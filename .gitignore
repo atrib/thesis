@@ -1,0 +1,8 @@
+*-blx.bib
+*.aux
+*.log
+*.rubbercache
+*.run.xml
+*.toc
+thesis.pdf
+

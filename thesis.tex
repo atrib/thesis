@@ -1,0 +1,103 @@
+% rubber: setlist arguments --shell-escape
+\documentclass[lablogo]{thesis}
+
+
+\title{Secure Security at the Security-Critical Interface}
+\author{Atri Bhattacharyya}
+\president{Prof. Professor Mc. ProfessorFace}
+\director{Prof. Mathias Payer}
+\codirector{Prof. Babak Falsafi}
+\internal{Prof. Professor Mc. ProfessorFace}
+\external{Prof. Professor Mc. ProfessorFace}
+\external{Dr. Anil Kurmus}
+
+\cv{Resume.pdf}
+
+%%%%%%%%%% Packages borrowed from Ahmad's thesis %%%%%%%%%%%%%%%%%%
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{epigraph}
+\usepackage{enumitem}                 % custom lists
+\usepackage{listings}                 % code formatting
+\usepackage{tikz}
+\usepackage{expl3}
+\usepackage{caption}                  % figure captioning
+\usepackage{subcaption}               % subfigures
+\usepackage{listofitems}              % \readlist
+\usepackage{fontawesome}              % faArrowUp, etc...
+\usepackage{siunitx}                  % \num, SI units
+\usepackage{xpatch}                   % \xapptocmd
+\usepackage{minted}                   % listing environment (TODO replace with consistent code listings)
+\usepackage{algorithm}                % algorithm environment
+\usepackage{algpseudocode}            % \algnewcommand, \Procedure, \Call, etc...
+\usepackage{varwidth}                 % varwidth environment
+\usepackage{fmtcount}                 % \numberstringnum
+\usepackage{refcount}                 % \getrefnumber
+\usepackage{soul}                     % \sethlcolor
+\usepackage{adjustbox}                % adjustbox environment
+\usepackage{booktabs}                 % \toprule
+\usepackage{multirow}                 % \multirow
+\usepackage{colortbl}                 % \cellcolor
+\usepackage{pifont}                   % \ding
+\usepackage{makecell}                 % \multirowcell
+\usepackage{rotating}                 % sideways environment
+\usepackage{pgfplots}                 % axis environment
+\usepackage{csquotes}                 % \enquote
+% \usepackage{annotate-equations}
+\usepackage{bbding}                   % \XSolidBold
+\usepackage{ifsym}                    % \textifsymbol
+\usepackage{nicefrac}                 % \nicefrac
+\usepackage{amsmath}
+\usepackage{amssymb}                  % \npreceq etc...
+\usepackage{pgf-umlsd}                % sequencediagram environment
+\usepackage{tikz-layers}
+\usepackage{scalerel}
+\usepackage{graphicx}
+\usepackage[
+  backend=bibtex,
+  style=numeric-comp,
+  hyperref=true,
+  defernumbers=true,
+  maxbibnames=99,
+  maxcitenames=1
+]{biblatex}
+\addbibresource{thesis.bib}
+\graphicspath{{./media/}}
+
+\begin{dedication}
+  \epigraph{TODO: Stuff here}{\textit{TODO: Anakin, I am your father}}
+  \begin{absolute}
+    \makebox[0pt]{\parbox{\textwidth}{
+      \centering
+      Stuff about Scrooge Mc.Duck.
+    }}
+  \end{absolute}
+\end{dedication}
+
+\begin{acknowledgments}
+I thank the Academy \dots
+\end{acknowledgments}
+
+
+\begin{abstract}
+  I think I did stuff here
+\end{abstract}
+
+\begin{frenchabstract}
+  Je pense que j'ai faire quelques choses ici.
+\end{frenchabstract}
+
+\begin{document}
+
+\chapter{Introduction}
+\epigraph{Testing can only prove the presence of idiots, not their absence.}%
+         {\textit{Aristotle}}
+Software is written---for the most part---by idiots.
+
+
+\end{document}
