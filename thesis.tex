@@ -135,125 +135,125 @@
 % \addbibresource{thesis.bib}
 \graphicspath{{./media/}}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SecureCells definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{namedscope}{seccell}+
-\graphicspath{{./papers/seccell-paper/}}
+  \graphicspath{{./papers/seccell-paper/}}
 
-\makeatletter
-\providecommand*{\input@path}{}
-\g@addto@macro\input@path{{./papers/seccell-paper/}} % append
-\makeatother
+  \makeatletter
+  \providecommand*{\input@path}{}
+  \g@addto@macro\input@path{{./papers/seccell-paper/}} % append
+  \makeatother
 
-% \makeatletter
-% \providecommand*{\input@path}{}
-% \edef\input@path{{./papers/seccell-paper/}\input@path}% prepend
-% \makeatother
+  % \makeatletter
+  % \providecommand*{\input@path}{}
+  % \edef\input@path{{./papers/seccell-paper/}\input@path}% prepend
+  % \makeatother
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newmacro{seccells}{SecureCells\xspace}
-\newmacro{ptable}{PTable\xspace}
-\newmacro{gtable}{GTable\xspace}
-\newmacro{cell}{cell\xspace}
-\newmacro{cellx}  [m]{$Cell_{#1}$\xspace}
-\newmacro{secdiv}{SD\xspace}
-\newmacro{secdivx}[m]{$SD_{#1}$\xspace}
-% List of SD/SC instructions
-\newmacro{sdswitch}{\Code{SDSwitch}\xspace}
-\newmacro{sdentry} {\Code{SDEntry}\xspace}
-\newmacro{scprot}  {\Code{SCProt}\xspace}
-\newmacro{scgrant} {\Code{SCGrant}\xspace}
-\newmacro{screcv}  {\Code{SCRecv}\xspace}
-\newmacro{sctfer}  {\Code{SCTfer}\xspace}
-\newmacro{scinval} {\Code{SCInval}\xspace}
-\newmacro{screval} {\Code{SCReval}\xspace}
-\newmacro{scexcl}  {\Code{SCExcl}\xspace}
-% List of SD/SC registers
-\newmacro{sid}{$SDID$\xspace}
-\newmacro{rid}{$RID$\xspace}
-\newmacro{xid}{$XID$\xspace}
-% Requirements
-\newmacro{req}[m]{\textbf{O#1}\xspace}
+  \newmacro{seccells}{SecureCells\xspace}
+  \newmacro{ptable}{PTable\xspace}
+  \newmacro{gtable}{GTable\xspace}
+  \newmacro{cell}{cell\xspace}
+  \newmacro{cellx}  [m]{$Cell_{#1}$\xspace}
+  \newmacro{secdiv}{SD\xspace}
+  \newmacro{secdivx}[m]{$SD_{#1}$\xspace}
+  % List of SD/SC instructions
+  \newmacro{sdswitch}{\Code{SDSwitch}\xspace}
+  \newmacro{sdentry} {\Code{SDEntry}\xspace}
+  \newmacro{scprot}  {\Code{SCProt}\xspace}
+  \newmacro{scgrant} {\Code{SCGrant}\xspace}
+  \newmacro{screcv}  {\Code{SCRecv}\xspace}
+  \newmacro{sctfer}  {\Code{SCTfer}\xspace}
+  \newmacro{scinval} {\Code{SCInval}\xspace}
+  \newmacro{screval} {\Code{SCReval}\xspace}
+  \newmacro{scexcl}  {\Code{SCExcl}\xspace}
+  % List of SD/SC registers
+  \newmacro{sid}{$SDID$\xspace}
+  \newmacro{rid}{$RID$\xspace}
+  \newmacro{xid}{$XID$\xspace}
+  % Requirements
+  \newmacro{req}[m]{\textbf{O#1}\xspace}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%% Atri's design choices %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%% Atri's design choices %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newenvironment{minilisting}
-  {\minipage[b]{\linewidth}\verbatim}
-  {\endverbatim\endminipage}
+  \newenvironment{minilisting}
+    {\minipage[b]{\linewidth}\verbatim}
+    {\endverbatim\endminipage}
 
-\lstdefinestyle{cstyle}{
-  basicstyle=\footnotesize\ttfamily,
-  keywordstyle=\color{black!85}\bfseries,
-  keywordstyle=[2]\color{black!85}\bfseries\emph,
-  showstringspaces=false,
-  language={C},
-  breaklines=false,
-  mathescape=true,
-  escapechar={@}
-}
-\lstdefinestyle{inline}{
-  style=cstyle,
-  mathescape=false,
-  breaklines=true,
-  keywordstyle=,
-  keywordstyle=[2],
-  extendedchars=true,
-  basicstyle=\ttfamily\small
-}
-\newmacro{Code}[m]{\lstinline[style=inline,breaklines=false]@#1@}
-\let\realparagraph\paragraph
-\let\paragraph\relax
-\newmacro{paragraph}[m]{\textbf{#1.}}
-% \newcolumntype{Q}{>{\centering\arraybackslash}X}
-% \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+  \lstdefinestyle{cstyle}{
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\color{black!85}\bfseries,
+    keywordstyle=[2]\color{black!85}\bfseries\emph,
+    showstringspaces=false,
+    language={C},
+    breaklines=false,
+    mathescape=true,
+    escapechar={@}
+  }
+  \lstdefinestyle{inline}{
+    style=cstyle,
+    mathescape=false,
+    breaklines=true,
+    keywordstyle=,
+    keywordstyle=[2],
+    extendedchars=true,
+    basicstyle=\ttfamily\small
+  }
+  \newmacro{Code}[m]{\lstinline[style=inline,breaklines=false]@#1@}
+  \let\realparagraph\paragraph
+  \let\paragraph\relax
+  \newmacro{paragraph}[m]{\textbf{#1.}}
+  % \newcolumntype{Q}{>{\centering\arraybackslash}X}
+  % \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
-% These old were useful with the prettyref package
-% Now overruled by the autoref package
-% \newrefformat{cha}{\hyperref[#1]{Chapter~\ref*{#1}}}
-% \newrefformat{sec}{\hyperref[#1]{Section~\ref*{#1}}}
-% \newrefformat{sub}{\hyperref[#1]{Section~\ref*{#1}}}
-% \newrefformat{tab}{\hyperref[#1]{Table~\ref*{#1}}}
-% \newrefformat{fig}{\hyperref[#1]{Figure~\ref*{#1}}}
-% \newrefformat{line}{\hyperref[#1]{line~\ref*{#1}}}
-% \newrefformat{lst}{\hyperref[#1]{Listing~\ref*{#1}}}
-% \newrefformat{pat}{\hyperref[#1]{Patch~\ref*{#1}}}
-% \newrefformat{alg}{\hyperref[#1]{Algorithm~\ref*{#1}}}
-% Customizing reference formats for
-\renewcommand{\sectionautorefname}{Section}
-\let\subsectionautorefname\sectionautorefname
-\let\subsubsectionautorefname\sectionautorefname
-\newmacro{algorithmautorefname}{Instruction}
+  % These old were useful with the prettyref package
+  % Now overruled by the autoref package
+  % \newrefformat{cha}{\hyperref[#1]{Chapter~\ref*{#1}}}
+  % \newrefformat{sec}{\hyperref[#1]{Section~\ref*{#1}}}
+  % \newrefformat{sub}{\hyperref[#1]{Section~\ref*{#1}}}
+  % \newrefformat{tab}{\hyperref[#1]{Table~\ref*{#1}}}
+  % \newrefformat{fig}{\hyperref[#1]{Figure~\ref*{#1}}}
+  % \newrefformat{line}{\hyperref[#1]{line~\ref*{#1}}}
+  % \newrefformat{lst}{\hyperref[#1]{Listing~\ref*{#1}}}
+  % \newrefformat{pat}{\hyperref[#1]{Patch~\ref*{#1}}}
+  % \newrefformat{alg}{\hyperref[#1]{Algorithm~\ref*{#1}}}
+  % Customizing reference formats for
+  \renewcommand{\sectionautorefname}{Section}
+  \let\subsectionautorefname\sectionautorefname
+  \let\subsubsectionautorefname\sectionautorefname
+  \newmacro{algorithmautorefname}{Instruction}
 
-\makeatletter
-\newmacro{removelatexerror}{\let\@latex@error\@gobble}
-\makeatother
+  \makeatletter
+  \newmacro{removelatexerror}{\let\@latex@error\@gobble}
+  \makeatother
 
-% Custom naming for algorithm, used for table of securecells instructions
-\makeatletter
-\renewcommand{\ALG@name}{Instruction}
-\makeatother
+  % Custom naming for algorithm, used for table of securecells instructions
+  \makeatletter
+  \renewcommand{\ALG@name}{Instruction}
+  \makeatother
 
-% Custom command for making formatting changes to an entire row in tables
-% For example, \setrow{\bfseries} in front of a row to make it bold
-% https://tex.stackexchange.com/questions/4811/make-first-row-of-table-all-bold
-% \newcolumntype{!}{>{\global\let\currentrowstyle\relax}}
-% \newcolumntype{?}{>{\currentrowstyle}}
-% \newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
-%   #1\ignorespaces
-% }
+  % Custom command for making formatting changes to an entire row in tables
+  % For example, \setrow{\bfseries} in front of a row to make it bold
+  % https://tex.stackexchange.com/questions/4811/make-first-row-of-table-all-bold
+  % \newcolumntype{!}{>{\global\let\currentrowstyle\relax}}
+  % \newcolumntype{?}{>{\currentrowstyle}}
+  % \newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
+  %   #1\ignorespaces
+  % }
 
-% Cross and tick marks
-\newmacro{cmark}{\ding{51}}%
-\newmacro{xmark}{\ding{55}}%
+  % Cross and tick marks
+  \newmacro{cmark}{\ding{51}}%
+  \newmacro{xmark}{\ding{55}}%
 
-% Aliases:
-% yes: for checkmark to make readable
-\newmacro{yes}{\checkmark}
-
+  % Aliases:
+  % yes: for checkmark to make readable
+  \newmacro{yes}{\checkmark}
 \end{namedscope}
-
-
-
 
 
 
