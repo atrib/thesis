@@ -29,7 +29,7 @@
 
 % Atri's list of typically used packages
 % List of unused packages from Midas/TikTok
-% \usepackage{adjustbox}
+\usepackage{adjustbox}
 % \usepackage{amsmath}
 % \usepackage{filecontents}
 % \usepackage{tikz}
@@ -133,6 +133,45 @@
 %   maxcitenames=1
 % ]{biblatex}
 % \addbibresource{thesis.bib}
+
+%%%%%%%%%%%%%%%%%%%%% Commenter's sections %%%%%%%%%%%%%%%%%%%%%%%
+% Enable or disable reviews
+\newif\ifreview
+% \reviewtrue   % comment this line to disable reviews
+% newreviewer command description
+\newcounter{ReviewerID}
+\readlist*\annotationcolors{blue, red, orange, green, purple, yellow, brown, olive}
+\newcommand{\newreviewer}[2]{%
+  \ifnum \theReviewerID=\annotationcolorslen
+    \setcounter{ReviewerID}{0} % cycle through colors
+  \fi
+  \stepcounter{ReviewerID}%
+  \expandafter\edef\csname bootstrap#1\endcsname{%
+    \expandafter\def\csname #1\endcsname####1{%
+      \ifreview%
+        {\noexpand\color{\annotationcolors[\theReviewerID]} {\noexpand\bf{\noexpand\fbox{#2}} {\noexpand\it ####1} }}
+      \else%
+        {}% disable annotations
+      \fi%
+    }%
+  }%
+  \csname bootstrap#1\endcsname%
+}
+% List of reviewers
+% Command: \newreviewer{latexcommand}{visiblename}
+% You will be able to use a command \latexcommand{comment}
+% to generate a colored comment prepended by visiblename.
+\newreviewer{mat}{Mat}
+\newreviewer{atri}{AB}
+% \newreviewer{florian}{FH}
+\newreviewer{babak}{BF}
+% \newreviewer{andres}{AS}
+% \newreviewer{yuanlong}{YL}
+% \newreviewer{sg}{Sid}
+% \newreviewer{ant}{AV}
+% \newreviewer{ahmad}{AH}
+% \newreviewer{nicolas}{NB}
+
 \graphicspath{{./media/}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -255,6 +294,75 @@
   \newmacro{yes}{\checkmark}
 \end{namedscope}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Midas definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{namedscope}{midas}+
+  \graphicspath{{./papers/midas-paper/}}
+
+  \newenvironment{minilisting}
+  {\minipage[b]{\linewidth}\verbatim}
+  {\endverbatim\endminipage}
+
+  \lstdefinestyle{cstyle}{
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{black!85}\bfseries,
+  keywordstyle=[2]\color{black!85}\bfseries\emph,
+  showstringspaces=false,
+  language={C},
+  breaklines=false,
+  mathescape=true,
+  escapechar={@}
+  }
+  \lstdefinestyle{inline}{
+  style=cstyle,
+  mathescape=false,
+  breaklines=true,
+  keywordstyle=,
+  keywordstyle=[2],
+  extendedchars=true,
+  basicstyle=\ttfamily\small
+  }
+  \newmacro{Code}[m]{\lstinline[style=inline,breaklines=false]@#1@}
+  \let\realparagraph\paragraph
+  \let\paragraph\relax
+  \newmacro{paragraph}[m]{\textbf{#1.}}
+  \newcolumntype{Q}{>{\centering\arraybackslash}X}
+  \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+  \newmacro{tocttou}{TOCTTOU\xspace}
+  \newmacro{midas}{Midas\xspace}
+
+  \newrefformat{cha}{\hyperref[#1]{Chapter~\ref*{#1}}}
+  \newrefformat{sec}{\hyperref[#1]{Section~\ref*{#1}}}
+  \newrefformat{sub}{\hyperref[#1]{Section~\ref*{#1}}}
+  \newrefformat{tab}{\hyperref[#1]{Table~\ref*{#1}}}
+  \newrefformat{fig}{\hyperref[#1]{Figure~\ref*{#1}}}
+  \newrefformat{line}{\hyperref[#1]{line~\ref*{#1}}}
+  \newrefformat{lst}{\hyperref[#1]{Listing~\ref*{#1}}}
+  \newrefformat{pat}{\hyperref[#1]{Patch~\ref*{#1}}}
+  \newrefformat{alg}{\hyperref[#1]{Algorithm~\ref*{#1}}}
+  \renewcommand{\sectionautorefname}{Section}
+  \let\subsectionautorefname\sectionautorefname
+  \let\subsubsectionautorefname\sectionautorefname
+
+  \renewcommand\itemautorefname{Attack}
+
+  \newmacro{doinumber}{5753026}
+  \newmacro{zenodorecord}{\url{https://zenodo.org/record/\doinumber}}
+  \newmacro{zenododoi}{10.5281/zenodo.\doinumber\xspace}
+
+  % \newcommand\mat[1]{}
+  % \newcommand\atri[1]{}
+  % \newcommand\UT[1]{}
+
+  \newmacro{footremember}[O{}m]{\footnote{#2}\newcounter{#1}\setcounter{#1}{\value{footnote}}}
+  \newmacro{footrecall}[m]{%
+    \footnotemark[\value{#1}]%
+  }
+\end{namedscope}
+
 
 
 \begin{dedication}
@@ -297,7 +405,15 @@ Software is written---for the most part---by idiots.
 Does anything change if I put some text here?
 
 \include{papers/seccell-paper/seccell-core}
+\end{namedscope}
 
+\begin{namedscope}{midas}
+  \chapter{Some actual work}
+  \label{ch:midas}
+  \epigraph{Thanks, Uros, really.}%
+          {\textit{Me}}
+
+\include{papers/midas-paper/Midas-core}
 \end{namedscope}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

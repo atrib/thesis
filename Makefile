@@ -4,7 +4,7 @@ TEX = $(wildcard *.sty *.cls)
 # INC = $(wildcard papers/*.tex)
 # FIG = $(call rglob,media,*)
 DEP = $(TEX) $(FIG) $(INC) $(PAPERS)
-PAPERS = papers/seccell-paper/seccell-core.tex
+PAPERS = papers/seccell-paper/seccell-core.tex papers/midas-paper/Midas-core.tex
 
 # override define rglob
 # $(foreach d,$(wildcard $(1:=/*)),\
@@ -16,6 +16,7 @@ PAPERS = papers/seccell-paper/seccell-core.tex
 
 $(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf
 	make -C papers/seccell-paper
+	make -C papers/midas-paper midas
 	rubber --unsafe --pdf $(DOC).tex 
 
 # resume.pdf: resume.tex
