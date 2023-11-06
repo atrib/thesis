@@ -300,9 +300,22 @@ Does anything change if I put some text here?
 
 \end{namedscope}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{namedscope}{seccell}
+\input{papers/seccell-paper/seccell-appendix}
+\end{namedscope}
+
+
+%-------------------------------------------------------------------------------
+\backmatter
+
 \bibliographystyle{IEEEtran}
-\bibliography{thesis}
+\phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
-% \printbibliography
+\bibliography{thesis}
+
 
 \end{document}
