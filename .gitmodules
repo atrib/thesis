@@ -1,0 +1,3 @@
+[submodule "papers/seccell-paper"]
+	path = papers/seccell-paper
+	url = git@github.com:HexHive/seccell-paper.git

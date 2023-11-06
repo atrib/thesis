@@ -1,0 +1,2897 @@
+@string{Oakland="IEEE Symposium on Security and Privacy"}
+@string{SEC="USENIX Security Symposium"}
+@string{WOOT="USENIX Workshop On Offensive Technologies"}
+@string{CCS="Conference on Computer and Communications Security"}
+
+@inproceedings{lipp18sec,
+  author    = {Moritz Lipp and
+               Michael Schwarz and
+               Daniel Gruss and
+               Thomas Prescher and
+               Werner Haas and
+               Anders Fogh and
+               Jann Horn and
+               Stefan Mangard and
+               Paul Kocher and
+               Daniel Genkin and
+               Yuval Yarom and
+               Mike Hamburg},
+  title     = {Meltdown: Reading Kernel Memory from User Space},
+  booktitle = SEC,
+  year      = {2018},
+}
+
+@inproceedings{pldi16-strata,
+  author    = {Stefan Heule and Eric Schkufza and Rahul Sharma and Alex Aiken},
+  title     = {Stratified Synthesis: Automatically Learning the x86-64 Instruction Set},
+  booktitle = {Programming Language Design and Implementation ({PLDI})},
+  year      = {2016},
+  month     = {June},
+  publisher = {{ACM}},
+  url       = {http://dx.doi.org/10.1145/2908080.2908121},
+  doi       = {10.1145/2908080.2908121},
+  biburl    = {https://stefanheule.com/publications/pldi16-strata/},
+  bibsource = {stefanheule.com, https://stefanheule.com/}
+}
+
+@misc{ropper,
+  title={Ropper - rop gadget finder and binary information tool},
+  author={Sascha Schirra},
+  howpublished = "\url{http://scoding.de/ropper/}",
+  year={2014}
+}
+
+#  editor    = {Kathryn S. McKinley and
+#               Kathleen Fisher},
+@inproceedings{Dasgupta0KAR19,
+  author    = {Sandeep Dasgupta and
+               Daejun Park and
+               Theodoros Kasampalis and
+               Vikram S. Adve and
+               Grigore Rosu},
+  title     = {A complete formal semantics of x86-64 user-level instruction set architecture},
+  booktitle = {Proceedings of the 40th {ACM} {SIGPLAN} Conference on Programming
+               Language Design and Implementation, {PLDI} 2019, Phoenix, AZ, USA,
+               June 22-26, 2019},
+  pages     = {1133--1148},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3314221.3314601},
+  doi       = {10.1145/3314221.3314601},
+  timestamp = {Sun, 09 Jun 2019 19:00:05 +0200},
+  biburl    = {https://dblp.org/rec/conf/pldi/Dasgupta0KAR19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Christian Rossow and
+#               Yves Younan},
+@inproceedings{KoruyehKSA18,
+  author    = {Esmaeil Mohammadian Koruyeh and
+               Khaled N. Khasawneh and
+               Chengyu Song and
+               Nael B. Abu{-}Ghazaleh},
+  title     = {Spectre Returns! Speculation Attacks using the Return Stack Buffer},
+  booktitle = {12th {USENIX} Workshop on Offensive Technologies, {WOOT} 2018, Baltimore,
+               MD, USA, August 13-14, 2018},
+  publisher = {{USENIX} Association},
+  year      = {2018},
+  url       = {https://www.usenix.org/conference/woot18/presentation/koruyeh},
+  timestamp = {Mon, 20 Aug 2018 14:07:58 +0200},
+  biburl    = {https://dblp.org/rec/conf/woot/KoruyehKSA18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{schwarz18arxiv,
+  author = {Michael Schwarz and Martin Schwarzl and Moritz Lipp and Daniel Gruss},
+  title = {NetSpectre: Read Arbitrary Memory over Network},
+  year = 2018,
+  howpublished = {\url{https://arxiv.org/abs/1807.10535}}
+}
+
+@inproceedings{CanellaB0LBOPEG19,
+  author    = {Claudio Canella and
+               Jo Van Bulck and
+               Michael Schwarz and
+               Moritz Lipp and
+               Benjamin von Berg and
+               Philipp Ortner and
+               Frank Piessens and
+               Dmitry Evtyushkin and
+               Daniel Gruss},
+  editor    = {Nadia Heninger and
+               Patrick Traynor},
+  title     = {A Systematic Evaluation of Transient Execution Attacks and Defenses},
+  booktitle = {28th {USENIX} Security Symposium, {USENIX} Security 2019, Santa Clara,
+               CA, USA, August 14-16, 2019},
+  pages     = {249--266},
+  publisher = {{USENIX} Association},
+  year      = {2019},
+  url       = {https://www.usenix.org/conference/usenixsecurity19/presentation/canella},
+  timestamp = {Tue, 03 Sep 2019 16:39:56 +0200},
+  biburl    = {https://dblp.org/rec/conf/uss/CanellaB0LBOPEG19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+% TODO: Verify details
+@article{fogmicroarchitecture,
+  title={The microarchitecture of Intel, AMD and VIA CPUs. An optimization guide for assembly programmers and compiler makers (2016)},
+  author={Fog, Agner},
+  howpublished = {\url{http://www.agner.org/optimize/microarchitecture.pdf}}
+}
+
+@article{horn2018reading,
+  title={Reading privileged memory with a side-channel},
+  author={Horn, Jann},
+  journal={Project Zero},
+  volume={3},
+  year={2018},
+  howpublished = {\url{https://googleprojectzero.blogspot.com/2018/01/reading-privileged-memory-with-side.html}}
+}
+
+@misc{ms18ssb,
+  title={Speculative Store Bypass},
+  author={Secure Windows Initiative},
+  howpublished = "\url{https://blogs.technet.microsoft.com/srd/2018/05/21/analysis-and-mitigation-of-speculative-store-bypass-cve-2018-3639/}",
+  year={2018}
+}
+
+@misc{amd18ssb,
+  author = {AMD},
+  title = {Speculative Store Bypass Disable},
+  howpublished = "\url{https://developer.amd.com/wp-content/resources/124441_AMD64_SpeculativeStoreBypassDisable_Whitepaper_final.pdf}",
+  year = {2018}
+}
+
+@misc{kiriansky18specoverflow,
+    title = {{Speculative Buffer Overflows: Attacks and Defenses}},
+    howpublished = "\url{https://people.csail.mit.edu/vlk/spectre11.pdf}",
+    year = {2018},
+    author = {Kiriansky, Vladimir and Waldspurger, Carl}
+}
+
+@inproceedings{mais18rsb,
+ author = {Maisuradze, Giorgi and Rossow, Christian},
+ title = {Ret2Spec: Speculative Execution Using Return Stack Buffers},
+ booktitle = CCS,
+ year = {2018},
+} 
+
+
+@InProceedings{tromer05aes,
+author="Osvik, Dag Arne and Shamir, Adi and Tromer, Eran",
+title="Cache Attacks and Countermeasures: The Case of AES",
+booktitle="Topics in Cryptology",
+year="2006",
+}
+
+@Article{tromer10aes,
+author="Tromer, Eran and Osvik, Dag Arne and Shamir, Adi",
+title="Efficient Cache Attacks on AES, and Countermeasures",
+journal="Journal of Cryptology",
+year="2010",
+}
+
+@inproceedings{YaromF14,
+  author    = {Yuval Yarom and
+               Katrina Falkner},
+  title     = {{FLUSH+RELOAD:} {A} High Resolution, Low Noise, {L3} Cache Side-Channel
+               Attack},
+  booktitle = {Proceedings of the 23rd {USENIX} Security Symposium, San Diego, CA,
+               USA, August 20-22, 2014},
+  pages     = {719--732},
+  year      = {2014},
+  crossref  = {DBLP:conf/uss/2014},
+  url       = {https://www.usenix.org/conference/usenixsecurity14/technical-sessions/presentation/yarom},
+  timestamp = {Fri, 19 Aug 2016 15:38:03 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/uss/YaromF14},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@InProceedings{gruss16flush,
+author="Gruss, Daniel and Maurice, Cl{\'e}mentine and Wagner, Klaus and Mangard, Stefan",
+title ={Flush+Flush: A Fast and Stealthy Cache Attack},
+booktitle="Detection of Intrusions and Malware, and Vulnerability Assessment",
+year="2016",
+}
+
+@inproceedings {disselkoen17abort,
+author = {Craig Disselkoen and David Kohlbrenner and Leo Porter and Dean Tullsen},
+title = {Prime+Abort: A Timer-Free High-Precision L3 Cache Attack using Intel {TSX}},
+booktitle = SEC,
+year = {2017},
+}
+
+@inproceedings{BulckMWGKPSWYS18,
+  author    = {Jo Van Bulck and
+               Marina Minkin and
+               Ofir Weisse and
+               Daniel Genkin and
+               Baris Kasikci and
+               Frank Piessens and
+               Mark Silberstein and
+               Thomas F. Wenisch and
+               Yuval Yarom and
+               Raoul Strackx},
+  editor    = {William Enck and
+               Adrienne Porter Felt},
+  title     = {Foreshadow: Extracting the Keys to the Intel {SGX} Kingdom with Transient
+               Out-of-Order Execution},
+  booktitle = {27th {USENIX} Security Symposium, {USENIX} Security 2018, Baltimore,
+               MD, USA, August 15-17, 2018},
+  pages     = {991--1008},
+  publisher = {{USENIX} Association},
+  year      = {2018},
+  url       = {https://www.usenix.org/conference/usenixsecurity18/presentation/bulck},
+  timestamp = {Wed, 31 Oct 2018 06:33:27 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/BulckMWGKPSWYS18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings {gras18tlbleed,
+  author = {Ben Gras and Kaveh Razavi and Herbert Bos and Cristiano Giuffrida},
+  title = {Translation Leak-aside Buffer: Defeating Cache Side-channel Protections with {TLB} Attacks},
+  booktitle = SEC,
+  year = {2018},
+}
+
+@misc{aldaya18portsmash,
+    author = {Alejandro Cabrera Aldaya and Billy Bob Brumley and Sohaib ul Hassan and Cesar Pereida Garc\'ia and Nicola Tuveri},
+    title = {Port Contention for Fun and Profit},
+    howpublished = {Cryptology ePrint Archive, Report 2018/1060},
+    year = {2018},
+    note = {\url{https://eprint.iacr.org/2018/1060}},
+}
+
+@misc{laukemann18osaca,
+  author = {Jan Laukemann and Julian Hammer and Johannes Hofmann and Georg Hager and Gerhard Wellein},
+  title = {Automated Instruction Stream Throughput Prediction for Intel and AMD Microarchitectures},
+  year = 2018,
+  howpublished = {\url{https://arxiv.org/abs/1809.00912}}
+}
+
+@inproceedings{evtyushkin2016jump,
+ title={Jump over ASLR: Attacking branch predictors to bypass ASLR},
+ author={Evtyushkin, Dmitry and Ponomarev, Dmitry and Abu-Ghazaleh, Nael},
+ booktitle={The 49th Annual IEEE/ACM International Symposium on Microarchitecture},
+ pages={40},
+ year={2016},
+ organization={IEEE Press}
+}
+
+@inproceedings{sotirov2009bypassing,
+  title={Bypassing memory protections: The future of exploitation},
+  author={Sotirov, Alexander},
+  booktitle={USENIX Security},
+  year={2009}
+}
+
+@inproceedings{gruss2017kaslr,
+  title={Kaslr is dead: long live kaslr},
+  author={Gruss, Daniel and Lipp, Moritz and Schwarz, Michael and Fellner, Richard and Maurice, Cl{\'e}mentine and Mangard, Stefan},
+  booktitle={International Symposium on Engineering Secure Software and Systems},
+  pages={161--176},
+  year={2017},
+  organization={Springer}
+}
+
+@misc{turner2018retpoline,
+  title={Retpoline: a software construct for preventing branch-target-injection},
+  author={Turner, Paul},
+  year={2018},
+  howpublished = {\url{https://support.google.com/faqs/answer/7625886}}
+}
+
+@misc{corporation2009intel,
+  title={Intel 64 and IA-32 architectures optimization reference manual},
+  author={Corporation, Intel},
+  year={2016},
+  publisher={May}
+}
+
+@article{guide2011intel,
+  title={Intel{\textregistered} 64 and ia-32 architectures software developer’s manual},
+  author={Guide, Part},
+  journal={Volumes 1-4},
+  volume={2},
+  number={11},
+  year={2011}
+}
+
+@article{khasawneh2018safespec,
+  title={SafeSpec: Banishing the Spectre of a Meltdown with Leakage-Free Speculation},
+  author={Khasawneh, Khaled N and Koruyeh, Esmaeil Mohammadian and Song, Chengyu and Evtyushkin, Dmitry and Ponomarev, Dmitry and Abu-Ghazaleh, Nael},
+  journal={arXiv preprint arXiv:1806.05179},
+  year={2018}
+}
+
+@misc{linusemails,
+ title = {Linus on Spectre/Meltdown mitigations},
+ year = 2018,
+ author = {Linus Torvalds},
+ howpublished = {\url{https://lkml.org/lkml/2018/1/21/192}}
+}
+
+@inproceedings{hund2013practical,
+  title={Practical timing side channel attacks against kernel space ASLR},
+  author={Hund, Ralf and Willems, Carsten and Holz, Thorsten},
+  booktitle={2013 IEEE Symposium on Security and Privacy},
+  pages={191--205},
+  year={2013},
+  organization={IEEE}
+}
+
+@misc{v8isolates,
+  title={Cloud Computing without Containers},
+  author={Zack Bloom},
+  howpublished = "\url{https://blog.cloudflare.com/cloud-computing-without-containers/}",
+  year={2018}
+}
+
+@misc{gcloudfaq,
+  key = {Google},
+  title = {Google Compute Engine FAQ},
+  howpublished = {\url{https://cloud.google.com/compute/docs/faq}},
+  note = {Accessed: 2019-02-13}
+}
+
+@inproceedings{wang06smt,
+  author = {Wang, Zhenghong and Lee, Ruby B.},
+  title = {Covert and Side Channels Due to Processor Architecture},
+  booktitle = {Proceedings of the 22Nd Annual Computer Security Applications
+    Conference},
+  series = {ACSAC '06},
+  year = {2006},
+  isbn = {0-7695-2716-7},
+  pages = {473--482},
+  numpages = {10},
+  url = {https://doi.org/10.1109/ACSAC.2006.20},
+  doi = {10.1109/ACSAC.2006.20},
+  publisher = {IEEE Computer Society},
+  address = {Washington, DC, USA},
+} 
+
+@inproceedings{aciicmez2007cheap,
+  title={Cheap hardware parallelism implies cheap security},
+  author={Aciicmez, Onur and Seifert, Jean-Pierre},
+  booktitle={Fault Diagnosis and Tolerance in Cryptography, 2007. FDTC
+    2007. Workshop on},
+  pages={80--91},
+  year={2007},
+  organization={IEEE}
+}
+
+@misc{fogh16shotgun,
+  title = {Covert Shotgun},
+  author={Fogh, Anders},
+  howpublished = {\url{ https://cyber.wtf/2016/09/27/covert-shotgun/ }},
+}
+
+@misc{corbetTamingStibp,
+  title = {Taming STIBP},
+  author={Corbet, Jonathan},
+  howpublished = {\url{ https://lwn.net/Articles/773118/ }},
+}
+
+@misc{andersWranglingGhost,
+  title = {Wrangling with the Ghost: An inside story of mitigating speculative execution side channel vulnerabilities},
+  author={Fogh, Anders and Ertl, Christopher},
+  howpublished = {\url{https://i.blackhat.com/us-18/Thu-August-9/us-18-Fogh-Ertl-Wrangling-with-the-Ghost-An-Inside-Story-of-Mitigating-Speculative-Execution-Side-Channel-Vulnerabilities.pdf}},
+}
+
+@misc{fogInstTables,
+  title = {{Instruction tables: Lists of instruction latencies, throughputs and
+    micro-operation breakdowns for Intel, AMD and VIA CPUs}},
+  author={Agner Fog},
+  howpublished = {\url{https://www.agner.org/optimize/instruction_tables.pdf}},
+}
+
+@inproceedings{ZhangJRR12,
+  author    = {Yinqian Zhang and
+               Ari Juels and
+               Michael K. Reiter and
+               Thomas Ristenpart},
+  title     = {Cross-VM side channels and their use to extract private keys},
+  booktitle = {the {ACM} Conference on Computer and Communications Security, CCS'12,
+               Raleigh, NC, USA, October 16-18, 2012},
+  pages     = {305--316},
+  year      = {2012},
+  crossref  = {DBLP:conf/ccs/2012},
+  url       = {https://doi.org/10.1145/2382196.2382230},
+  doi       = {10.1145/2382196.2382230},
+  timestamp = {Tue, 06 Nov 2018 11:07:31 +0100},
+  biburl    = {https://dblp.org/rec/bib/conf/ccs/ZhangJRR12},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{HeningerS09,
+  author    = {Nadia Heninger and
+               Hovav Shacham},
+  title     = {Reconstructing {RSA} Private Keys from Random Key Bits},
+  booktitle = {Advances in Cryptology - {CRYPTO} 2009, 29th Annual International
+               Cryptology Conference, Santa Barbara, CA, USA, August 16-20, 2009.
+               Proceedings},
+  pages     = {1--17},
+  year      = {2009},
+  crossref  = {DBLP:conf/crypto/2009},
+  url       = {https://doi.org/10.1007/978-3-642-03356-8\_1},
+  doi       = {10.1007/978-3-642-03356-8\_1},
+  timestamp = {Tue, 14 May 2019 10:00:48 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/crypto/HeningerS09},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{guarnieri2020spectector,
+author = {Guarnieri, Marco and Köpf, Boris and Morales, Jose F. and Reineke, Jan and Sanchez, Andres},
+title = {Spectector: Principled Detection of Speculative Information Flows},
+booktitle = {IEEE Symposium on Security and Privacy},
+year = {2020},
+month = {May},
+publisher = {IEEE},
+url = {https://www.microsoft.com/en-us/research/publication/spectector-principled-detection-of-speculative-information-flows/},
+}
+
+@inproceedings{BhattacharyyaSN19,
+  author    = {Atri Bhattacharyya and
+               Alexandra Sandulescu and
+               Matthias Neugschwandtner and
+               Alessandro Sorniotti and
+               Babak Falsafi and
+               Mathias Payer and
+               Anil Kurmus},
+  title     = {SMoTherSpectre: Exploiting Speculative Execution through Port Contention},
+  booktitle = {Proceedings of the 2019 {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, {CCS} 2019, London, UK, November 11-15, 2019},
+  pages     = {785--800},
+  year      = {2019},
+  crossref  = {DBLP:conf/ccs/2019},
+  url       = {https://doi.org/10.1145/3319535.3363194},
+  doi       = {10.1145/3319535.3363194},
+  timestamp = {Fri, 08 Nov 2019 12:58:49 +0100},
+  biburl    = {https://dblp.org/rec/bib/conf/ccs/BhattacharyyaSN19},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Netspectre,
+  author    = {Michael Schwarz and
+               Martin Schwarzl and
+               Moritz Lipp and
+               Jon Masters and
+               Daniel Gruss},
+  title     = {NetSpectre: Read Arbitrary Memory over Network},
+  booktitle = {Computer Security - {ESORICS} 2019 - 24th European Symposium on Research
+               in Computer Security, Luxembourg, September 23-27, 2019, Proceedings,
+               Part {I}},
+  pages     = {279--299},
+  year      = {2019},
+  crossref  = {DBLP:conf/esorics/2019-1},
+  url       = {https://doi.org/10.1007/978-3-030-29959-0\_14},
+  doi       = {10.1007/978-3-030-29959-0\_14},
+  timestamp = {Mon, 16 Sep 2019 19:43:37 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/esorics/0001SLMG19},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Shacham07,
+  author    = {Hovav Shacham},
+  title     = {The geometry of innocent flesh on the bone: return-into-libc without
+               function calls (on the x86)},
+  booktitle = {Proceedings of the 2007 {ACM} Conference on Computer and Communications
+               Security, {CCS} 2007, Alexandria, Virginia, USA, October 28-31, 2007},
+  pages     = {552--561},
+  year      = {2007},
+  crossref  = {DBLP:conf/ccs/2007},
+  url       = {https://doi.org/10.1145/1315245.1315313},
+  doi       = {10.1145/1315245.1315313},
+  timestamp = {Mon, 26 Nov 2018 17:14:40 +0100},
+  biburl    = {https://dblp.org/rec/bib/conf/ccs/Shacham07},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{quynh2014capstone,
+  title={Capstone: Next-gen disassembly framework},
+  author={Quynh, Nguyen Anh},
+  journal={Black Hat USA},
+  volume={5},
+  number={2},
+  pages={3--8},
+  year={2014}
+}
+
+@inproceedings{de2008z3,
+  title={Z3: An efficient SMT solver},
+  author={De Moura, Leonardo and Bj{\o}rner, Nikolaj},
+  booktitle={International conference on Tools and Algorithms for the Construction and Analysis of Systems},
+  pages={337--340},
+  year={2008},
+  organization={Springer}
+}
+
+@article{SPECCFI,
+  author    = {Esmaeil Mohammadian Koruyeh and
+               Shirin Haji Amin Shirazi and
+               Khaled N. Khasawneh and
+               Chengyu Song and
+               Nael B. Abu{-}Ghazaleh},
+  title     = {{SPECCFI:} Mitigating Spectre Attacks using {CFI} Informed Speculation},
+  journal   = {CoRR},
+  volume    = {abs/1906.01345},
+  year      = {2019},
+  url       = {http://arxiv.org/abs/1906.01345},
+  archivePrefix = {arXiv},
+  eprint    = {1906.01345},
+  timestamp = {Thu, 13 Jun 2019 13:36:00 +0200},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-1906-01345.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{intelCET,
+  title={Control-flow Enforcement Technology Specification},
+  author={{Intel Corporation}},
+  howpublished = "\url{https://software.intel.com/sites/default/files/managed/4d/2a/control-flow-enforcement-technology-preview.pdf}",
+  year={May 2019},
+  note = {Accessed: 2020-03}
+}
+
+@misc{intelIBRS,
+  title={Deep Dive: Indirect Branch Restricted Speculation},
+  author={{Intel Corporation}},
+  howpublished = "\url{https://software.intel.com/security-software-guidance/insights/deep-dive-indirect-branch-restricted-speculation}",
+  note = {Accessed: 2020-03}
+}
+
+@misc{intelIBPB,
+  title={Deep Dive: Indirect Branch Predictor Barrier},
+  author={{Intel Corporation}},
+  howpublished = "\url{https://software.intel.com/security-software-guidance/insights/deep-dive-indirect-branch-predictor-barrier}",
+  note = {Accessed: 2020-03}
+}
+
+@misc{intelSTIBP,
+  title={Deep Dive: Single Thread Indirect Branch Predictors},
+  author={{Intel Corporation}},
+  howpublished = "\url{https://software.intel.com/security-software-guidance/insights/deep-dive-single-thread-indirect-branch-predictors}",
+  note = {Accessed: 2020-03}
+}
+
+@misc{armMTEPAC,
+  title={Providing protection for complex software},
+  author={{Arm Limited}},
+  howpublished = "\url{https://developer.arm.com/-/media/Arm\%20Developer\%20Community/PDF/Learn\%20the\%20Architecture/Providing\%20protection\%20for\%20complex\%20software.pdf}",
+  note = {Accessed: 2021-01}
+}
+
+@inproceedings{WeisseNLWK19,
+  author    = {Ofir Weisse and
+               Ian Neal and
+               Kevin Loughlin and
+               Thomas F. Wenisch and
+               Baris Kasikci},
+  title     = {{NDA:} Preventing Speculative Execution Attacks at Their Source},
+  booktitle = {Proceedings of the 52nd Annual {IEEE/ACM} International Symposium
+               on Microarchitecture, {MICRO} 2019, Columbus, OH, USA, October 12-16,
+               2019},
+  pages     = {572--586},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3352460.3358306},
+  doi       = {10.1145/3352460.3358306},
+  timestamp = {Wed, 16 Oct 2019 10:12:02 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/WeisseNLWK19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{YanCS0FT19,
+  author    = {Mengjia Yan and
+               Jiho Choi and
+               Dimitrios Skarlatos and
+               Adam Morrison and
+               Christopher W. Fletcher and
+               Josep Torrellas},
+  title     = {InvisiSpec: Making Speculative Execution Invisible in the Cache Hierarchy
+               (Corrigendum)},
+  booktitle = {Proceedings of the 52nd Annual {IEEE/ACM} International Symposium
+               on Microarchitecture, {MICRO} 2019, Columbus, OH, USA, October 12-16,
+               2019},
+  pages     = {1076},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3352460.3361129},
+  doi       = {10.1145/3352460.3361129},
+  timestamp = {Wed, 16 Oct 2019 10:12:02 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/YanCS0FT19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{KirianskyLADE18,
+  author    = {Vladimir Kiriansky and
+               Ilia A. Lebedev and
+               Saman P. Amarasinghe and
+               Srinivas Devadas and
+               Joel S. Emer},
+  title     = {{DAWG:} {A} Defense Against Cache Timing Attacks in Speculative Execution
+               Processors},
+  booktitle = {51st Annual {IEEE/ACM} International Symposium on Microarchitecture,
+               {MICRO} 2018, Fukuoka, Japan, October 20-24, 2018},
+  pages     = {974--987},
+  publisher = {{IEEE} Computer Society},
+  year      = {2018},
+  url       = {https://doi.org/10.1109/MICRO.2018.00083},
+  doi       = {10.1109/MICRO.2018.00083},
+  timestamp = {Wed, 16 Oct 2019 14:14:55 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/KirianskyLADE18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{armgadgets,
+  author    = {Richard Grisenthwaite},
+  title     = {Cache Speculation Side-channels},
+  publisher = {ARM},
+  year={January 2018}
+}
+
+@article{MambrettiSpec,
+  author    = {Andrea Mambretti and
+               Alexandra Sandulescu and
+               Alessandro Sorniotti and
+               William K. Robertson and
+               Engin Kirda and
+               Anil Kurmus},
+  title     = {Bypassing memory safety mechanisms through speculative control flow
+               hijacks},
+  journal   = {CoRR},
+  volume    = {abs/2003.05503},
+  year      = {2020},
+  url       = {https://arxiv.org/abs/2003.05503},
+  archivePrefix = {arXiv},
+  eprint    = {2003.05503},
+  timestamp = {Tue, 17 Mar 2020 14:18:27 +0100},
+  biburl    = {https://dblp.org/rec/journals/corr/abs-2003-05503.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{BulckM0LMGYSGP20,
+  author    = {Jo Van Bulck and
+               Daniel Moghimi and
+               Michael Schwarz and
+               Moritz Lipp and
+               Marina Minkin and
+               Daniel Genkin and
+               Yuval Yarom and
+               Berk Sunar and
+               Daniel Gruss and
+               Frank Piessens},
+  title     = {{LVI:} Hijacking Transient Execution through Microarchitectural Load
+               Value Injection},
+  booktitle = {2020 {IEEE} Symposium on Security and Privacy, {SP} 2020, San Francisco,
+               CA, USA, May 18-21, 2020},
+  pages     = {54--72},
+  year      = {2020},
+  crossref  = {DBLP:conf/sp/2020},
+  url       = {https://doi.org/10.1109/SP40000.2020.00089},
+  doi       = {10.1109/SP40000.2020.00089},
+  timestamp = {Thu, 20 Aug 2020 17:04:50 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/BulckM0LMGYSGP20.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{wang2019oo7,
+  title={oo7: Low-overhead Defense against Spectre attacks via Program Analysis},
+  author={Wang, Guanhua and Chattopadhyay, Sudipta and Gotovchits, Ivan and Mitra, Tulika and Roychoudhury, Abhik},
+  journal={IEEE Transactions on Software Engineering},
+  year={2019},
+  publisher={IEEE}
+}
+
+@inproceedings{vander17,
+  title = {The Dynamics of Innocent Flesh on the Bone: Code Reuse Ten Years Later},
+  url = {Paper=http://vvdveen.com/publications/newton.pdf Web=https://www.vusec.net/projects/newton},
+  booktitle = {{CCS}},
+  author = {van der Veen, Victor and Andriesse, Dennis and Stamatogiannakis, Manolis and Chen, Xi and Bos, Herbert and Giuffrida, Cristiano},
+  month = oct,
+  year = {2017},
+  keywords = {class\_binary, proj\_sharcs, proj\_vici, type\_ast, type\_conf, type\_tier1, type\_top}
+}
+
+@inproceedings{BletschJFL11,
+  author    = {Tyler K. Bletsch and
+               Xuxian Jiang and
+               Vincent W. Freeh and
+               Zhenkai Liang},
+  editor    = {Bruce S. N. Cheung and
+               Lucas Chi Kwong Hui and
+               Ravi S. Sandhu and
+               Duncan S. Wong},
+  title     = {Jump-oriented programming: a new class of code-reuse attack},
+  booktitle = {Proceedings of the 6th {ACM} Symposium on Information, Computer and
+               Communications Security, {ASIACCS} 2011, Hong Kong, China, March 22-24,
+               2011},
+  pages     = {30--40},
+  publisher = {{ACM}},
+  year      = {2011},
+  url       = {https://doi.org/10.1145/1966913.1966919},
+  doi       = {10.1145/1966913.1966919},
+  timestamp = {Wed, 14 Nov 2018 10:54:58 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/BletschJFL11.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{MambrettiNSKRK19,
+  author    = {Andrea Mambretti and
+               Matthias Neugschwandtner and
+               Alessandro Sorniotti and
+               Engin Kirda and
+               William K. Robertson and
+               Anil Kurmus},
+  editor    = {David Balenson},
+  title     = {Speculator: a tool to analyze speculative execution attacks and mitigations},
+  booktitle = {Proceedings of the 35th Annual Computer Security Applications Conference,
+               {ACSAC} 2019, San Juan, PR, USA, December 09-13, 2019},
+  pages     = {747--761},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3359789.3359837},
+  doi       = {10.1145/3359789.3359837},
+  timestamp = {Tue, 26 Nov 2019 09:57:54 +0100},
+  biburl    = {https://dblp.org/rec/conf/acsac/MambrettiNSKRK19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{WitchelCA02MMP,
+  author    = {Emmett Witchel and
+               Josh Cates and
+               Krste Asanovic},
+  title     = {Mondrian memory protection},
+  booktitle = {Proceedings of the 10th International Conference on Architectural
+               Support for Programming Languages and Operating Systems (ASPLOS-X),
+               San Jose, California, USA, October 5-9, 2002},
+  pages     = {304--316},
+  year      = {2002},
+  crossref  = {DBLP:conf/asplos/2002},
+  url       = {https://doi.org/10.1145/605397.605429},
+  doi       = {10.1145/605397.605429},
+  timestamp = {Mon, 14 Oct 2019 13:33:01 +0200},
+  biburl    = {https://dblp.org/rec/conf/asplos/WitchelCA02.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ParkLXMK19,
+  author    = {Soyeon Park and
+               Sangho Lee and
+               Wen Xu and
+               Hyungon Moon and
+               Taesoo Kim},
+  title     = {libmpk: Software Abstraction for Intel Memory Protection Keys (Intel
+               MPK)},
+  booktitle = {2019 {USENIX} Annual Technical Conference, {USENIX} {ATC} 2019, Renton,
+               WA, USA, July 10-12, 2019},
+  pages     = {241--254},
+  year      = {2019},
+  crossref  = {DBLP:conf/usenix/2019},
+  url       = {https://www.usenix.org/conference/atc19/presentation/park-soyeon},
+  timestamp = {Thu, 27 Aug 2020 15:21:37 +0200},
+  biburl    = {https://dblp.org/rec/conf/usenix/ParkLXMK19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{LittonVE0BD16,
+  author    = {James Litton and
+               Anjo Vahldiek{-}Oberwagner and
+               Eslam Elnikety and
+               Deepak Garg and
+               Bobby Bhattacharjee and
+               Peter Druschel},
+  title     = {Light-Weight Contexts: An OS Abstraction for Safety and Performance},
+  booktitle = {12th {USENIX} Symposium on Operating Systems Design and Implementation,
+               {OSDI} 2016, Savannah, GA, USA, November 2-4, 2016},
+  pages     = {49--64},
+  year      = {2016},
+  crossref  = {DBLP:conf/osdi/2016},
+  url       = {https://www.usenix.org/conference/osdi16/technical-sessions/presentation/litton},
+  timestamp = {Tue, 29 Jan 2019 17:35:36 +0100},
+  biburl    = {https://dblp.org/rec/conf/osdi/LittonVE0BD16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{DuHXZC19XPC,
+  author    = {Dong Du and
+               Zhichao Hua and
+               Yubin Xia and
+               Binyu Zang and
+               Haibo Chen},
+  title     = {{XPC:} architectural support for secure and efficient cross process
+               call},
+  booktitle = {Proceedings of the 46th International Symposium on Computer Architecture,
+               {ISCA} 2019, Phoenix, AZ, USA, June 22-26, 2019},
+  pages     = {671--684},
+  year      = {2019},
+  crossref  = {DBLP:conf/isca/2019},
+  url       = {https://doi.org/10.1145/3307650.3322218},
+  doi       = {10.1145/3307650.3322218},
+  timestamp = {Mon, 31 Aug 2020 18:56:20 +0200},
+  biburl    = {https://dblp.org/rec/conf/isca/DuHXZC19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{VilanovaBNEV14,
+  author    = {Llu{\'{\i}}s Vilanova and
+               Muli Ben{-}Yehuda and
+               Nacho Navarro and
+               Yoav Etsion and
+               Mateo Valero},
+  title     = {CODOMs: Protecting software with Code-centric memory Domains},
+  booktitle = {{ACM/IEEE} 41st International Symposium on Computer Architecture,
+               {ISCA} 2014, Minneapolis, MN, USA, June 14-18, 2014},
+  pages     = {469--480},
+  year      = {2014},
+  crossref  = {DBLP:conf/isca/2014},
+  url       = {https://doi.org/10.1109/ISCA.2014.6853202},
+  doi       = {10.1109/ISCA.2014.6853202},
+  timestamp = {Sat, 19 Oct 2019 20:19:28 +0200},
+  biburl    = {https://dblp.org/rec/conf/isca/VilanovaBNEV14.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{WoodruffWCMADLNNR14,
+  author    = {Jonathan Woodruff and
+               Robert N. M. Watson and
+               David Chisnall and
+               Simon W. Moore and
+               Jonathan Anderson and
+               Brooks Davis and
+               Ben Laurie and
+               Peter G. Neumann and
+               Robert M. Norton and
+               Michael Roe},
+  title     = {The {CHERI} capability model: Revisiting {RISC} in an age of risk},
+  booktitle = {{ACM/IEEE} 41st International Symposium on Computer Architecture,
+               {ISCA} 2014, Minneapolis, MN, USA, June 14-18, 2014},
+  pages     = {457--468},
+  year      = {2014},
+  crossref  = {DBLP:conf/isca/2014},
+  url       = {https://doi.org/10.1109/ISCA.2014.6853201},
+  doi       = {10.1109/ISCA.2014.6853201},
+  timestamp = {Wed, 16 Oct 2019 14:14:49 +0200},
+  biburl    = {https://dblp.org/rec/conf/isca/WoodruffWCMADLNNR14.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{FordL94,
+  author    = {Bryan Ford and
+               Jay Lepreau},
+  title     = {Evolving Mach 3.0 to {A} Migrating Thread Model},
+  booktitle = {{USENIX} Winter 1994 Technical Conference, San Francisco, California,
+               USA, January 17-21, 1994, Conference Proceedings},
+  pages     = {97--114},
+  year      = {1994},
+  crossref  = {DBLP:conf/usenix/1994wi},
+  url       = {https://www.usenix.org/conference/usenix-winter-1994-technical-conference/evolving-mach-30-migrating-thread-model},
+  timestamp = {Wed, 04 Jul 2018 13:06:34 +0200},
+  biburl    = {https://dblp.org/rec/conf/usenix/FordL94.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{PhamVJB12,
+  author    = {Binh Pham and
+               Viswanathan Vaidyanathan and
+               Aamer Jaleel and
+               Abhishek Bhattacharjee},
+  title     = {CoLT: Coalesced Large-Reach TLBs},
+  booktitle = {45th Annual {IEEE/ACM} International Symposium on Microarchitecture,
+               {MICRO} 2012, Vancouver, BC, Canada, December 1-5, 2012},
+  pages     = {258--269},
+  year      = {2012},
+  crossref  = {DBLP:conf/micro/2012},
+  url       = {https://doi.org/10.1109/MICRO.2012.32},
+  doi       = {10.1109/MICRO.2012.32},
+  timestamp = {Wed, 16 Oct 2019 14:14:55 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/PhamVJB12.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{YanLNB19,
+  author    = {Zi Yan and
+               Daniel Lustig and
+               David W. Nellans and
+               Abhishek Bhattacharjee},
+  title     = {Translation ranger: operating system support for contiguity-aware
+               TLBs},
+  booktitle = {Proceedings of the 46th International Symposium on Computer Architecture,
+               {ISCA} 2019, Phoenix, AZ, USA, June 22-26, 2019},
+  pages     = {698--710},
+  year      = {2019},
+  crossref  = {DBLP:conf/isca/2019},
+  url       = {https://doi.org/10.1145/3307650.3322223},
+  doi       = {10.1145/3307650.3322223},
+  timestamp = {Mon, 10 Feb 2020 16:25:22 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/YanLNB19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{LevinCCPW75,
+  author    = {Roy Levin and
+               Ellis S. Cohen and
+               William M. Corwin and
+               Fred J. Pollack and
+               William A. Wulf},
+  title     = {Policy/Mechanism Separation in {HYDRA}},
+  booktitle = {Proceedings of the Fifth Symposium on Operating System Principles,
+               {SOSP} 1975, The University of Texas at Austin, Austin, Texas, USA,
+               November 19-21, 1975},
+  pages     = {132--140},
+  year      = {1975},
+  crossref  = {DBLP:conf/sosp/1975},
+  url       = {https://doi.org/10.1145/800213.806531},
+  doi       = {10.1145/800213.806531},
+  timestamp = {Tue, 06 Nov 2018 16:59:32 +0100},
+  biburl    = {https://dblp.org/rec/conf/sosp/LevinCCPW75.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{KleinEHACDEEKNSTW09,
+  author    = {Gerwin Klein and
+               Kevin Elphinstone and
+               Gernot Heiser and
+               June Andronick and
+               David Cock and
+               Philip Derrin and
+               Dhammika Elkaduwe and
+               Kai Engelhardt and
+               Rafal Kolanski and
+               Michael Norrish and
+               Thomas Sewell and
+               Harvey Tuch and
+               Simon Winwood},
+  title     = {seL4: formal verification of an {OS} kernel},
+  booktitle = {Proceedings of the 22nd {ACM} Symposium on Operating Systems Principles
+               2009, {SOSP} 2009, Big Sky, Montana, USA, October 11-14, 2009},
+  pages     = {207--220},
+  year      = {2009},
+  crossref  = {DBLP:conf/sosp/2009},
+  url       = {https://doi.org/10.1145/1629575.1629596},
+  doi       = {10.1145/1629575.1629596},
+  timestamp = {Tue, 06 Nov 2018 16:59:32 +0100},
+  biburl    = {https://dblp.org/rec/conf/sosp/KleinEHACDEEKNSTW09.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{AbateABEFHLPST18,
+  author    = {Carmine Abate and
+               Arthur Azevedo de Amorim and
+               Roberto Blanco and
+               Ana Nora Evans and
+               Guglielmo Fachini and
+               Catalin Hritcu and
+               Th{\'{e}}o Laurent and
+               Benjamin C. Pierce and
+               Marco Stronati and
+               Andrew Tolmach},
+  title     = {When Good Components Go Bad: Formally Secure Compilation Despite Dynamic
+               Compromise},
+  booktitle = {Proceedings of the 2018 {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, {CCS} 2018, Toronto, ON, Canada, October
+               15-19, 2018},
+  pages     = {1351--1368},
+  year      = {2018},
+  crossref  = {DBLP:conf/ccs/2018},
+  url       = {https://doi.org/10.1145/3243734.3243745},
+  doi       = {10.1145/3243734.3243745},
+  timestamp = {Tue, 10 Nov 2020 20:00:51 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/AbateABEFHLPST18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{KarakostasGACHM15,
+  author    = {Vasileios Karakostas and
+               Jayneel Gandhi and
+               Furkan Ayar and
+               Adri{\'{a}}n Cristal and
+               Mark D. Hill and
+               Kathryn S. McKinley and
+               Mario Nemirovsky and
+               Michael M. Swift and
+               Osman S. Unsal},
+  title     = {Redundant memory mappings for fast access to large memories},
+  booktitle = {Proceedings of the 42nd Annual International Symposium on Computer
+               Architecture, Portland, OR, USA, June 13-17, 2015},
+  pages     = {66--78},
+  year      = {2015},
+  crossref  = {DBLP:conf/isca/2015},
+  url       = {https://doi.org/10.1145/2749469.2749471},
+  doi       = {10.1145/2749469.2749471},
+  timestamp = {Tue, 06 Nov 2018 11:07:00 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/KarakostasGACHM15.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Bhattacharjee13,
+  author    = {Abhishek Bhattacharjee},
+  title     = {Large-reach memory management unit caches},
+  booktitle = {The 46th Annual {IEEE/ACM} International Symposium on Microarchitecture,
+               MICRO-46, Davis, CA, USA, December 7-11, 2013},
+  pages     = {383--394},
+  year      = {2013},
+  crossref  = {DBLP:conf/micro/2013},
+  url       = {https://doi.org/10.1145/2540708.2540741},
+  doi       = {10.1145/2540708.2540741},
+  timestamp = {Wed, 16 Oct 2019 14:14:55 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/Bhattacharjee13.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{BasuGCHS13,
+  author    = {Arkaprava Basu and
+               Jayneel Gandhi and
+               Jichuan Chang and
+               Mark D. Hill and
+               Michael M. Swift},
+  title     = {Efficient virtual memory for big memory servers},
+  booktitle = {The 40th Annual International Symposium on Computer Architecture,
+               ISCA'13, Tel-Aviv, Israel, June 23-27, 2013},
+  pages     = {237--248},
+  year      = {2013},
+  crossref  = {DBLP:conf/isca/2013},
+  url       = {https://doi.org/10.1145/2485922.2485943},
+  doi       = {10.1145/2485922.2485943},
+  timestamp = {Tue, 06 Nov 2018 11:07:00 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/BasuGCHS13.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ZhangSRL10,
+  author    = {Lixin Zhang and
+               Evan Speight and
+               Ramakrishnan Rajamony and
+               Jiang Lin},
+  title     = {Enigma: architectural and operating system support for reducing the
+               impact of address translation},
+  booktitle = {Proceedings of the 24th International Conference on Supercomputing,
+               2010, Tsukuba, Ibaraki, Japan, June 2-4, 2010},
+  pages     = {159--168},
+  year      = {2010},
+  crossref  = {DBLP:conf/ics/2010},
+  url       = {https://doi.org/10.1145/1810085.1810109},
+  doi       = {10.1145/1810085.1810109},
+  timestamp = {Tue, 06 Nov 2018 11:07:03 +0100},
+  biburl    = {https://dblp.org/rec/conf/ics/ZhangSRL10.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{microsoftACG,
+  title={Mitigating arbitrary native code execution in Microsoft Edge},
+  author={{Matt Miller}},
+  howpublished = "\url{https://blogs.windows.com/msedgedev/2017/02/23/mitigating-arbitrary-native-code-execution/}",
+  year={February 23, 2017},
+  note = {Accessed: 2021-01}
+}
+
+@inproceedings{CandeaKFFF04,
+  author    = {George Candea and
+               Shinichi Kawamoto and
+               Yuichi Fujiki and
+               Greg Friedman and
+               Armando Fox},
+  title     = {Microreboot - {A} Technique for Cheap Recovery},
+  booktitle = {6th Symposium on Operating System Design and Implementation {(OSDI}
+               2004), San Francisco, California, USA, December 6-8, 2004},
+  pages     = {31--44},
+  year      = {2004},
+  crossref  = {DBLP:conf/osdi/2004},
+  url       = {http://www.usenix.org/events/osdi04/tech/candea.html},
+  timestamp = {Wed, 04 Jul 2018 13:06:35 +0200},
+  biburl    = {https://dblp.org/rec/conf/osdi/CandeaKFFF04.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{SzekeresPWS13,
+  author    = {Laszlo Szekeres and
+               Mathias Payer and
+               Tao Wei and
+               Dawn Song},
+  title     = {SoK: Eternal War in Memory},
+  booktitle = {2013 {IEEE} Symposium on Security and Privacy, {SP} 2013, Berkeley,
+               CA, USA, May 19-22, 2013},
+  pages     = {48--62},
+  publisher = {{IEEE} Computer Society},
+  year      = {2013},
+  crossref  = {DBLP:conf/sp/2013},
+  url       = {https://doi.org/10.1109/SP.2013.13},
+  doi       = {10.1109/SP.2013.13},
+  timestamp = {Fri, 26 May 2017 01:00:00 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/SzekeresPWS13.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{WatsonWNMACDDGL15,
+  author    = {Robert N. M. Watson and
+               Jonathan Woodruff and
+               Peter G. Neumann and
+               Simon W. Moore and
+               Jonathan Anderson and
+               David Chisnall and
+               Nirav H. Dave and
+               Brooks Davis and
+               Khilan Gudka and
+               Ben Laurie and
+               Steven J. Murdoch and
+               Robert M. Norton and
+               Michael Roe and
+               Stacey D. Son and
+               Munraj Vadera},
+  title     = {{CHERI:} {A} Hybrid Capability-System Architecture for Scalable Software
+               Compartmentalization},
+  booktitle = {2015 {IEEE} Symposium on Security and Privacy, {SP} 2015, San Jose,
+               CA, USA, May 17-21, 2015},
+  pages     = {20--37},
+  year      = {2015},
+  crossref  = {DBLP:conf/sp/2015},
+  url       = {https://doi.org/10.1109/SP.2015.9},
+  doi       = {10.1109/SP.2015.9},
+  timestamp = {Wed, 16 Oct 2019 14:14:51 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/WatsonWNMACDDGL15.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Karger87,
+  author    = {Paul A. Karger},
+  title     = {Limiting the Damage Potential of Discretionary Trojan Horses},
+  booktitle = {Proceedings of the 1987 {IEEE} Symposium on Security and Privacy,
+               Oakland, California, USA, April 27-29, 1987},
+  pages     = {32--37},
+  year      = {1987},
+  crossref  = {DBLP:conf/sp/1987},
+  url       = {https://doi.org/10.1109/SP.1987.10011},
+  doi       = {10.1109/SP.1987.10011},
+  timestamp = {Wed, 16 Oct 2019 14:14:51 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/Karger87.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Kilpatrick03,
+  author    = {Douglas Kilpatrick},
+  title     = {Privman: {A} Library for Partitioning Applications},
+  booktitle = {Proceedings of the {FREENIX} Track: 2003 {USENIX} Annual Technical
+               Conference, June 9-14, 2003, San Antonio, Texas, {USA}},
+  pages     = {273--284},
+  year      = {2003},
+  crossref  = {DBLP:conf/usenix/2003f},
+  url       = {http://www.usenix.org/events/usenix03/tech/freenix03/kilpatrick.html},
+  timestamp = {Wed, 03 Sep 2003 14:02:56 +0200},
+  biburl    = {https://dblp.org/rec/conf/usenix/Kilpatrick03.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ProvosFH03,
+  author    = {Niels Provos and
+               Markus Friedl and
+               Peter Honeyman},
+  title     = {Preventing Privilege Escalation},
+  booktitle = {Proceedings of the 12th {USENIX} Security Symposium, Washington, D.C.,
+               USA, August 4-8, 2003},
+  year      = {2003},
+  crossref  = {DBLP:conf/uss/2003},
+  url       = {https://www.usenix.org/conference/12th-usenix-security-symposium/preventing-privilege-escalation},
+  timestamp = {Wed, 04 Jul 2018 13:06:34 +0200},
+  biburl    = {https://dblp.org/rec/conf/uss/ProvosFH03.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{WatsonALK10,
+  author    = {Robert N. M. Watson and
+               Jonathan Anderson and
+               Ben Laurie and
+               Kris Kennaway},
+  title     = {Capsicum: Practical Capabilities for {UNIX}},
+  booktitle = {19th {USENIX} Security Symposium, Washington, DC, USA, August 11-13,
+               2010, Proceedings},
+  pages     = {29--46},
+  year      = {2010},
+  crossref  = {DBLP:conf/uss/2010},
+  url       = {http://www.usenix.org/events/sec10/tech/full\_papers/Watson.pdf},
+  timestamp = {Thu, 12 Mar 2020 11:35:00 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/WatsonALK10.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ReisG09,
+  author    = {Charles Reis and
+               Steven D. Gribble},
+  title     = {Isolating web programs in modern browser architectures},
+  booktitle = {Proceedings of the 2009 EuroSys Conference, Nuremberg, Germany, April
+               1-3, 2009},
+  pages     = {219--232},
+  year      = {2009},
+  crossref  = {DBLP:conf/eurosys/2009},
+  url       = {https://doi.org/10.1145/1519065.1519090},
+  doi       = {10.1145/1519065.1519090},
+  timestamp = {Tue, 06 Nov 2018 16:58:31 +0100},
+  biburl    = {https://dblp.org/rec/conf/eurosys/ReisG09.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{SaltzerS75,
+  author    = {Jerome H. Saltzer and
+               Michael D. Schroeder},
+  title     = {The protection of information in computer systems},
+  journal   = {Proceedings of the {IEEE}},
+  volume    = {63},
+  number    = {9},
+  pages     = {1278--1308},
+  year      = {1975},
+  url       = {https://doi.org/10.1109/PROC.1975.9939},
+  doi       = {10.1109/PROC.1975.9939},
+  timestamp = {Wed, 14 Nov 2018 10:42:34 +0100},
+  biburl    = {https://dblp.org/rec/journals/pieee/SaltzerS75.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{Saltzer74a,
+  author    = {Jerome H. Saltzer},
+  title     = {Protection and the Control of Information Sharing in Multics},
+  journal   = {Commun. {ACM}},
+  volume    = {17},
+  number    = {7},
+  pages     = {388--402},
+  year      = {1974}
+}
+
+@inproceedings{GolubDFR90,
+  author    = {David B. Golub and
+               Randall W. Dean and
+               Alessandro Forin and
+               Richard F. Rashid},
+  title     = {{UNIX} as an Application Program},
+  booktitle = {Proceedings of the Usenix Summer 1990 Technical Conference, Anaheim,
+               California, USA, June 1990},
+  pages     = {87--95},
+  year      = {1990},
+  crossref  = {DBLP:conf/usenix/1990su},
+  timestamp = {Thu, 15 May 2014 18:36:23 +0200},
+  biburl    = {https://dblp.org/rec/conf/usenix/GolubDFR90.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{RozierAABGGHKLLN88,
+  author    = {Marc Rozier and
+               Vadim Abrossimov and
+               Fran{\c{c}}ois Armand and
+               Ivan Boule and
+               Michel Gien and
+               Marc Guillemont and
+               Fr{\'{e}}d{\'{e}}ric Herrmann and
+               Claude Kaiser and
+               Sylvain Langlois and
+               Pierre L{\'{e}}onard and
+               Will Neuhauser},
+  title     = {{CHORUS} Distributed Operating System},
+  journal   = {Comput. Syst.},
+  volume    = {1},
+  number    = {4},
+  pages     = {305--370},
+  year      = {1988}
+}
+
+@inproceedings{Hildebrand92,
+  author    = {Dan Hildebrand},
+  title     = {An Architectural Overview of {QNX}},
+  booktitle = {Proceedings of the Workshop on Micro-kernels and Other Kernel Architectures,
+               Seattle, WA, USA, 27-28 April 1992s},
+  pages     = {113--126},
+  year      = {1992},
+  crossref  = {DBLP:conf/mkern/1992},
+  timestamp = {Fri, 23 Aug 2002 10:07:32 +0200},
+  biburl    = {https://dblp.org/rec/conf/mkern/Hildebrand92.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{LiljestrandNWPE19,
+  author    = {Hans Liljestrand and
+               Thomas Nyman and
+               Kui Wang and
+               Carlos Chinea Perez and
+               Jan{-}Erik Ekberg and
+               N. Asokan},
+  title     = {{PAC} it up: Towards Pointer Integrity using {ARM} Pointer Authentication},
+  booktitle = {28th {USENIX} Security Symposium, {USENIX} Security 2019, Santa Clara,
+               CA, USA, August 14-16, 2019},
+  pages     = {177--194},
+  year      = {2019},
+  crossref  = {DBLP:conf/uss/2019},
+  url       = {https://www.usenix.org/conference/usenixsecurity19/presentation/liljestrand},
+  timestamp = {Tue, 03 Sep 2019 16:39:56 +0200},
+  biburl    = {https://dblp.org/rec/conf/uss/LiljestrandNWPE19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{AbdAllahAES,
+  author     = {AbdAllah, Eslam G. and 
+                Yu Rang Kuang and 
+                Changcheng Huang},
+  title      = {Advanced Encryption Standard New Instructions (AES-NI) Analysis:
+                Security, Performance, and Power Consumption},
+  booktitle  = {Proceedings of the 12th International Conference on 
+                Computer and Automation Engineering},
+  year       = {2020}
+}
+
+@article{ChaseLFL94SASOS,
+  author    = {Jeffrey S. Chase and
+               Henry M. Levy and
+               Michael J. Feeley and
+               Edward D. Lazowska},
+  title     = {Sharing and Protection in a Single-Address-Space Operating System},
+  journal   = {{ACM} Trans. Comput. Syst.},
+  volume    = {12},
+  number    = {4},
+  pages     = {271--307},
+  year      = {1994},
+  url       = {https://doi.org/10.1145/195792.195795},
+  doi       = {10.1145/195792.195795},
+  timestamp = {Sun, 02 Jun 2019 21:08:58 +0200},
+  biburl    = {https://dblp.org/rec/journals/tocs/ChaseLFL94.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{KarakostasUNCS14,
+  author    = {Vasileios Karakostas and
+               Osman S. Unsal and
+               Mario Nemirovsky and
+               Adri{\'{a}}n Cristal and
+               Michael M. Swift},
+  title     = {Performance analysis of the memory management unit under scale-out
+               workloads},
+  booktitle = {2014 {IEEE} International Symposium on Workload Characterization,
+               {IISWC} 2014, Raleigh, NC, USA, October 26-28, 2014},
+  pages     = {1--12},
+  year      = {2014},
+  crossref  = {DBLP:conf/iiswc/2014},
+  url       = {https://doi.org/10.1109/IISWC.2014.6983034},
+  doi       = {10.1109/IISWC.2014.6983034},
+  timestamp = {Wed, 16 Oct 2019 14:14:56 +0200},
+  biburl    = {https://dblp.org/rec/conf/iiswc/KarakostasUNCS14.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{FrassettoJLS18,
+  author    = {Tommaso Frassetto and
+               Patrick Jauernig and
+               Christopher Liebchen and
+               Ahmad{-}Reza Sadeghi},
+  title     = {{IMIX:} In-Process Memory Isolation EXtension},
+  booktitle = {27th {USENIX} Security Symposium, {USENIX} Security 2018, Baltimore,
+               MD, USA, August 15-17, 2018},
+  pages     = {83--97},
+  year      = {2018},
+  crossref  = {DBLP:conf/uss/2018},
+  url       = {https://www.usenix.org/conference/usenixsecurity18/presentation/frassetto},
+  timestamp = {Mon, 01 Feb 2021 08:43:20 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/FrassettoJLS18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ERIMOberwagner19,
+  author    = {Anjo Vahldiek{-}Oberwagner and
+               Eslam Elnikety and
+               Nuno O. Duarte and
+               Michael Sammler and
+               Peter Druschel and
+               Deepak Garg},
+  title     = {{ERIM:} Secure, Efficient In-process Isolation with Protection Keys
+               {(MPK)}},
+  booktitle = {28th {USENIX} Security Symposium, {USENIX} Security 2019, Santa Clara,
+               CA, USA, August 14-16, 2019},
+  pages     = {1221--1238},
+  year      = {2019},
+  crossref  = {DBLP:conf/uss/2019},
+  url       = {https://www.usenix.org/conference/usenixsecurity19/presentation/vahldiek-oberwagner},
+  timestamp = {Mon, 01 Feb 2021 08:43:12 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/Vahldiek-Oberwagner19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{SchrammelWSS0MG20Donky,
+  author    = {David Schrammel and
+               Samuel Weiser and
+               Stefan Steinegger and
+               Martin Schwarzl and
+               Michael Schwarz and
+               Stefan Mangard and
+               Daniel Gruss},
+  title     = {Donky: Domain Keys - Efficient In-Process Isolation for {RISC-V} and
+               x86},
+  booktitle = {29th {USENIX} Security Symposium, {USENIX} Security 2020, August 12-14,
+               2020},
+  pages     = {1677--1694},
+  year      = {2020},
+  crossref  = {DBLP:conf/uss/2020},
+  url       = {https://www.usenix.org/conference/usenixsecurity20/presentation/schrammel},
+  timestamp = {Fri, 29 Jan 2021 22:08:58 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/SchrammelWSS0MG20.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{HedayatiGJCSSM19Hodor,
+  author    = {Mohammad Hedayati and
+               Spyridoula Gravani and
+               Ethan Johnson and
+               John Criswell and
+               Michael L. Scott and
+               Kai Shen and
+               Mike Marty},
+  title     = {Hodor: Intra-Process Isolation for High-Throughput Data Plane Libraries},
+  booktitle = {2019 {USENIX} Annual Technical Conference, {USENIX} {ATC} 2019, Renton,
+               WA, USA, July 10-12, 2019},
+  pages     = {489--504},
+  year      = {2019},
+  crossref  = {DBLP:conf/usenix/2019},
+  url       = {https://www.usenix.org/conference/atc19/presentation/hedayati-hodor},
+  timestamp = {Mon, 01 Feb 2021 17:03:06 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/HedayatiGJCSSM19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{0003BOBFP21midgard,
+  author    = {Siddharth Gupta and
+               Atri Bhattacharyya and
+               Yunho Oh and
+               Abhishek Bhattacharjee and
+               Babak Falsafi and
+               Mathias Payer},
+  title     = {Rebooting Virtual Memory with Midgard},
+  booktitle = {48th {ACM/IEEE} Annual International Symposium on Computer Architecture,
+               {ISCA} 2021, Valencia, Spain, June 14-18, 2021},
+  pages     = {512--525},
+  year      = {2021},
+  crossref  = {DBLP:conf/isca/2021},
+  url       = {https://doi.org/10.1109/ISCA52012.2021.00047},
+  doi       = {10.1109/ISCA52012.2021.00047},
+  timestamp = {Fri, 06 Aug 2021 10:59:55 +0200},
+  biburl    = {https://dblp.org/rec/conf/isca/0003BOBFP21.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{LiptonS77,
+  author    = {Richard J. Lipton and
+               Lawrence Snyder},
+  title     = {A Linear Time Algorithm for Deciding Subject Security},
+  journal   = {J. {ACM}},
+  volume    = {24},
+  number    = {3},
+  pages     = {455--464},
+  year      = {1977},
+  url       = {https://doi.org/10.1145/322017.322025},
+  doi       = {10.1145/322017.322025},
+  timestamp = {Tue, 06 Nov 2018 12:51:44 +0100},
+  biburl    = {https://dblp.org/rec/journals/jacm/LiptonS77.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{RoesslerAPMPKPB21,
+  author    = {Nick Roessler and
+               Lucas Atayde and
+               Imani Palmer and
+               Derrick Paul McKee and
+               Jai Pandey and
+               Vasileios P. Kemerlis and
+               Mathias Payer and
+               Adam Bates and
+               Jonathan M. Smith and
+               Andr{\'{e}} DeHon and
+               Nathan Dautenhahn},
+  title     = {{\(\mu\)}SCOPE: {A} Methodology for Analyzing Least-Privilege Compartmentalization
+               in Large Software Artifacts},
+  booktitle = {{RAID} '21: 24th International Symposium on Research in Attacks, Intrusions
+               and Defenses, San Sebastian, Spain, October 6-8, 2021},
+  pages     = {296--311},
+  year      = {2021},
+  crossref  = {DBLP:conf/raid/2021},
+  url       = {https://doi.org/10.1145/3471621.3471839},
+  doi       = {10.1145/3471621.3471839},
+  timestamp = {Wed, 03 Nov 2021 13:52:29 +0100},
+  biburl    = {https://dblp.org/rec/conf/raid/RoesslerAPMPKPB21.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{GudkaWACDLMNR15,
+  author    = {Khilan Gudka and
+               Robert N. M. Watson and
+               Jonathan Anderson and
+               David Chisnall and
+               Brooks Davis and
+               Ben Laurie and
+               Ilias Marinos and
+               Peter G. Neumann and
+               Alex Richardson},
+  title     = {Clean Application Compartmentalization with {SOAAP}},
+  booktitle = {Proceedings of the 22nd {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, Denver, CO, USA, October 12-16, 2015},
+  pages     = {1016--1031},
+  year      = {2015},
+  crossref  = {DBLP:conf/ccs/2015},
+  url       = {https://doi.org/10.1145/2810103.2813611},
+  doi       = {10.1145/2810103.2813611},
+  timestamp = {Tue, 10 Nov 2020 19:58:09 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/GudkaWACDLMNR15.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{PhamBEL14,
+  author    = {Binh Pham and
+               Abhishek Bhattacharjee and
+               Yasuko Eckert and
+               Gabriel H. Loh},
+  title     = {Increasing {TLB} reach by exploiting clustering in page translations},
+  booktitle = {20th {IEEE} International Symposium on High Performance Computer Architecture,
+               {HPCA} 2014, Orlando, FL, USA, February 15-19, 2014},
+  pages     = {558--567},
+  year      = {2014},
+  crossref  = {DBLP:conf/hpca/2014},
+  url       = {https://doi.org/10.1109/HPCA.2014.6835964},
+  doi       = {10.1109/HPCA.2014.6835964},
+  timestamp = {Wed, 16 Oct 2019 14:14:50 +0200},
+  biburl    = {https://dblp.org/rec/conf/hpca/PhamBEL14.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@misc{fffission,
+  title     = {Project Fission},
+  url       = {https://wiki.mozilla.org/Project_Fission},
+  publisher = {Mozilla},
+  year      = {2021},
+  note = {Accessed: Nov 2021}
+}
+
+@inproceedings{ShillakerP20,
+  author    = {Simon Shillaker and
+               Peter R. Pietzuch},
+  title     = {Faasm: Lightweight Isolation for Efficient Stateful Serverless Computing},
+  booktitle = {2020 {USENIX} Annual Technical Conference, {USENIX} {ATC} 2020, July
+               15-17, 2020},
+  pages     = {419--433},
+  year      = {2020},
+  crossref  = {DBLP:conf/usenix/2020},
+  url       = {https://www.usenix.org/conference/atc20/presentation/shillaker},
+  timestamp = {Mon, 01 Feb 2021 08:43:38 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/ShillakerP20.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{VasilakisKRDDS17,
+  author    = {Nikos Vasilakis and
+               Ben Karel and
+               Nick Roessler and
+               Nathan Dautenhahn and
+               Andr{\'{e}} DeHon and
+               Jonathan M. Smith},
+  title     = {Towards Fine-grained, Automated Application Compartmentalization},
+  booktitle = {Proceedings of the 9th Workshop on Programming Languages and Operating
+               Systems, Shanghai, China, October 28, 2017},
+  pages     = {43--50},
+  year      = {2017},
+  crossref  = {DBLP:conf/sosp/2017plos},
+  url       = {https://doi.org/10.1145/3144555.3144563},
+  doi       = {10.1145/3144555.3144563},
+  timestamp = {Tue, 06 Nov 2018 16:59:32 +0100},
+  biburl    = {https://dblp.org/rec/conf/sosp/VasilakisKRDDS17.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{VasilakisKRDDS18,
+  author    = {Nikos Vasilakis and
+               Ben Karel and
+               Nick Roessler and
+               Nathan Dautenhahn and
+               Andr{\'{e}} DeHon and
+               Jonathan M. Smith},
+  title     = {BreakApp: Automated, Flexible Application Compartmentalization},
+  booktitle = {25th Annual Network and Distributed System Security Symposium, {NDSS}
+               2018, San Diego, California, USA, February 18-21, 2018},
+  year      = {2018},
+  crossref  = {DBLP:conf/ndss/2018},
+  url       = {http://wp.internetsociety.org/ndss/wp-content/uploads/sites/25/2018/02/ndss2018\_08-3\_Vasilakis\_paper.pdf},
+  timestamp = {Thu, 17 Jun 2021 16:04:48 +0200},
+  biburl    = {https://dblp.org/rec/conf/ndss/VasilakisKRDDS18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{GhosnKPLB21,
+  author    = {Adrien Ghosn and
+               Marios Kogias and
+               Mathias Payer and
+               James R. Larus and
+               Edouard Bugnion},
+  title     = {Enclosure: language-based restriction of untrusted libraries},
+  booktitle = {{ASPLOS} '21: 26th {ACM} International Conference on Architectural
+               Support for Programming Languages and Operating Systems, Virtual Event,
+               USA, April 19-23, 2021},
+  pages     = {255--267},
+  year      = {2021},
+  crossref  = {DBLP:conf/asplos/2021},
+  url       = {https://doi.org/10.1145/3445814.3446728},
+  doi       = {10.1145/3445814.3446728},
+  timestamp = {Tue, 21 Sep 2021 18:28:10 +0200},
+  biburl    = {https://dblp.org/rec/conf/asplos/GhosnKPLB21.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{miller2021,
+  author={Miller, Loïc and 
+          Mérindol, Pascal 
+          and Gallais, Antoine 
+          and Pelsser, Cristel},
+  booktitle={2021 IEEE 22nd International Conference on High Performance Switching and Routing (HPSR)}, 
+  title={Towards Secure and Leak-Free Workflows Using Microservice Isolation}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={1-5},
+  doi={10.1109/HPSR52026.2021.9481820}
+}
+
+@inproceedings{ZimmermannSTP19,
+  author    = {Markus Zimmermann and
+               Cristian{-}Alexandru Staicu and
+               Cam Tenny and
+               Michael Pradel},
+  title     = {Small World with High Risks: {A} Study of Security Threats in the
+               npm Ecosystem},
+  booktitle = {28th {USENIX} Security Symposium, {USENIX} Security 2019, Santa Clara,
+               CA, USA, August 14-16, 2019},
+  pages     = {995--1010},
+  year      = {2019},
+  crossref  = {DBLP:conf/uss/2019},
+  url       = {https://www.usenix.org/conference/usenixsecurity19/presentation/zimmerman},
+  timestamp = {Mon, 01 Feb 2021 08:43:12 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/ZimmermannSTP19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Chu96,
+  author    = {Hsiao{-}Keng Jerry Chu},
+  title     = {Zero-Copy {TCP} in Solaris},
+  booktitle = {Proceedings of the {USENIX} Annual Technical Conference, San Diego,
+               California, USA, January 22-26, 1996},
+  pages     = {253--264},
+  year      = {1996},
+  crossref  = {DBLP:conf/usenix/1996},
+  timestamp = {Wed, 04 Jul 2018 13:06:34 +0200},
+  biburl    = {https://dblp.org/rec/conf/usenix/Chu96.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{cve201816845,
+  title={CVE-2018-16845},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-16845}"
+}cve20122089
+
+@misc{cve20122089,
+  title={CVE-2012-2089},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-2089}"
+}
+
+@misc{cve20164450,
+  title={CVE-2016-4450},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-4450}"
+}
+
+@misc{cve202123017,
+  title={CVE-2021-23017},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-23017}"
+}
+
+@misc{cve20121180,
+  title={CVE-2012-1180},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-1180}"
+}
+
+@misc{cve201812386,
+  title={CVE-2018-12386},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-12386}"
+}
+
+@misc{cve202144228,
+  author={National Vulnerability Database (NVD)},
+  title={CVE-2021-44228},
+  year={2021},
+  howpublished="\url{https://www.cve.org/CVERecord?id=CVE-2021-44228}"
+}
+
+@misc{cve20141266,
+  author={National Vulnerability Database (NVD)},
+  title={CVE-2014-1266},
+  year={2014},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-1266}"
+}
+
+@misc{qualcomm_ac,
+  author={Qing Li and
+          David Hartley and
+          Brian Rosenberg},
+  title={An Introduction to Access Control on Qualcomm Snapdragon Platforms},
+  year={2020},
+  howpublished = "\url{https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/whitepaper_0.pdf}"
+}
+
+@inproceedings{LeeSK18,
+  author    = {Hojoon Lee and
+               Chihyun Song and
+               Brent ByungHoon Kang},
+  title     = {Lord of the x86 Rings: {A} Portable User Mode Privilege Separation
+               Architecture on x86},
+  booktitle = {Proceedings of the 2018 {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, {CCS} 2018, Toronto, ON, Canada, October
+               15-19, 2018},
+  pages     = {1441--1454},
+  year      = {2018},
+  crossref  = {DBLP:conf/ccs/2018},
+  url       = {https://doi.org/10.1145/3243734.3243748},
+  doi       = {10.1145/3243734.3243748},
+  timestamp = {Tue, 10 Nov 2020 20:00:51 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/LeeSK18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{SandhuS94,
+  author    = {Ravi S. Sandhu and
+               Pierangela Samarati},
+  title     = {Access control: principles and practice},
+  journal   = {{IEEE} Commun. Mag.},
+  volume    = {32},
+  number    = {9},
+  pages     = {40--48},
+  year      = {1994},
+  url       = {https://doi.org/10.1109/35.312842},
+  doi       = {10.1109/35.312842},
+  timestamp = {Tue, 01 Jun 2021 09:58:30 +0200},
+  biburl    = {https://dblp.org/rec/journals/cm/SandhuS94.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{KolosickNJWLGJS22Verizero,
+  author    = {Matthew Kolosick and
+               Shravan Narayan and
+               Evan Johnson and
+               Conrad Watt and
+               Michael LeMay and
+               Deepak Garg and
+               Ranjit Jhala and
+               Deian Stefan},
+  title     = {Isolation without taxation: near-zero-cost transitions for WebAssembly
+               and {SFI}},
+  journal   = {Proc. {ACM} Program. Lang.},
+  volume    = {6},
+  number    = {{POPL}},
+  pages     = {1--30},
+  year      = {2022},
+  url       = {https://doi.org/10.1145/3498688},
+  doi       = {10.1145/3498688},
+  timestamp = {Wed, 16 Mar 2022 23:49:28 +0100},
+  biburl    = {https://dblp.org/rec/journals/pacmpl/KolosickNJWLGJS22.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{CaulfieldCPAFHH16,
+  author    = {Adrian M. Caulfield and
+               Eric S. Chung and
+               Andrew Putnam and
+               Hari Angepat and
+               Jeremy Fowers and
+               Michael Haselman and
+               Stephen Heil and
+               Matt Humphrey and
+               Puneet Kaur and
+               Joo{-}Young Kim and
+               Daniel Lo and
+               Todd Massengill and
+               Kalin Ovtcharov and
+               Michael Papamichael and
+               Lisa Woods and
+               Sitaram Lanka and
+               Derek Chiou and
+               Doug Burger},
+  title     = {A cloud-scale acceleration architecture},
+  booktitle = {49th Annual {IEEE/ACM} International Symposium on Microarchitecture,
+               {MICRO} 2016, Taipei, Taiwan, October 15-19, 2016},
+  pages     = {7:1--7:13},
+  year      = {2016},
+  crossref  = {DBLP:conf/micro/2016},
+  url       = {https://doi.org/10.1109/MICRO.2016.7783710},
+  doi       = {10.1109/MICRO.2016.7783710},
+  timestamp = {Thu, 14 Oct 2021 09:50:25 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/CaulfieldCPAFHH16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{KoningCBGA17,
+  author    = {Koen Koning and
+               Xi Chen and
+               Herbert Bos and
+               Cristiano Giuffrida and
+               Elias Athanasopoulos},
+  title     = {No Need to Hide: Protecting Safe Regions on Commodity Hardware},
+  booktitle = {Proceedings of the Twelfth European Conference on Computer Systems,
+               EuroSys 2017, Belgrade, Serbia, April 23-26, 2017},
+  pages     = {437--452},
+  year      = {2017},
+  crossref  = {DBLP:conf/eurosys/2017},
+  url       = {https://doi.org/10.1145/3064176.3064217},
+  doi       = {10.1145/3064176.3064217},
+  timestamp = {Sun, 25 Oct 2020 22:57:25 +0100},
+  biburl    = {https://dblp.org/rec/conf/eurosys/KoningCBGA17.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{KirthDCLDGNVF22,
+  author    = {Paul Kirth and
+               Mitchel Dickerson and
+               Stephen Crane and
+               Per Larsen and
+               Adrian Dabrowski and
+               David Gens and
+               Yeoul Na and
+               Stijn Volckaert and
+               Michael Franz},
+  title     = {PKRU-safe: automatically locking down the heap between safe and unsafe
+               languages},
+  booktitle = {EuroSys '22: Seventeenth European Conference on Computer Systems,
+               Rennes, France, April 5 - 8, 2022},
+  pages     = {132--148},
+  year      = {2022},
+  crossref  = {DBLP:conf/eurosys/2022},
+  url       = {https://doi.org/10.1145/3492321.3519582},
+  doi       = {10.1145/3492321.3519582},
+  timestamp = {Wed, 13 Apr 2022 13:48:01 +0200},
+  biburl    = {https://dblp.org/rec/conf/eurosys/KirthDCLDGNVF22.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{HsuHEP16,
+  author    = {Terry Ching{-}Hsiang Hsu and
+               Kevin J. Hoffman and
+               Patrick Eugster and
+               Mathias Payer},
+  title     = {Enforcing Least Privilege Memory Views for Multithreaded Applications},
+  booktitle = {Proceedings of the 2016 {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, Vienna, Austria, October 24-28, 2016},
+  pages     = {393--405},
+  year      = {2016},
+  crossref  = {DBLP:conf/ccs/2016},
+  url       = {https://doi.org/10.1145/2976749.2978327},
+  doi       = {10.1145/2976749.2978327},
+  timestamp = {Tue, 10 Nov 2020 20:00:49 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/HsuHEP16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{JuglaretHAEP16,
+  author    = {Yannis Juglaret and
+               Catalin Hritcu and
+               Arthur Azevedo de Amorim and
+               Boris Eng and
+               Benjamin C. Pierce},
+  title     = {Beyond Good and Evil: Formalizing the Security Guarantees of Compartmentalizing
+               Compilation},
+  booktitle = {{IEEE} 29th Computer Security Foundations Symposium, {CSF} 2016, Lisbon,
+               Portugal, June 27 - July 1, 2016},
+  pages     = {45--60},
+  year      = {2016},
+  crossref  = {DBLP:conf/csfw/2016},
+  url       = {https://doi.org/10.1109/CSF.2016.11},
+  doi       = {10.1109/CSF.2016.11},
+  timestamp = {Wed, 16 Oct 2019 14:14:49 +0200},
+  biburl    = {https://dblp.org/rec/conf/csfw/JuglaretHAEP16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{ChenRSL16,
+  author    = {Yaohui Chen and
+               Sebassujeen Reymondjohnson and
+               Zhichuang Sun and
+               Long Lu},
+  title     = {Shreds: Fine-Grained Execution Units with Private Memory},
+  booktitle = {{IEEE} Symposium on Security and Privacy, {SP} 2016, San Jose, CA,
+               USA, May 22-26, 2016},
+  pages     = {56--71},
+  year      = {2016},
+  crossref  = {DBLP:conf/sp/2016},
+  url       = {https://doi.org/10.1109/SP.2016.12},
+  doi       = {10.1109/SP.2016.12},
+  timestamp = {Wed, 16 Oct 2019 14:14:51 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/ChenRSL16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{BittauMHK08,
+  author    = {Andrea Bittau and
+               Petr Marchenko and
+               Mark Handley and
+               Brad Karp},
+  title     = {Wedge: Splitting Applications into Reduced-Privilege Compartments},
+  booktitle = {5th {USENIX} Symposium on Networked Systems Design {\&} Implementation,
+               {NSDI} 2008, April 16-18, 2008, San Francisco, CA, USA, Proceedings},
+  pages     = {309--322},
+  year      = {2008},
+  crossref  = {DBLP:conf/nsdi/2008},
+  url       = {http://www.usenix.org/events/nsdi08/tech/full\_papers/bittau/bittau.pdf},
+  timestamp = {Thu, 12 Mar 2020 11:35:20 +0100},
+  biburl    = {https://dblp.org/rec/conf/nsdi/BittauMHK08.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{MartinsAROHBH14,
+  author    = {Jo{\~{a}}o Martins and
+               Mohamed Ahmed and
+               Costin Raiciu and
+               Vladimir Andrei Olteanu and
+               Michio Honda and
+               Roberto Bifulco and
+               Felipe Huici},
+  title     = {ClickOS and the Art of Network Function Virtualization},
+  booktitle = {Proceedings of the 11th {USENIX} Symposium on Networked Systems Design
+               and Implementation, {NSDI} 2014, Seattle, WA, USA, April 2-4, 2014},
+  pages     = {459--473},
+  year      = {2014},
+  crossref  = {DBLP:conf/nsdi/2014},
+  url       = {https://www.usenix.org/conference/nsdi14/technical-sessions/presentation/martins},
+  timestamp = {Tue, 02 Feb 2021 08:05:43 +0100},
+  biburl    = {https://dblp.org/rec/conf/nsdi/MartinsAROHBH14.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{preservingvma,
+  author       = {Abhishek Bhattacharjee},
+  howpublished = {\url{https://www.sigarch.org/preserving-the-virtual-memory-abstraction/}},
+  title        = {Preserving the Virtual Memory Abstraction},
+  year         = {2017},
+  month        = {May}
+}
+
+@inproceedings{KocherHFGGHHLM019,
+  author    = {Paul Kocher and
+               Jann Horn and
+               Anders Fogh and
+               Daniel Genkin and
+               Daniel Gruss and
+               Werner Haas and
+               Mike Hamburg and
+               Moritz Lipp and
+               Stefan Mangard and
+               Thomas Prescher and
+               Michael Schwarz and
+               Yuval Yarom},
+  title     = {Spectre Attacks: Exploiting Speculative Execution},
+  booktitle = {2019 {IEEE} Symposium on Security and Privacy, {SP} 2019, San Francisco,
+               CA, USA, May 19-23, 2019},
+  pages     = {1--19},
+  year      = {2019},
+  crossref  = {DBLP:conf/sp/2019},
+  url       = {https://doi.org/10.1109/SP.2019.00002},
+  doi       = {10.1109/SP.2019.00002},
+  timestamp = {Thu, 25 Jun 2020 09:22:12 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/KocherHFGGHHLM019.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{MogosanuRD18,
+  author    = {Lucian Mogosanu and
+               Ashay Rane and
+               Nathan Dautenhahn},
+  title     = {MicroStache: {A} Lightweight Execution Context for In-Process Safe
+               Region Isolation},
+  booktitle = {Research in Attacks, Intrusions, and Defenses - 21st International
+               Symposium, {RAID} 2018, Heraklion, Crete, Greece, September 10-12,
+               2018, Proceedings},
+  pages     = {359--379},
+  year      = {2018},
+  crossref  = {DBLP:conf/raid/2018},
+  url       = {https://doi.org/10.1007/978-3-030-00470-5\_17},
+  doi       = {10.1007/978-3-030-00470-5\_17},
+  timestamp = {Wed, 25 Sep 2019 18:13:01 +0200},
+  biburl    = {https://dblp.org/rec/conf/raid/MogosanuRD18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{mckee2022preventing,
+  title={Preventing Kernel Hacks with HAKC},
+  author={McKee, Derrick and Giannaris, Yianni and Perez, Carolina Ortega and Shrobe, Howard and Payer, Mathias and Okhravi, Hamed and Burow, Nathan},
+  booktitle={Proceedings 2022 Network and Distributed System Security Symposium. NDSS},
+  volume={22},
+  pages={1--17},
+  year={2022}
+}
+
+@inproceedings{ConnorMSS20,
+  author    = {R. Joseph Connor and
+               Tyler McDaniel and
+               Jared M. Smith and
+               Max Schuchard},
+  title     = {{PKU} Pitfalls: Attacks on PKU-based Memory Isolation Systems},
+  booktitle = {29th {USENIX} Security Symposium, {USENIX} Security 2020, August 12-14,
+               2020},
+  pages     = {1409--1426},
+  year      = {2020},
+  crossref  = {DBLP:conf/uss/2020},
+  url       = {https://www.usenix.org/conference/usenixsecurity20/presentation/connor},
+  timestamp = {Fri, 29 Jan 2021 22:08:57 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/ConnorMSS20.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{schrammel2022jenny,
+  title={Jenny: Securing Syscalls for PKU-based Memory Isolation Systems},
+  author={Schrammel, David and Weiser, Samuel and Sadek, Richard and Mangard, Stefan},
+  booktitle={USENIX Security Symposium},
+  year={2022}
+}
+
+@inproceedings{ZeldovichBKM06,
+  author    = {Nickolai Zeldovich and
+               Silas Boyd{-}Wickizer and
+               Eddie Kohler and
+               David Mazi{\`{e}}res},
+  title     = {Making Information Flow Explicit in HiStar},
+  booktitle = {7th Symposium on Operating Systems Design and Implementation {(OSDI}
+               '06), November 6-8, Seattle, WA, {USA}},
+  pages     = {263--278},
+  year      = {2006},
+  crossref  = {DBLP:conf/osdi/2006},
+  url       = {http://www.usenix.org/events/osdi06/tech/zeldovich.html},
+  timestamp = {Tue, 02 Feb 2021 08:06:00 +0100},
+  biburl    = {https://dblp.org/rec/conf/osdi/ZeldovichBKM06.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{pacmanRavichandranNLY22,
+  author    = {Joseph Ravichandran and
+               Weon Taek Na and
+               Jay Lang and
+               Mengjia Yan},
+  title     = {{PACMAN:} attacking {ARM} pointer authentication with speculative
+               execution},
+  booktitle = {{ISCA} '22: The 49th Annual International Symposium on Computer Architecture,
+               New York, New York, USA, June 18 - 22, 2022},
+  pages     = {685--698},
+  year      = {2022},
+  crossref  = {DBLP:conf/isca/2022},
+  url       = {https://doi.org/10.1145/3470496.3527429},
+  doi       = {10.1145/3470496.3527429},
+  timestamp = {Sun, 02 Oct 2022 16:09:20 +0200},
+  biburl    = {https://dblp.org/rec/conf/isca/RavichandranNLY22.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@incollection{barth2008security,
+  title={The security architecture of the chromium browser},
+  author={Barth, Adam and Jackson, Collin and Reis, Charles and TGC Team and others},
+  booktitle={Technical report},
+  year={2008},
+  publisher={Stanford University}
+}
+
+@article{SkorstengaardDB20,
+  author    = {Lau Skorstengaard and
+               Dominique Devriese and
+               Lars Birkedal},
+  title     = {Reasoning about a Machine with Local Capabilities: Provably Safe Stack
+               and Return Pointer Management},
+  journal   = {{ACM} Trans. Program. Lang. Syst.},
+  volume    = {42},
+  number    = {1},
+  pages     = {5:1--5:53},
+  year      = {2020},
+  url       = {https://doi.org/10.1145/3363519},
+  doi       = {10.1145/3363519},
+  timestamp = {Fri, 27 Mar 2020 08:38:34 +0100},
+  biburl    = {https://dblp.org/rec/journals/toplas/SkorstengaardDB20.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+########################################################
+## Proceedings references
+########################################################
+
+#  editor    = {Kourosh Gharachorloo and
+#               David A. Wood},
+@proceedings{DBLP:conf/asplos/2002,
+  title     = {Proceedings of the 10th International Conference on Architectural
+               Support for Programming Languages and Operating Systems (ASPLOS-X),
+               San Jose, California, USA, October 5-9, 2002},
+  publisher = {{ACM} Press},
+  year      = {2002},
+  url       = {http://dl.acm.org/citation.cfm?id=605397},
+  isbn      = {1-58113-574-2},
+  timestamp = {Mon, 04 Jan 2021 18:40:45 +0100},
+  biburl    = {https://dblp.org/rec/conf/asplos/2002.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/asplos/2021,
+  editor    = {Tim Sherwood and
+               Emery D. Berger and
+               Christos Kozyrakis},
+  title     = {{ASPLOS} '21: 26th {ACM} International Conference on Architectural
+               Support for Programming Languages and Operating Systems, Virtual Event,
+               USA, April 19-23, 2021},
+  publisher = {{ACM}},
+  year      = {2021},
+  url       = {https://doi.org/10.1145/3445814},
+  doi       = {10.1145/3445814},
+  isbn      = {978-1-4503-8317-2},
+  timestamp = {Thu, 18 Nov 2021 15:48:21 +0100},
+  biburl    = {https://dblp.org/rec/conf/asplos/2021.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+#  editor    = {Peng Ning and
+#               Sabrina De Capitani di Vimercati and
+#               Paul F. Syverson},
+@proceedings{DBLP:conf/ccs/2007,
+  title     = {Proceedings of the 2007 {ACM} Conference on Computer and Communications
+               Security, {CCS} 2007, Alexandria, Virginia, USA, October 28-31, 2007},
+  publisher = {{ACM}},
+  year      = {2007},
+  isbn      = {978-1-59593-703-2},
+  timestamp = {Fri, 22 Feb 2008 08:21:16 +0100},
+  biburl    = {https://dblp.org/rec/bib/conf/ccs/2007},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Ting Yu and
+#               George Danezis and
+#               Virgil D. Gligor},
+@proceedings{DBLP:conf/ccs/2012,
+  title     = {the {ACM} Conference on Computer and Communications Security, CCS'12,
+               Raleigh, NC, USA, October 16-18, 2012},
+  publisher = {{ACM}},
+  year      = {2012},
+  url       = {http://dl.acm.org/citation.cfm?id=2382196},
+  isbn      = {978-1-4503-1651-4},
+  timestamp = {Tue, 16 Oct 2012 19:02:50 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/ccs/2012},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/ccs/2015,
+  editor    = {Indrajit Ray and
+               Ninghui Li and
+               Christopher Kruegel},
+  title     = {Proceedings of the 22nd {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, Denver, CO, USA, October 12-16, 2015},
+  publisher = {{ACM}},
+  year      = {2015},
+  url       = {http://dl.acm.org/citation.cfm?id=2810103},
+  isbn      = {978-1-4503-3832-5},
+  timestamp = {Thu, 11 Nov 2021 16:10:54 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/2015.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/ccs/2016,
+  editor    = {Edgar R. Weippl and
+               Stefan Katzenbeisser and
+               Christopher Kruegel and
+               Andrew C. Myers and
+               Shai Halevi},
+  title     = {Proceedings of the 2016 {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, Vienna, Austria, October 24-28, 2016},
+  publisher = {{ACM}},
+  year      = {2016},
+  url       = {http://dl.acm.org/citation.cfm?id=2976749},
+  isbn      = {978-1-4503-4139-4},
+  timestamp = {Fri, 22 Apr 2022 15:59:58 +0200},
+  biburl    = {https://dblp.org/rec/conf/ccs/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {David Lie and
+#               Mohammad Mannan and
+#               Michael Backes and
+#               XiaoFeng Wang},
+@proceedings{DBLP:conf/ccs/2018,
+  title     = {Proceedings of the 2018 {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, {CCS} 2018, Toronto, ON, Canada, October
+               15-19, 2018},
+  publisher = {{ACM}},
+  year      = {2018},
+  url       = {http://dl.acm.org/citation.cfm?id=3243734},
+  isbn      = {978-1-4503-5693-0},
+  timestamp = {Mon, 18 Jan 2021 10:58:07 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/2018.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Lorenzo Cavallaro and
+#               Johannes Kinder and
+#               XiaoFeng Wang and
+#               Jonathan Katz},
+@proceedings{DBLP:conf/ccs/2019,
+  title     = {Proceedings of the 2019 {ACM} {SIGSAC} Conference on Computer and
+               Communications Security, {CCS} 2019, London, UK, November 11-15, 2019},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3319535},
+  doi       = {10.1145/3319535},
+  isbn      = {978-1-4503-6747-9},
+  timestamp = {Fri, 08 Nov 2019 12:58:36 +0100},
+  biburl    = {https://dblp.org/rec/bib/conf/ccs/2019},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Shai Halevi},
+@proceedings{DBLP:conf/crypto/2009,
+  title     = {Advances in Cryptology - {CRYPTO} 2009, 29th Annual International
+               Cryptology Conference, Santa Barbara, CA, USA, August 16-20, 2009.
+               Proceedings},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {5677},
+  publisher = {Springer},
+  year      = {2009},
+  url       = {https://doi.org/10.1007/978-3-642-03356-8},
+  doi       = {10.1007/978-3-642-03356-8},
+  isbn      = {978-3-642-03355-1},
+  timestamp = {Tue, 14 May 2019 10:00:48 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/crypto/2009},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/csfw/2016,
+  title     = {{IEEE} 29th Computer Security Foundations Symposium, {CSF} 2016, Lisbon,
+               Portugal, June 27 - July 1, 2016},
+  publisher = {{IEEE} Computer Society},
+  year      = {2016},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/7518122/proceeding},
+  isbn      = {978-1-5090-2607-4},
+  timestamp = {Fri, 22 Apr 2022 17:09:55 +0200},
+  biburl    = {https://dblp.org/rec/conf/csfw/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Kazue Sako and
+#               Steve Schneider and
+#               Peter Y. A. Ryan},
+@proceedings{DBLP:conf/esorics/2019-1,
+  title     = {Computer Security - {ESORICS} 2019 - 24th European Symposium on Research
+               in Computer Security, Luxembourg, September 23-27, 2019, Proceedings,
+               Part {I}},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {11735},
+  publisher = {Springer},
+  year      = {2019},
+  url       = {https://doi.org/10.1007/978-3-030-29959-0},
+  doi       = {10.1007/978-3-030-29959-0},
+  isbn      = {978-3-030-29958-3},
+  timestamp = {Mon, 16 Sep 2019 19:38:55 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/esorics/2019-1},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Wolfgang Schr{\"{o}}der{-}Preikschat and
+#               John Wilkes and
+#               Rebecca Isaacs},
+@proceedings{DBLP:conf/eurosys/2009,
+  title     = {Proceedings of the 2009 EuroSys Conference, Nuremberg, Germany, April
+               1-3, 2009},
+  publisher = {{ACM}},
+  year      = {2009},
+  isbn      = {978-1-60558-482-9},
+  timestamp = {Tue, 26 Jan 2021 11:58:07 +0100},
+  biburl    = {https://dblp.org/rec/conf/eurosys/2009.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/eurosys/2017,
+  editor    = {Gustavo Alonso and
+               Ricardo Bianchini and
+               Marko Vukolic},
+  title     = {Proceedings of the Twelfth European Conference on Computer Systems,
+               EuroSys 2017, Belgrade, Serbia, April 23-26, 2017},
+  publisher = {{ACM}},
+  year      = {2017},
+  url       = {https://doi.org/10.1145/3064176},
+  doi       = {10.1145/3064176},
+  isbn      = {978-1-4503-4938-3},
+  timestamp = {Wed, 20 Apr 2022 15:14:22 +0200},
+  biburl    = {https://dblp.org/rec/conf/eurosys/2017.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/eurosys/2022,
+  editor    = {Y{\'{e}}rom{-}David Bromberg and
+               Anne{-}Marie Kermarrec and
+               Christos Kozyrakis},
+  title     = {EuroSys '22: Seventeenth European Conference on Computer Systems,
+               Rennes, France, April 5 - 8, 2022},
+  publisher = {{ACM}},
+  year      = {2022},
+  url       = {https://doi.org/10.1145/3492321},
+  doi       = {10.1145/3492321},
+  isbn      = {978-1-4503-9162-7},
+  timestamp = {Wed, 13 Apr 2022 13:48:01 +0200},
+  biburl    = {https://dblp.org/rec/conf/eurosys/2022.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/hpca/2014,
+  title     = {20th {IEEE} International Symposium on High Performance Computer Architecture,
+               {HPCA} 2014, Orlando, FL, USA, February 15-19, 2014},
+  publisher = {{IEEE} Computer Society},
+  year      = {2014},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/6823235/proceeding},
+  isbn      = {978-1-4799-3097-5},
+  timestamp = {Sun, 14 Nov 2021 20:59:58 +0100},
+  biburl    = {https://dblp.org/rec/conf/hpca/2014.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Taisuke Boku and
+#               Hiroshi Nakashima and
+#               Avi Mendelson},
+@proceedings{DBLP:conf/ics/2010,
+  title     = {Proceedings of the 24th International Conference on Supercomputing,
+               2010, Tsukuba, Ibaraki, Japan, June 2-4, 2010},
+  publisher = {{ACM}},
+  year      = {2010},
+  url       = {https://doi.org/10.1145/1810085},
+  doi       = {10.1145/1810085},
+  isbn      = {978-1-4503-0018-6},
+  timestamp = {Tue, 19 Jan 2021 18:28:40 +0100},
+  biburl    = {https://dblp.org/rec/conf/ics/2010.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/iiswc/2014,
+  title     = {2014 {IEEE} International Symposium on Workload Characterization,
+               {IISWC} 2014, Raleigh, NC, USA, October 26-28, 2014},
+  publisher = {{IEEE} Computer Society},
+  year      = {2014},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/6966889/proceeding},
+  isbn      = {978-1-4799-6452-9},
+  timestamp = {Mon, 18 Oct 2021 10:18:10 +0200},
+  biburl    = {https://dblp.org/rec/conf/iiswc/2014.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Avi Mendelson},
+@proceedings{DBLP:conf/isca/2013,
+  title     = {The 40th Annual International Symposium on Computer Architecture,
+               ISCA'13, Tel-Aviv, Israel, June 23-27, 2013},
+  publisher = {{ACM}},
+  year      = {2013},
+  url       = {http://dl.acm.org/citation.cfm?id=2485922},
+  isbn      = {978-1-4503-2079-5},
+  timestamp = {Tue, 19 Jan 2021 18:26:10 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/2013.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/isca/2014,
+  title     = {{ACM/IEEE} 41st International Symposium on Computer Architecture,
+               {ISCA} 2014, Minneapolis, MN, USA, June 14-18, 2014},
+  publisher = {{IEEE} Computer Society},
+  year      = {2014},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/6847316/proceeding},
+  isbn      = {978-1-4799-4396-8},
+  timestamp = {Wed, 27 Jan 2021 15:52:17 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/2014.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Deborah T. Marr and
+#               David H. Albonesi},
+@proceedings{DBLP:conf/isca/2015,
+  title     = {Proceedings of the 42nd Annual International Symposium on Computer
+               Architecture, Portland, OR, USA, June 13-17, 2015},
+  publisher = {{ACM}},
+  year      = {2015},
+  url       = {http://dl.acm.org/citation.cfm?id=2749469},
+  isbn      = {978-1-4503-3402-0},
+  timestamp = {Tue, 19 Jan 2021 18:21:16 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/2015.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Srilatha Bobbie Manne and
+#               Hillery C. Hunter and
+#               Erik R. Altman},
+@proceedings{DBLP:conf/isca/2019,
+  title     = {Proceedings of the 46th International Symposium on Computer Architecture,
+               {ISCA} 2019, Phoenix, AZ, USA, June 22-26, 2019},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://dl.acm.org/citation.cfm?id=3307650},
+  isbn      = {978-1-4503-6669-4},
+  timestamp = {Mon, 04 Jan 2021 19:01:11 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/2019.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/isca/2021,
+  title     = {48th {ACM/IEEE} Annual International Symposium on Computer Architecture,
+               {ISCA} 2021, Valencia, Spain, June 14-18, 2021},
+  publisher = {{IEEE}},
+  year      = {2021},
+  url       = {https://doi.org/10.1109/ISCA52012.2021},
+  doi       = {10.1109/ISCA52012.2021},
+  isbn      = {978-1-6654-3333-4},
+  timestamp = {Mon, 08 Nov 2021 20:33:43 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/2021.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/isca/2022,
+  editor    = {Valentina Salapura and
+               Mohamed Zahran and
+               Fred Chong and
+               Lingjia Tang},
+  title     = {{ISCA} '22: The 49th Annual International Symposium on Computer Architecture,
+               New York, New York, USA, June 18 - 22, 2022},
+  publisher = {{ACM}},
+  year      = {2022},
+  url       = {https://doi.org/10.1145/3470496},
+  doi       = {10.1145/3470496},
+  isbn      = {978-1-4503-8610-4},
+  timestamp = {Mon, 21 Nov 2022 20:33:33 +0100},
+  biburl    = {https://dblp.org/rec/conf/isca/2022.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Matthew K. Farrens and
+#               Christos Kozyrakis},
+@proceedings{DBLP:conf/micro/2013,
+  title     = {The 46th Annual {IEEE/ACM} International Symposium on Microarchitecture,
+               MICRO-46, Davis, CA, USA, December 7-11, 2013},
+  publisher = {{ACM}},
+  year      = {2013},
+  url       = {http://dl.acm.org/citation.cfm?id=2540708},
+  isbn      = {978-1-4503-2638-4},
+  timestamp = {Tue, 19 Jan 2021 18:49:04 +0100},
+  biburl    = {https://dblp.org/rec/conf/micro/2013.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/micro/2012,
+  title     = {45th Annual {IEEE/ACM} International Symposium on Microarchitecture,
+               {MICRO} 2012, Vancouver, BC, Canada, December 1-5, 2012},
+  publisher = {{IEEE} Computer Society},
+  year      = {2012},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/6490492/proceeding},
+  isbn      = {978-1-4673-4819-5},
+  timestamp = {Fri, 15 Jan 2021 18:32:23 +0100},
+  biburl    = {https://dblp.org/rec/conf/micro/2012.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/micro/2016,
+  title     = {49th Annual {IEEE/ACM} International Symposium on Microarchitecture,
+               {MICRO} 2016, Taipei, Taiwan, October 15-19, 2016},
+  publisher = {{IEEE} Computer Society},
+  year      = {2016},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/7777315/proceeding},
+  isbn      = {978-1-5090-3508-3},
+  timestamp = {Mon, 18 Apr 2022 17:19:48 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/mkern/1992,
+  title     = {Proceedings of the Workshop on Micro-kernels and Other Kernel Architectures,
+               Seattle, WA, USA, 27-28 April 1992s},
+  publisher = {{USENIX}},
+  year      = {1992},
+  isbn      = {1-880446-42-1},
+  timestamp = {Wed, 27 Jan 2021 15:19:13 +0100},
+  biburl    = {https://dblp.org/rec/conf/mkern/1992.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/ndss/2018,
+  title     = {25th Annual Network and Distributed System Security Symposium, {NDSS}
+               2018, San Diego, California, USA, February 18-21, 2018},
+  publisher = {The Internet Society},
+  year      = {2018},
+  url       = {https://www.ndss-symposium.org/ndss2018/},
+  timestamp = {Thu, 18 Nov 2021 15:45:04 +0100},
+  biburl    = {https://dblp.org/rec/conf/ndss/2018.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/nsdi/2008,
+  editor    = {Jon Crowcroft and
+               Michael Dahlin},
+  title     = {5th {USENIX} Symposium on Networked Systems Design {\&} Implementation,
+               {NSDI} 2008, April 16-18, 2008, San Francisco, CA, USA, Proceedings},
+  publisher = {{USENIX} Association},
+  year      = {2008},
+  url       = {http://www.usenix.org/nsdi08/},
+  isbn      = {978-1-931971-58-4},
+  timestamp = {Fri, 22 Apr 2022 17:18:01 +0200},
+  biburl    = {https://dblp.org/rec/conf/nsdi/2008.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/nsdi/2014,
+  editor    = {Ratul Mahajan and
+               Ion Stoica},
+  title     = {Proceedings of the 11th {USENIX} Symposium on Networked Systems Design
+               and Implementation, {NSDI} 2014, Seattle, WA, USA, April 2-4, 2014},
+  publisher = {{USENIX} Association},
+  year      = {2014},
+  url       = {https://www.usenix.org/conference/nsdi14},
+  isbn      = {978-1-931971-09-6},
+  timestamp = {Tue, 26 Apr 2022 15:52:11 +0200},
+  biburl    = {https://dblp.org/rec/conf/nsdi/2014.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Eric A. Brewer and
+#               Peter Chen},
+@proceedings{DBLP:conf/osdi/2004,
+  title     = {6th Symposium on Operating System Design and Implementation {(OSDI}
+               2004), San Francisco, California, USA, December 6-8, 2004},
+  publisher = {{USENIX} Association},
+  year      = {2004},
+  timestamp = {Mon, 25 Jan 2021 09:45:25 +0100},
+  biburl    = {https://dblp.org/rec/conf/osdi/2004.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/osdi/2006,
+  editor    = {Brian N. Bershad and
+               Jeffrey C. Mogul},
+  title     = {7th Symposium on Operating Systems Design and Implementation {(OSDI}
+               '06), November 6-8, Seattle, WA, {USA}},
+  publisher = {{USENIX} Association},
+  year      = {2006},
+  isbn      = {1-931971-47-1},
+  timestamp = {Wed, 17 Aug 2022 22:34:37 +0200},
+  biburl    = {https://dblp.org/rec/conf/osdi/2006.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Kimberly Keeton and
+#               Timothy Roscoe},
+@proceedings{DBLP:conf/osdi/2016,
+  title     = {12th {USENIX} Symposium on Operating Systems Design and Implementation,
+               {OSDI} 2016, Savannah, GA, USA, November 2-4, 2016},
+  publisher = {{USENIX} Association},
+  year      = {2016},
+  url       = {https://www.usenix.org/conference/osdi16},
+  timestamp = {Mon, 04 Jan 2021 18:58:46 +0100},
+  biburl    = {https://dblp.org/rec/conf/osdi/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/raid/2018,
+  editor    = {Michael Bailey and
+               Thorsten Holz and
+               Manolis Stamatogiannakis and
+               Sotiris Ioannidis},
+  title     = {Research in Attacks, Intrusions, and Defenses - 21st International
+               Symposium, {RAID} 2018, Heraklion, Crete, Greece, September 10-12,
+               2018, Proceedings},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {11050},
+  publisher = {Springer},
+  year      = {2018},
+  url       = {https://doi.org/10.1007/978-3-030-00470-5},
+  doi       = {10.1007/978-3-030-00470-5},
+  isbn      = {978-3-030-00469-9},
+  timestamp = {Mon, 02 May 2022 17:19:06 +0200},
+  biburl    = {https://dblp.org/rec/conf/raid/2018.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/raid/2021,
+  editor    = {Leyla Bilge and
+               Tudor Dumitras},
+  title     = {{RAID} '21: 24th International Symposium on Research in Attacks, Intrusions
+               and Defenses, San Sebastian, Spain, October 6-8, 2021},
+  publisher = {{ACM}},
+  year      = {2021},
+  url       = {https://doi.org/10.1145/3471621},
+  doi       = {10.1145/3471621},
+  isbn      = {978-1-4503-9058-3},
+  timestamp = {Thu, 11 Nov 2021 14:10:08 +0100},
+  biburl    = {https://dblp.org/rec/conf/raid/2021.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {James C. Browne and
+#               Juan Rodriguez{-}Rosell},
+@proceedings{DBLP:conf/sosp/1975,
+  title     = {Proceedings of the Fifth Symposium on Operating System Principles,
+               {SOSP} 1975, The University of Texas at Austin, Austin, Texas, USA,
+               November 19-21, 1975},
+  publisher = {{ACM}},
+  year      = {1975},
+  url       = {https://doi.org/10.1145/800213},
+  doi       = {10.1145/800213},
+  timestamp = {Mon, 18 Jan 2021 10:33:04 +0100},
+  biburl    = {https://dblp.org/rec/conf/sosp/1975.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Jeanna Neefe Matthews and
+#               Thomas E. Anderson},
+@proceedings{DBLP:conf/sosp/2009,
+  title     = {Proceedings of the 22nd {ACM} Symposium on Operating Systems Principles
+               2009, {SOSP} 2009, Big Sky, Montana, USA, October 11-14, 2009},
+  publisher = {{ACM}},
+  year      = {2009},
+  url       = {https://doi.org/10.1145/1629575},
+  doi       = {10.1145/1629575},
+  isbn      = {978-1-60558-752-3},
+  timestamp = {Mon, 18 Jan 2021 10:34:31 +0100},
+  biburl    = {https://dblp.org/rec/conf/sosp/2009.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sosp/2017plos,
+  editor    = {Julia Lawall},
+  title     = {Proceedings of the 9th Workshop on Programming Languages and Operating
+               Systems, Shanghai, China, October 28, 2017},
+  publisher = {{ACM}},
+  year      = {2017},
+  url       = {http://dl.acm.org/citation.cfm?id=3144555},
+  isbn      = {978-1-4503-5153-9},
+  timestamp = {Thu, 18 Nov 2021 16:00:56 +0100},
+  biburl    = {https://dblp.org/rec/conf/sosp/2017plos.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sp/1987,
+  title     = {Proceedings of the 1987 {IEEE} Symposium on Security and Privacy,
+               Oakland, California, USA, April 27-29, 1987},
+  publisher = {{IEEE} Computer Society},
+  year      = {1987},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/6234872/proceeding},
+  isbn      = {0-8186-0771-8},
+  timestamp = {Tue, 26 Jan 2021 11:38:15 +0100},
+  biburl    = {https://dblp.org/rec/conf/sp/1987.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sp/2013,
+  title     = {2013 {IEEE} Symposium on Security and Privacy, {SP} 2013, Berkeley,
+               CA, USA, May 19-22, 2013},
+  publisher = {{IEEE} Computer Society},
+  year      = {2013},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/6547086/proceeding},
+  isbn      = {978-1-4673-6166-8},
+  timestamp = {Wed, 16 Oct 2019 01:00:00 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/2013.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sp/2015,
+  title     = {2015 {IEEE} Symposium on Security and Privacy, {SP} 2015, San Jose,
+               CA, USA, May 17-21, 2015},
+  publisher = {{IEEE} Computer Society},
+  year      = {2015},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/7160813/proceeding},
+  isbn      = {978-1-4673-6949-7},
+  timestamp = {Tue, 26 Jan 2021 11:31:50 +0100},
+  biburl    = {https://dblp.org/rec/conf/sp/2015.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sp/2016,
+  title     = {{IEEE} Symposium on Security and Privacy, {SP} 2016, San Jose, CA,
+               USA, May 22-26, 2016},
+  publisher = {{IEEE} Computer Society},
+  year      = {2016},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/7528194/proceeding},
+  isbn      = {978-1-5090-0824-7},
+  timestamp = {Fri, 22 Apr 2022 17:15:31 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sp/2019,
+  title     = {2019 {IEEE} Symposium on Security and Privacy, {SP} 2019, San Francisco,
+               CA, USA, May 19-23, 2019},
+  publisher = {{IEEE}},
+  year      = {2019},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/8826229/proceeding},
+  isbn      = {978-1-5386-6660-9},
+  timestamp = {Thu, 28 Apr 2022 23:56:35 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/2019.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sp/2020,
+  title     = {2020 {IEEE} Symposium on Security and Privacy, {SP} 2020, San Francisco,
+               CA, USA, May 18-21, 2020},
+  publisher = {{IEEE}},
+  year      = {2020},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/9144328/proceeding},
+  timestamp = {Wed, 27 Jan 2021 15:44:28 +0100},
+  biburl    = {https://dblp.org/rec/conf/sp/2020.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/uss/2003,
+  title     = {Proceedings of the 12th {USENIX} Security Symposium, Washington, D.C.,
+               USA, August 4-8, 2003},
+  publisher = {{USENIX} Association},
+  year      = {2003},
+  url       = {https://www.usenix.org/legacy/publications/library/proceedings/sec03/},
+  timestamp = {Tue, 26 Jan 2021 11:50:33 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/2003.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/uss/2010,
+  title     = {19th {USENIX} Security Symposium, Washington, DC, USA, August 11-13,
+               2010, Proceedings},
+  publisher = {{USENIX} Association},
+  year      = {2010},
+  timestamp = {Tue, 26 Jan 2021 11:53:32 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/2010.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Kevin Fu and
+#               Jaeyeon Jung},
+@proceedings{DBLP:conf/uss/2014,
+  title     = {Proceedings of the 23rd {USENIX} Security Symposium, San Diego, CA,
+               USA, August 20-22, 2014},
+  publisher = {{USENIX} Association},
+  year      = {2014},
+  url       = {https://www.usenix.org/conference/usenixsecurity14},
+  timestamp = {Fri, 19 Aug 2016 15:38:02 +0200},
+  biburl    = {https://dblp.org/rec/bib/conf/uss/2014},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {William Enck and
+#               Adrienne Porter Felt},
+@proceedings{DBLP:conf/uss/2018,
+  title     = {27th {USENIX} Security Symposium, {USENIX} Security 2018, Baltimore,
+               MD, USA, August 15-17, 2018},
+  publisher = {{USENIX} Association},
+  year      = {2018},
+  url       = {https://www.usenix.org/conference/usenixsecurity18},
+  timestamp = {Mon, 08 Nov 2021 20:19:15 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/2018.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Nadia Heninger and
+#               Patrick Traynor},
+@proceedings{DBLP:conf/uss/2019,
+  title     = {28th {USENIX} Security Symposium, {USENIX} Security 2019, Santa Clara,
+               CA, USA, August 14-16, 2019},
+  publisher = {{USENIX} Association},
+  year      = {2019},
+  url       = {https://www.usenix.org/conference/usenixsecurity19},
+  timestamp = {Wed, 27 Jan 2021 15:18:13 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/2019.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Srdjan Capkun and
+#               Franziska Roesner},
+@proceedings{DBLP:conf/uss/2020,
+  title     = {29th {USENIX} Security Symposium, {USENIX} Security 2020, August 12-14,
+               2020},
+  publisher = {{USENIX} Association},
+  year      = {2020},
+  url       = {https://www.usenix.org/conference/usenixsecurity20},
+  isbn      = {978-1-939133-17-5},
+  timestamp = {Mon, 08 Nov 2021 20:30:08 +0100},
+  biburl    = {https://dblp.org/rec/conf/uss/2020.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/usenix/1990su,
+  title     = {Proceedings of the Usenix Summer 1990 Technical Conference, Anaheim,
+               California, USA, June 1990},
+  publisher = {{USENIX} Association},
+  year      = {1990},
+  timestamp = {Wed, 27 Jan 2021 15:21:39 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/1990su.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/usenix/1994wi,
+  title     = {{USENIX} Winter 1994 Technical Conference, San Francisco, California,
+               USA, January 17-21, 1994, Conference Proceedings},
+  publisher = {{USENIX} Association},
+  year      = {1994},
+  isbn      = {1-880446-58-8},
+  timestamp = {Thu, 07 Jan 2021 15:12:35 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/1994wi.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/usenix/1996,
+  title     = {Proceedings of the {USENIX} Annual Technical Conference, San Diego,
+               California, USA, January 22-26, 1996},
+  publisher = {{USENIX} Association},
+  year      = {1996},
+  timestamp = {Thu, 18 Nov 2021 19:59:17 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/1996.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/usenix/2003f,
+  title     = {Proceedings of the {FREENIX} Track: 2003 {USENIX} Annual Technical
+               Conference, June 9-14, 2003, San Antonio, Texas, {USA}},
+  publisher = {{USENIX}},
+  year      = {2003},
+  isbn      = {1-931971-11-0},
+  timestamp = {Tue, 26 Jan 2021 11:40:45 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/2003f.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+#  editor    = {Dahlia Malkhi and
+#               Dan Tsafrir},
+@proceedings{DBLP:conf/usenix/2019,
+  title     = {2019 {USENIX} Annual Technical Conference, {USENIX} {ATC} 2019, Renton,
+               WA, USA, July 10-12, 2019},
+  publisher = {{USENIX} Association},
+  year      = {2019},
+  url       = {https://www.usenix.org/conference/atc19},
+  timestamp = {Mon, 04 Jan 2021 18:56:58 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/2019.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/usenix/2020,
+  editor    = {Ada Gavrilovska and
+               Erez Zadok},
+  title     = {2020 {USENIX} Annual Technical Conference, {USENIX} {ATC} 2020, July
+               15-17, 2020},
+  publisher = {{USENIX} Association},
+  year      = {2020},
+  url       = {https://www.usenix.org/conference/atc20},
+  isbn      = {978-1-939133-14-4},
+  timestamp = {Thu, 18 Nov 2021 15:32:58 +0100},
+  biburl    = {https://dblp.org/rec/conf/usenix/2020.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{RocketChip,
+  title     = {The Rocket Chip Generator},
+  author    = {Asanovic, Krste and
+               Avizienis, Rimas and
+               Bachrach, Jonathan and
+               Beamer, Scott and
+               Biancolin, David and
+               Celio, Christopher and
+               Cook, Henry and
+               Dabbelt, Daniel and
+               Hauser, John and
+               Izraelevitz, Adam and
+               others},
+  journal   = {EECS Department, University of California, Berkeley, Tech. Rep. UCB/EECS-2016-17},
+  year      = {2016}
+}
+
+@misc{OpenSBI,
+  title     = {RISC-V open source supervisor binary interface},
+  author    = {riscv-software-src},
+  url       = {https://github.com/riscv-software-src/opensbi},
+  urldate   = {2022-05-01},
+  year      = {2022}
+}
+
+@misc{ARMAT,
+  title     = {Arm Armv8-A Architecture Registers},
+  author    = {Arm Limited (or its affiliates)},
+  url       = {https://developer.arm.com/documentation/ddi0595/2021-12/AArch64-Instructions/AT-S12E0R--Address-Translate-Stages-1-and-2-EL0-Read},
+  urldate   = {2022-05-01},
+  year      = {2022}
+}
+
+@misc{CortexA75,
+  title     = {Arm® Cortex®-A75 Core Technical Reference Manual},
+  author    = {Arm Limited (or its affiliates)},
+  url       = {https://documentation-service.arm.com/static/5e7e09f6a3736a0d2e862e90},
+  urldate   = {2022-05-01},
+  year      = {2018}
+}

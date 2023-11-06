@@ -13,61 +13,249 @@
 
 \cv{Resume.pdf}
 
-%%%%%%%%%% Packages borrowed from Ahmad's thesis %%%%%%%%%%%%%%%%%%
-\usepackage{titlesec}
-\titleformat{\chapter}[display]
-  {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
-\titlespacing*{\chapter}{0pt}{-20pt}{40pt}
-
-\usepackage{xcolor}
-\usepackage{xspace}
-\usepackage{epigraph}
-\usepackage{enumitem}                 % custom lists
-\usepackage{listings}                 % code formatting
-\usepackage{tikz}
-\usepackage{expl3}
-\usepackage{caption}                  % figure captioning
-\usepackage{subcaption}               % subfigures
-\usepackage{listofitems}              % \readlist
-\usepackage{fontawesome}              % faArrowUp, etc...
-\usepackage{siunitx}                  % \num, SI units
-\usepackage{xpatch}                   % \xapptocmd
-\usepackage{minted}                   % listing environment (TODO replace with consistent code listings)
-\usepackage{algorithm}                % algorithm environment
-\usepackage{algpseudocode}            % \algnewcommand, \Procedure, \Call, etc...
-\usepackage{varwidth}                 % varwidth environment
-\usepackage{fmtcount}                 % \numberstringnum
-\usepackage{refcount}                 % \getrefnumber
-\usepackage{soul}                     % \sethlcolor
-\usepackage{adjustbox}                % adjustbox environment
-\usepackage{booktabs}                 % \toprule
-\usepackage{multirow}                 % \multirow
-\usepackage{colortbl}                 % \cellcolor
-\usepackage{pifont}                   % \ding
-\usepackage{makecell}                 % \multirowcell
-\usepackage{rotating}                 % sideways environment
-\usepackage{pgfplots}                 % axis environment
-\usepackage{csquotes}                 % \enquote
-% \usepackage{annotate-equations}
-\usepackage{bbding}                   % \XSolidBold
-\usepackage{ifsym}                    % \textifsymbol
-\usepackage{nicefrac}                 % \nicefrac
-\usepackage{amsmath}
-\usepackage{amssymb}                  % \npreceq etc...
-\usepackage{pgf-umlsd}                % sequencediagram environment
-\usepackage{tikz-layers}
-\usepackage{scalerel}
+%%%%%%%%%%%%% Standard list of used packages %%%%%%%%%%%%%%%%
+% \usepackage{cite}
+\usepackage{amsmath,amsfonts}
+% \usepackage{amssymb, amsfonts}
 \usepackage{graphicx}
-\usepackage[
-  backend=bibtex,
-  style=numeric-comp,
-  hyperref=true,
-  defernumbers=true,
-  maxbibnames=99,
-  maxcitenames=1
-]{biblatex}
-\addbibresource{thesis.bib}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+% \usepackage[hyphens]{url}
+\usepackage[mathscr]{euscript}
+
+% \usepackage[normalem]{ulem}
+
+% Atri's list of typically used packages
+% List of unused packages from Midas/TikTok
+% \usepackage{adjustbox}
+% \usepackage{amsmath}
+% \usepackage{filecontents}
+% \usepackage{tikz}
+\usepackage{xspace}
+\usepackage{listings}
+% \usepackage{xcolor}
+% \usepackage{textcomp}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{subcaption}
+% \usepackage{todonotes}
+\usepackage{multirow}
+\usepackage{multicol}
+% \usepackage{booktabs}
+\usepackage{paralist}       % For inparaenum
+% \usepackage{enumitem}
+% \usepackage{tabulary}
+% \usepackage{verbatim}
+\usepackage{balance}
+\usepackage{tabularx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{braket}         % Fancy brackets
+\usepackage{threeparttable} % Table with footnotes
+\usepackage{makecell}       % Fancy multiline cells in table
+\usepackage{pifont}         % For fancy dingbats, example xmark
+\usepackage{comment}        % For comment environment
+\usepackage{prettyref}    % For labels for autoref
+% \usepackage[bookmarks=true,breaklinks=true,letterpaper=true,colorlinks,linkcolor=black,citecolor=blue,urlcolor=black]{hyperref}
+                            % For autoref
+\usepackage{listofitems}    % For `readlist` used for \newreviewer command
+\usepackage{soul}           % For strikethrough \st
+
+
+%%%%%%%%%% Sid's list of packages %%%%%%%%%%
+% \usepackage[normalem]{ulem}
+% \usepackage[final]{microtype}
+% \usepackage[keeplastbox]{flushend}
+% \usepackage{soul}
+% \usepackage{makecell}
+% \usepackage{hyphenat}
+% \usepackage{subfig}
+% \usepackage{color}
+% \usepackage{balance}    
+% \usepackage{verbatimbox}
+% \usepackage{fancyvrb}
+% \usepackage{enumitem}
+
+%%%%%%%%%% Packages borrowed from Ahmad's thesis %%%%%%%%%%%%%%%%%%
+% \usepackage{titlesec}
+% \titleformat{\chapter}[display]
+%   {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+% \titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+
+% \usepackage{xcolor}
+% \usepackage{xspace}
+\usepackage{epigraph}
+% \usepackage{enumitem}                 % custom lists
+% \usepackage{listings}                 % code formatting
+% \usepackage{tikz}
+% \usepackage{expl3}
+% \usepackage{caption}                  % figure captioning
+% \usepackage{subcaption}               % subfigures
+% \usepackage{listofitems}              % \readlist
+% \usepackage{fontawesome}              % faArrowUp, etc...
+% \usepackage{siunitx}                  % \num, SI units
+% \usepackage{xpatch}                   % \xapptocmd
+% \usepackage{minted}                   % listing environment (TODO replace with consistent code listings)
+% \usepackage{algorithm}                % algorithm environment
+% \usepackage{algpseudocode}            % \algnewcommand, \Procedure, \Call, etc...
+% \usepackage{varwidth}                 % varwidth environment
+% \usepackage{fmtcount}                 % \numberstringnum
+% \usepackage{refcount}                 % \getrefnumber
+% \usepackage{soul}                     % \sethlcolor
+% \usepackage{adjustbox}                % adjustbox environment
+% \usepackage{booktabs}                 % \toprule
+% \usepackage{multirow}                 % \multirow
+% \usepackage{colortbl}                 % \cellcolor
+% \usepackage{pifont}                   % \ding
+% \usepackage{makecell}                 % \multirowcell
+% \usepackage{rotating}                 % sideways environment
+% \usepackage{pgfplots}                 % axis environment
+% \usepackage{csquotes}                 % \enquote
+% % \usepackage{annotate-equations}
+% \usepackage{bbding}                   % \XSolidBold
+% \usepackage{ifsym}                    % \textifsymbol
+% \usepackage{nicefrac}                 % \nicefrac
+% % \usepackage{amsmath}
+% \usepackage{amssymb}                  % \npreceq etc...
+% \usepackage{pgf-umlsd}                % sequencediagram environment
+% \usepackage{tikz-layers}
+% \usepackage{scalerel}
+% \usepackage{graphicx}
+% \usepackage{threeparttable} % Table with footnotes
+% \usepackage[
+%   backend=bibtex,
+%   style=numeric-comp,
+%   hyperref=true,
+%   defernumbers=true,
+%   maxbibnames=99,
+%   maxcitenames=1
+% ]{biblatex}
+% \addbibresource{thesis.bib}
 \graphicspath{{./media/}}
+
+\begin{namedscope}{seccell}+
+\graphicspath{{./papers/seccell-paper/}}
+
+\makeatletter
+\providecommand*{\input@path}{}
+\g@addto@macro\input@path{{./papers/seccell-paper/}} % append
+\makeatother
+
+% \makeatletter
+% \providecommand*{\input@path}{}
+% \edef\input@path{{./papers/seccell-paper/}\input@path}% prepend
+% \makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Definitions %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newmacro{seccells}{SecureCells\xspace}
+\newmacro{ptable}{PTable\xspace}
+\newmacro{gtable}{GTable\xspace}
+\newmacro{cell}{cell\xspace}
+\newmacro{cellx}  [m]{$Cell_{#1}$\xspace}
+\newmacro{secdiv}{SD\xspace}
+\newmacro{secdivx}[m]{$SD_{#1}$\xspace}
+% List of SD/SC instructions
+\newmacro{sdswitch}{\Code{SDSwitch}\xspace}
+\newmacro{sdentry} {\Code{SDEntry}\xspace}
+\newmacro{scprot}  {\Code{SCProt}\xspace}
+\newmacro{scgrant} {\Code{SCGrant}\xspace}
+\newmacro{screcv}  {\Code{SCRecv}\xspace}
+\newmacro{sctfer}  {\Code{SCTfer}\xspace}
+\newmacro{scinval} {\Code{SCInval}\xspace}
+\newmacro{screval} {\Code{SCReval}\xspace}
+\newmacro{scexcl}  {\Code{SCExcl}\xspace}
+% List of SD/SC registers
+\newmacro{sid}{$SDID$\xspace}
+\newmacro{rid}{$RID$\xspace}
+\newmacro{xid}{$XID$\xspace}
+% Requirements
+\newmacro{req}[m]{\textbf{O#1}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Atri's design choices %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{minilisting}
+  {\minipage[b]{\linewidth}\verbatim}
+  {\endverbatim\endminipage}
+
+\lstdefinestyle{cstyle}{
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{black!85}\bfseries,
+  keywordstyle=[2]\color{black!85}\bfseries\emph,
+  showstringspaces=false,
+  language={C},
+  breaklines=false,
+  mathescape=true,
+  escapechar={@}
+}
+\lstdefinestyle{inline}{
+  style=cstyle,
+  mathescape=false,
+  breaklines=true,
+  keywordstyle=,
+  keywordstyle=[2],
+  extendedchars=true,
+  basicstyle=\ttfamily\small
+}
+\newmacro{Code}[m]{\lstinline[style=inline,breaklines=false]@#1@}
+\let\realparagraph\paragraph
+\let\paragraph\relax
+\newmacro{paragraph}[m]{\textbf{#1.}}
+% \newcolumntype{Q}{>{\centering\arraybackslash}X}
+% \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+% These old were useful with the prettyref package
+% Now overruled by the autoref package
+% \newrefformat{cha}{\hyperref[#1]{Chapter~\ref*{#1}}}
+% \newrefformat{sec}{\hyperref[#1]{Section~\ref*{#1}}}
+% \newrefformat{sub}{\hyperref[#1]{Section~\ref*{#1}}}
+% \newrefformat{tab}{\hyperref[#1]{Table~\ref*{#1}}}
+% \newrefformat{fig}{\hyperref[#1]{Figure~\ref*{#1}}}
+% \newrefformat{line}{\hyperref[#1]{line~\ref*{#1}}}
+% \newrefformat{lst}{\hyperref[#1]{Listing~\ref*{#1}}}
+% \newrefformat{pat}{\hyperref[#1]{Patch~\ref*{#1}}}
+% \newrefformat{alg}{\hyperref[#1]{Algorithm~\ref*{#1}}}
+% Customizing reference formats for
+\renewcommand{\sectionautorefname}{Section}
+\let\subsectionautorefname\sectionautorefname
+\let\subsubsectionautorefname\sectionautorefname
+\newmacro{algorithmautorefname}{Instruction}
+
+\makeatletter
+\newmacro{removelatexerror}{\let\@latex@error\@gobble}
+\makeatother
+
+% Custom naming for algorithm, used for table of securecells instructions
+\makeatletter
+\renewcommand{\ALG@name}{Instruction}
+\makeatother
+
+% Custom command for making formatting changes to an entire row in tables
+% For example, \setrow{\bfseries} in front of a row to make it bold
+% https://tex.stackexchange.com/questions/4811/make-first-row-of-table-all-bold
+% \newcolumntype{!}{>{\global\let\currentrowstyle\relax}}
+% \newcolumntype{?}{>{\currentrowstyle}}
+% \newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
+%   #1\ignorespaces
+% }
+
+% Cross and tick marks
+\newmacro{cmark}{\ding{51}}%
+\newmacro{xmark}{\ding{55}}%
+
+% Aliases:
+% yes: for checkmark to make readable
+\newmacro{yes}{\checkmark}
+
+\end{namedscope}
+
+
+
+
+
 
 \begin{dedication}
   \epigraph{TODO: Stuff here}{\textit{TODO: Anakin, I am your father}}
@@ -99,5 +287,22 @@ I thank the Academy \dots
          {\textit{Aristotle}}
 Software is written---for the most part---by idiots.
 
+
+\begin{namedscope}{seccell}
+\chapter{Not this again}
+\label{ch:seccell}
+\epigraph{The real cool stuff was already done.}%
+        {\textit{Me}}
+
+Does anything change if I put some text here?
+
+\include{papers/seccell-paper/seccell-core}
+
+\end{namedscope}
+
+\bibliographystyle{IEEEtran}
+\bibliography{thesis}
+\addcontentsline{toc}{chapter}{Bibliography}
+% \printbibliography
 
 \end{document}

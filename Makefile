@@ -1,9 +1,10 @@
 DOC := thesis
 
-# TEX = $(wildcard *.sty *.cls)
+TEX = $(wildcard *.sty *.cls)
 # INC = $(wildcard papers/*.tex)
 # FIG = $(call rglob,media,*)
-# DEP = $(TEX) $(FIG) $(INC)
+DEP = $(TEX) $(FIG) $(INC) $(PAPERS)
+PAPERS = papers/seccell-paper/seccell-core.tex
 
 # override define rglob
 # $(foreach d,$(wildcard $(1:=/*)),\
@@ -14,6 +15,7 @@ DOC := thesis
 # .PHONY: clean partial
 
 $(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf
+	make -C papers/seccell-paper
 	rubber --unsafe --pdf $(DOC).tex 
 
 # resume.pdf: resume.tex
@@ -24,7 +26,7 @@ $(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf
 # 		-interaction=nonstopmode -halt-on-error -shell-escape $<
 
 clean:
-	rm -rf *.pdf
+	rm -rf $(DOC).pdf *-blx.bib *.log *.run.xml *.toc *.rubbercache *.aux _minted-*
 # clean:
 # 	@rm -rf *.pdf $(call artifacts,*)
 
