@@ -1,0 +1,110 @@
+\chapter{Introduction}
+\epigraph{Testing can only prove the presence of idiots, not their absence. Software is written---for the most part---by idiots.}%
+         {\textit{Aristotle}}
+
+% Context, computers are running ever increasing code bases, which are impossible to definitively verify
+% and which are getting executed in shared environments all the time.
+Computer systems and computing environments have significantly evolved over time.
+\begin{itemize}
+  \item The complexity and scale of computing systems has increased exponentially for decades. 
+  \item The scale of modern systems allows, and also relies on, a large degree of sharing. 
+  \item The degree of code sharing has changed dramatically, 
+        from 
+        code written by individual tech-savvy developers and run on their personal machines
+        to 
+        code fully written and distributed by corporations and run by users on their personal machines
+        to
+        code written and distributed by a large variety of sources, and implicitly run in shared environments
+        by even unwitting users on personal machines.
+  \item Large amount of shared code cannot be vetted even by large corporations (e.g., popular libraries)
+  \item Shared code gets distributed by avenues with low checks or measures (e.g., package managers like crate, npm)
+  \item Browsers fetch and execute code on-demand from an infinitely varying set of sources.
+  \item Consequently, modern systems include a wider range of trust relationships compared to traditional systems.
+\end{itemize}
+
+% The core problem: mismatch between interface design and modern computing trust relations
+Modern systems are implemented on legacy interfaces, incurring security or performance limitations.
+\begin{itemize}
+  \item modern systems continue to rely extensively on legacy interfaces. 
+  Examples  of these interfaces include the ISA interface and OS system call interface, both of which largely resemble systems from 20-40 years back.
+  For example, the virtual memory definition of traditional ISAs focus on isolating different virtual address spaces from each other, whereas modern systems mix code from various untrusted sources within the same address space.
+  \item Interfaces might lack the expressivity to express modern trust relations (virtual memory)
+  \item Interfaces might include implicit assumptions, including ones not noticed by the developers of the interface, which may be wilfully or unknowingly violated by malicious or buggy code.
+\end{itemize}
+Problems with two specific interfaces are tackled by this thesis.
+\begin{itemize}
+  \item The OS interface to userspace lacks protection against concurrent modification by userspace. 
+        A contributing factor to this problem could be the relative absence of concurrency, and absolute 
+        lack of parallelism when modern operating systems were conceived.
+  \item The ISA interface for virtual memory contains a single permission for any address, for all code
+        executing within that address space.
+        This design was sufficient when programs trusted all of their code, moreso since most computers 
+        ran code entirely designed and written by one corporation.
+        The relative infancy of the internet meant very limited code sharing, and only among developers when
+        at all.
+\end{itemize}
+
+% Prior work around fixing abstractions or introducing new ones
+Recent work has started tackling this problem at various levels. 
+\begin{itemize}
+  \item Papers have tried to remove this implicit assumption from the kernel by attempting to find and 
+        refactor code vulnerable to userspace TOCTTOU, using methods based on static and dynamic analysis.
+        Limitations of existing works includes:
+        - protection only against known bugs, 
+        - detection of subset of bugs triggered by dybnamic analysis,
+        - other shortcomings described in the paper.
+  \item Mechanisms (research and production) have tried to introduce additional access control within an
+        address space to isolate parts of a program which do not trust each other.
+        However, these mechanisms continue to trade-off performance and security guarantees. 
+        - Some existing mechanisms offer a thin additional layer of security for very little overhead.
+        - Others provide more comprehensive protection, but at high cost.
+        A common contributing factor to higher costs is a reliance on more traditional abstractions.
+        Particularly, the OS is included in the TCB and tasked with implementing switching between
+        protection domains or compartments, assuring security at high cost.
+\end{itemize}
+
+% Insights: Problems with abstractions can be fixed. 
+% Fixes might require principled changes to the interfaces, as either mitigations which preserve the
+% interface but allow additional checks to be implemented, or as a redesign of the entire interface.
+In this thesis, we solve the two interfaces by:
+\begin{itemize}
+  \item System calls implicitly assume that their view of accessed user memory does not change
+        during the system call's lifetime. 
+        The kernel uses a well-defined software interface to access user memory. 
+        The clean separation of the access interface allow additional checks to assure that 
+        the implicit invariant is upheld.
+  \item The hardware is part of the TCB, and can be tasked with managing permissions for different
+        compartments, read from one two-D table.
+\end{itemize}
+
+
+
+and require defences which allow developers to implement protections to enforce such varying trust relations.
+
+This thesis
+
+Thesis statement: 
+The design of interfaces between layers of the computing system stack decisively influence the 
+security and performance characteristics of the system. 
+Strong, well-defined guarantees at the interfaces allow developers to build well-protected systems with high performance.
+
+\chapter{Compartmentalization}
+
+Background on Compartmentalization
+The aim of this section is to provide background of compartmentalization as a software design principle to provide enhanced security. This section will explain the terminology of "monolithic" and "compartmentalized" programs. This section will also describe the attacker model for compartmentalization and what attacks can be prevented.
+Compartmentalization and Principle of Least Privilege 
+This subsection defines the Principle of Least Privilege, and how compartmentalization implements this principle within programs to reduce the impact of security bugs.
+Compartmentalization and Modularity
+This subsection will describe the modular organization of modern software, and how this can be leveraged for compartmentalization. Example of modular organization includes libraries and sandboxes. This section also explains how modules in a compartmentalized program should communicate using well-defined APIs.
+Security Guarantees of Compartmentalization
+This subsection will describe the security benefits of compartmentalization. This subsection should explain exactly what attack scenarios are protected and which ones are not. At the end of this section, the reader should be clear about what the security guarantees of compartmentalization are. Particularly, we should be clear that compartmentalization does not protect against buggy modules that allow compromise via their external interface.
+Isolation and Communication in Compartmentalized Software
+Following on from the previous paragraph, this subsection explains the allocation of private and shared memory regions for compartments, and what communication interfaces for compartmentalized software are for, and what they look like.
+Compartmentalization Mechanism Requirements 
+This subsection follows from the SecureCells Paper (section 2) which describes how a hardware compartmentalization mechanism will support a compartmentalized program, and consequently, what the requirements for the mechanism are. This will have the same general outline as in the paper, being divided into requirements for security, performance and flexibility.
+Security
+From SecureCells paper.
+Performance
+From SecureCells paper.
+Flexibility
+SecureCells paper.
