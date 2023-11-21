@@ -3,6 +3,532 @@
 @string{WOOT="USENIX Workshop On Offensive Technologies"}
 @string{CCS="Conference on Computer and Communications Security"}
 
+@book{silberschatz2018operating,
+  title={{Operating system principles}},
+  author={Silberschatz, Abraham and Galvin, Peter Baer and Gagne, Greg},
+  year={2018},
+  publisher={John Wiley \& Sons},
+  edition={10}
+}
+
+@article{watson2007exploiting,
+  title={{Exploiting Concurrency Vulnerabilities in System Call Wrappers.}},
+  author={Watson, Robert NM},
+  journal={WOOT},
+  volume={7},
+  pages={1--8},
+  year={2007}
+}
+
+@inproceedings{wang2017double,
+  title={How double-fetch situations turn into double-fetch vulnerabilities: A
+  study of double fetches in the linux kernel},
+  author={Wang, Pengfei and Krinke, Jens and Lu, Kai and Li, Gen and
+  Dodier-Lazaro, Steve},
+  booktitle={26th $\{$USENIX$\}$ Security Symposium
+  ($\{$USENIX$\}$ Security 17)},
+  pages={1--16},
+  year={2017}
+}
+
+@inproceedings{schwartzDECAF,
+  author    = {Michael Schwarz and
+               Daniel Gruss and
+               Moritz Lipp and
+               Cl{\'{e}}mentine Maurice and
+               Thomas Schuster and
+               Anders Fogh and
+               Stefan Mangard},
+  title     = {Automated Detection, Exploitation, and Elimination of Double-Fetch
+               Bugs using Modern {CPU} Features},
+  booktitle = {Proceedings of the 2018 on Asia Conference on Computer and Communications
+               Security, AsiaCCS 2018, Incheon, Republic of Korea, June 04-08, 2018},
+  pages     = {587--600},
+  year      = {2018},
+  crossref  = {DBLP:conf/ccs/2018asia},
+  url       = {https://doi.org/10.1145/3196494.3196508},
+  doi       = {10.1145/3196494.3196508},
+  timestamp = {Tue, 29 Dec 2020 18:30:43 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccs/0001GLMSFM18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{deadline,
+  author    = {Meng Xu and
+               Chenxiong Qian and
+               Kangjie Lu and
+               Michael Backes and
+               Taesoo Kim},
+  title     = {Precise and Scalable Detection of Double-Fetch Bugs in {OS} Kernels},
+  booktitle = {2018 {IEEE} Symposium on Security and Privacy, {SP} 2018, Proceedings,
+               21-23 May 2018, San Francisco, California, {USA}},
+  pages     = {661--678},
+  year      = {2018},
+  crossref  = {DBLP:conf/sp/2018},
+  url       = {https://doi.org/10.1109/SP.2018.00017},
+  doi       = {10.1109/SP.2018.00017},
+  timestamp = {Tue, 27 Oct 2020 08:30:53 +0100},
+  biburl    = {https://dblp.org/rec/conf/sp/XuQL0K18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{SongH0SNVVKSF19,
+  author    = {Dokyung Song and
+               Felicitas Hetzelt and
+               Dipanjan Das and
+               Chad Spensky and
+               Yeoul Na and
+               Stijn Volckaert and
+               Giovanni Vigna and
+               Christopher Kruegel and
+               Jean{-}Pierre Seifert and
+               Michael Franz},
+  title     = {PeriScope: An Effective Probing and Fuzzing Framework for the Hardware-OS
+               Boundary},
+  booktitle = {26th Annual Network and Distributed System Security Symposium, {NDSS}
+               2019, San Diego, California, USA, February 24-27, 2019},
+  year      = {2019},
+  crossref  = {DBLP:conf/ndss/2019},
+  url       = {https://www.ndss-symposium.org/ndss-paper/periscope-an-effective-probing-and-fuzzing-framework-for-the-hardware-os-boundary/},
+  timestamp = {Mon, 01 Feb 2021 08:42:22 +0100},
+  biburl    = {https://dblp.org/rec/conf/ndss/SongH0SNVVKSF19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{wang2018survey,
+  title={{A survey of the double-fetch vulnerabilities}},
+  author={Wang, Pengfei and Lu, Kai and Li, Gen and Zhou, Xu},
+  journal={Concurrency and Computation: Practice and Experience},
+  volume={30},
+  number={6},
+  pages={e4345},
+  year={2018},
+  publisher={Wiley Online Library}
+}
+
+@article{jurczyk2013bochspwn,
+  title={{Bochspwn: Identifying 0-days via system-wide memory access pattern analysis}},
+  author={Jurczyk, GC Mateusz and Coldwind, Gynvael},
+  journal={Black Hat USA Briefings (Black Hat USA)},
+  year={2013}
+}
+
+
+@article{lu2018untrusted,
+  title={{Untrusted hardware causes double-fetch problems in the I/O memory}},
+  author={Lu, Kai and Wang, Peng-Fei and Li, Gen and Zhou, Xu},
+  journal={Journal of Computer Science and Technology},
+  volume={33},
+  number={3},
+  pages={587--602},
+  year={2018},
+  publisher={Springer}
+}
+
+@inproceedings{payer2012protecting,
+  title={{Protecting applications against TOCTTOU races by user-space caching of file metadata}},
+  author={Payer, Mathias and Gross, Thomas R},
+  booktitle={{Proceedings of the 8th ACM SIGPLAN/SIGOPS conference on Virtual Execution Environments}},
+  pages={215--226},
+  year={2012}
+}
+
+@inproceedings{pu2006methodical,
+  title={{A Methodical Defense against TOCTTOU Attacks: The EDGI Approach}},
+  author={Pu, Calton and Wei, Jinpeng},
+  booktitle={{Proceedings of the 2006 International Symposium on Secure Software Engineering}},
+  year={2006}
+}
+
+@article{wei2010modeling,
+  title={{Modeling and preventing TOCTTOU vulnerabilities in Unix-style file systems}},
+  author={Wei, Jinpeng and Pu, Calton},
+  journal={computers \& security},
+  volume={29},
+  number={8},
+  pages={815--830},
+  year={2010},
+  publisher={Elsevier}
+}
+
+@inproceedings{tsafrir2008portably,
+  title={{Portably Solving File TOCTTOU Races with Hardness Amplification.}},
+  author={Tsafrir, Dan and Hertz, Tomer and Wagner, David A and Da Silva, Dilma},
+  booktitle={{FAST}},
+  volume={8},
+  pages={1--18},
+  year={2008}
+}
+
+@misc{amd64prog,
+  title = {{AMD64 Architecture Programmer’s Manual Volume 3: 
+          General-Purpose and System Instructions}},
+  howpublished = "\url{https://www.amd.com/system/files/TechDocs/24594.pdf}",
+  author = {Advanced Micro Devices (AMD)}
+}
+
+@book{armv8a,
+  title={{ARM Architecture Reference Manual (ARMv8, for ARMv8-Aarchitecture profile)}},
+  author={ARM Ltd.},
+  year={2013}
+}
+
+@misc{zak_frasunek_dawidek,
+  title={{CerbNG}},
+  howpublished="\url{https://sourceforge.net/projects/cerber/files/cerb-ng/}",
+  author={Zak, Slawek and Frasunek, Przemyslaw and Dawidek, Pawel Jakub}
+}
+
+@misc{seccomp,
+  title={{SecComp}},
+  howpublished="\url{https://www.kernel.org/doc/html/latest/userspace-api/seccomp_filter.html}",
+}
+
+@misc{ebpf,
+  title={{eBPF}},
+  howpublished="\url{https://lwn.net/Articles/740157/}",
+}
+
+@misc{seccomp_deep,
+  title={{Seccomp and deep argument inspection}},
+  howpublished="\url{https://lwn.net/Articles/822256/}",
+}
+
+@misc{landlock,
+  title={{Landlock LSM}},
+  howpublished="\url{https://landlock.io/}",
+  author={Mickaël Salaün}
+}
+
+@misc{krsi,
+  title={{Kernel Runtime Security Instrumentation}},
+  howpublished="\url{https://github.com/sinkap/linux-krsi}",
+  author={K. P. Singh}
+}
+
+@misc{osbench,
+  title={{OSBench}},
+  howpublished="\url{https://github.com/mbitsnbites/osbench/}",
+}
+
+@inproceedings{morris2002linux,
+  title={{Linux security modules: General security support for the linux kernel}},
+  author={Morris, James and Smalley, Stephen and Kroah-Hartman, Greg},
+  booktitle={{USENIX Security Symposium}},
+  pages={17--31},
+  year={2002},
+  organization={ACM Berkeley, CA}
+}
+
+@article{smalley2001implementing,
+  title={{Implementing SELinux as a Linux security module}},
+  author={Smalley, Stephen and Vance, Chris and Salamon, Wayne},
+  journal={NAI Labs Report},
+  volume={1},
+  number={43},
+  pages={139},
+  year={2001}
+}
+
+@misc{gruenbacher2007apparmor,
+  title={{AppArmor Technical Documentation}},
+  author={Gruenbacher, Andreas and Arnold, Seth},
+  year={2007}
+}
+
+@article{intel64and,
+  title={{Intel 64 and IA-32 Architectures Developer's Manual}},
+  author={{Intel}},
+  chapter={Programming with Intel® Transactional Synchronization Extensions},
+  volume={1},
+  chapter={16},
+  year={2019}
+}
+
+@article{wilhelm2016xenpwn,
+  title={Xenpwn: Breaking paravirtualized devices},
+  author={Wilhelm, Felix},
+  journal={Black Hat USA},
+  year={2016}
+}
+
+@article{twizsgrakky07ring0,
+  title={From RING 0 to UID 0},
+  author={twiz and sgrakkyu},
+  journal={CCC},
+  year={2007}
+}
+
+@misc{serna08doublefetch, 
+  title={MS08-061 : The case of the kernel mode double-fetch}, 
+  howpublished="\url{https://msrc-blog.microsoft.com/2008/10/14/ms08-061-the-case-of-the-kernel-mode-double-fetch/}", 
+  journal={Microsoft Security Response Center}, 
+  author={Fermin J. Serna}, 
+  year={2008}, 
+  month={Oct}
+}
+
+@article{wang2019dftracker,
+  title={DFTracker: detecting double-fetch bugs by multi-taint parallel tracking},
+  author={Wang, Pengfei and Lu, Kai and Li, Gen and Zhou, Xu},
+  journal={Frontiers of Computer Science},
+  volume={13},
+  number={2},
+  pages={247--263},
+  year={2019},
+  publisher={Springer}
+}
+
+@misc{cve20166516,
+  title={CVE-2016-6516},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-6516}"
+}
+
+@misc{cve201812633,
+  title={CVE-2018-12633},
+  howpublished="\url{https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2018-12633}"
+}
+
+@misc{cve202012652,
+  title={CVE-2020-12652},
+  howpublished ="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-12652}"
+}
+
+@misc{cve20131332,
+  title={CVE-2013-1332},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1332}"
+}
+
+@misc{cve201920610,
+  title={CVE-2019-20610},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-20610}"
+}
+
+@misc{cve20158550,
+  title={CVE-2015-8550},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-8550}"
+}
+
+@misc{cve201610439,
+  title={CVE-2016-10439},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-10439}"
+}
+
+@misc{cve201610435,
+  title={CVE-2016-10435},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-10435}"
+}
+
+@misc{cve201610433,
+  title={CVE-2016-10433},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-10433}"
+}
+
+@misc{cve20195519,
+  title={CVE-2019-5519},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-5519}"
+}
+
+@misc{cve20168438,
+  title={CVE-2016-8438},
+  howpublished="\url{https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-8438}"
+  }
+}
+
+@misc{cve201812633fix,
+  title={CVE-2018-12633 Fix},
+  howpublished="\url{https://github.com/torvalds/linux/commit/bd23a7269834dc7c1f93e83535d16ebc44b75eba}",
+  journal={GitHub --- Linux},
+  month={Aug},
+  year={2020}
+}
+
+@misc{pts,
+  title={Phoronix Test Suite},
+  howpublished="\url{https://www.phoronix-test-suite.com/}",
+  month={8},
+  year={2020}
+}
+
+@article{npb,
+  title={The NAS parallel benchmarks},
+  author={Bailey, David H and Barszcz, Eric and Barton, John T and Browning, David S and Carter, Robert L and Dagum, Leonardo and Fatoohi, Rod A and Frederickson, Paul O and Lasinski, Thomas A and Schreiber, Rob S and others},
+  journal={The International Journal of Supercomputing Applications},
+  volume={5},
+  number={3},
+  pages={63--73},
+  year={1991},
+  publisher={Sage Publications Sage CA: Thousand Oaks, CA}
+}
+
+@article{dagum1998openmp,
+  title={OpenMP: an industry standard API for shared-memory programming},
+  author={Dagum, Leonardo and Menon, Ramesh},
+  journal={IEEE computational science and engineering},
+  volume={5},
+  number={1},
+  pages={46--55},
+  year={1998},
+  publisher={IEEE}
+}
+
+@book{snir1998mpi,
+  title={MPI--the Complete Reference: the MPI core},
+  author={Snir, Marc and Gropp, William and Otto, Steve and Huss-Lederman, Steven and Dongarra, Jack and Walker, David},
+  volume={1},
+  year={1998},
+  publisher={MIT press}
+}
+
+@article{mutlu2019rowhammer,
+  title={RowHammer: A retrospective},
+  author={Mutlu, Onur and Kim, Jeremie S},
+  journal={IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems},
+  year={2019},
+  publisher={IEEE}
+}
+
+@inproceedings{0001MK15,
+  author    = {Thomas Neumann and
+               Tobias M{\"{u}}hlbauer and
+               Alfons Kemper},
+  title     = {Fast Serializable Multi-Version Concurrency Control for Main-Memory
+               Database Systems},
+  booktitle = {Proceedings of the 2015 {ACM} {SIGMOD} International Conference on
+               Management of Data, Melbourne, Victoria, Australia, May 31 - June
+               4, 2015},
+  pages     = {677--689},
+  year      = {2015},
+  crossref  = {DBLP:conf/sigmod/2015},
+  url       = {https://doi.org/10.1145/2723372.2749436},
+  doi       = {10.1145/2723372.2749436},
+  timestamp = {Tue, 06 Nov 2018 11:07:38 +0100},
+  biburl    = {https://dblp.org/rec/conf/sigmod/0001MK15.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{Garfinkel03,
+  author    = {Tal Garfinkel},
+  title     = {Traps and Pitfalls: Practical Problems in System Call Interposition
+               Based Security Tools},
+  booktitle = {Proceedings of the Network and Distributed System Security Symposium,
+               {NDSS} 2003, San Diego, California, {USA}},
+  year      = {2003},
+  crossref  = {DBLP:conf/ndss/2003},
+  url       = {https://www.ndss-symposium.org/ndss2003/traps-and-pitfalls-practical-problems-system-call-interposition-based-security-tools/},
+  timestamp = {Mon, 01 Feb 2021 08:42:24 +0100},
+  biburl    = {https://dblp.org/rec/conf/ndss/Garfinkel03.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{dftinker,
+  author    = {Yingqi Luo and
+               Pengfei Wang and
+               Xu Zhou and
+               Kai Lu},
+  title     = {DFTinker: Detecting and Fixing Double-Fetch Bugs in an Automated Way},
+  booktitle = {Wireless Algorithms, Systems, and Applications - 13th International
+               Conference, {WASA} 2018, Tianjin, China, June 20-22, 2018, Proceedings},
+  pages     = {780--785},
+  year      = {2018},
+  crossref  = {DBLP:conf/wasa/2018},
+  url       = {https://doi.org/10.1007/978-3-319-94268-1\_67},
+  doi       = {10.1007/978-3-319-94268-1\_67},
+  timestamp = {Wed, 11 Nov 2020 16:58:36 +0100},
+  biburl    = {https://dblp.org/rec/conf/wasa/LuoWZL18.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{olsonbordercontrol,
+  author    = {Lena E. Olson and
+               Jason Power and
+               Mark D. Hill and
+               David A. Wood},
+  title     = {Border control: sandboxing accelerators},
+  booktitle = {Proceedings of the 48th International Symposium on Microarchitecture,
+               {MICRO} 2015, Waikiki, HI, USA, December 5-9, 2015},
+  pages     = {470--481},
+  year      = {2015},
+  crossref  = {DBLP:conf/micro/2015},
+  url       = {https://doi.org/10.1145/2830772.2830819},
+  doi       = {10.1145/2830772.2830819},
+  timestamp = {Wed, 11 Aug 2021 11:51:26 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/OlsonPHW15.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{GreggFlameGraph,
+  author    = {Brendan Gregg},
+  title     = {The flame graph},
+  journal   = {Commun. {ACM}},
+  volume    = {59},
+  number    = {6},
+  pages     = {48--57},
+  year      = {2016},
+  url       = {https://doi.org/10.1145/2909476},
+  doi       = {10.1145/2909476},
+  timestamp = {Tue, 06 Nov 2018 12:51:37 +0100},
+  biburl    = {https://dblp.org/rec/journals/cacm/Gregg16.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@article{WuALXP17,
+  author    = {Yingjun Wu and
+               Joy Arulraj and
+               Jiexi Lin and
+               Ran Xian and
+               Andrew Pavlo},
+  title     = {An Empirical Evaluation of In-Memory Multi-Version Concurrency Control},
+  journal   = {Proc. {VLDB} Endow.},
+  volume    = {10},
+  number    = {7},
+  pages     = {781--792},
+  year      = {2017},
+  url       = {http://www.vldb.org/pvldb/vol10/p781-Wu.pdf},
+  doi       = {10.14778/3067421.3067427},
+  timestamp = {Sat, 25 Apr 2020 13:59:08 +0200},
+  biburl    = {https://dblp.org/rec/journals/pvldb/WuALXP17.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{KhasawnehKSEPA19,
+  author    = {Khaled N. Khasawneh and
+               Esmaeil Mohammadian Koruyeh and
+               Chengyu Song and
+               Dmitry Evtyushkin and
+               Dmitry Ponomarev and
+               Nael B. Abu{-}Ghazaleh},
+  title     = {SafeSpec: Banishing the Spectre of a Meltdown with Leakage-Free Speculation},
+  booktitle = {Proceedings of the 56th Annual Design Automation Conference 2019,
+               {DAC} 2019, Las Vegas, NV, USA, June 02-06, 2019},
+  pages     = {60},
+  year      = {2019},
+  crossref  = {DBLP:conf/dac/2019},
+  url       = {https://doi.org/10.1145/3316781.3317903},
+  doi       = {10.1145/3316781.3317903},
+  timestamp = {Sun, 08 Aug 2021 01:40:59 +0200},
+  biburl    = {https://dblp.org/rec/conf/dac/KhasawnehKSEPA19.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+@inproceedings{YangCSS12,
+  author    = {Junfeng Yang and
+               Ang Cui and
+               Salvatore J. Stolfo and
+               Simha Sethumadhavan},
+  title     = {Concurrency Attacks},
+  booktitle = {4th {USENIX} Workshop on Hot Topics in Parallelism, HotPar'12, Berkeley,
+               CA, USA, June 7-8, 2012},
+  year      = {2012},
+  crossref  = {DBLP:conf/hotpar/2012},
+  url       = {https://www.usenix.org/conference/hotpar12/workshop-program/presentation/yang},
+  timestamp = {Wed, 04 Jul 2018 13:06:35 +0200},
+  biburl    = {https://dblp.org/rec/conf/hotpar/YangCSS12.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
 @inproceedings{lipp18sec,
   author    = {Moritz Lipp and
                Michael Schwarz and
@@ -295,13 +821,6 @@ year = {2017},
   volume={2},
   number={11},
   year={2011}
-}
-
-@article{khasawneh2018safespec,
-  title={SafeSpec: Banishing the Spectre of a Meltdown with Leakage-Free Speculation},
-  author={Khasawneh, Khaled N and Koruyeh, Esmaeil Mohammadian and Song, Chengyu and Evtyushkin, Dmitry and Ponomarev, Dmitry and Abu-Ghazaleh, Nael},
-  journal={arXiv preprint arXiv:1806.05179},
-  year={2018}
 }
 
 @misc{linusemails,
@@ -2087,6 +2606,48 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
+
+@article{RocketChip,
+  title     = {The Rocket Chip Generator},
+  author    = {Asanovic, Krste and
+               Avizienis, Rimas and
+               Bachrach, Jonathan and
+               Beamer, Scott and
+               Biancolin, David and
+               Celio, Christopher and
+               Cook, Henry and
+               Dabbelt, Daniel and
+               Hauser, John and
+               Izraelevitz, Adam and
+               others},
+  journal   = {EECS Department, University of California, Berkeley, Tech. Rep. UCB/EECS-2016-17},
+  year      = {2016}
+}
+
+@misc{OpenSBI,
+  title     = {RISC-V open source supervisor binary interface},
+  author    = {riscv-software-src},
+  url       = {https://github.com/riscv-software-src/opensbi},
+  urldate   = {2022-05-01},
+  year      = {2022}
+}
+
+@misc{ARMAT,
+  title     = {Arm Armv8-A Architecture Registers},
+  author    = {Arm Limited (or its affiliates)},
+  url       = {https://developer.arm.com/documentation/ddi0595/2021-12/AArch64-Instructions/AT-S12E0R--Address-Translate-Stages-1-and-2-EL0-Read},
+  urldate   = {2022-05-01},
+  year      = {2022}
+}
+
+@misc{CortexA75,
+  title     = {Arm® Cortex®-A75 Core Technical Reference Manual},
+  author    = {Arm Limited (or its affiliates)},
+  url       = {https://documentation-service.arm.com/static/5e7e09f6a3736a0d2e862e90},
+  urldate   = {2022-05-01},
+  year      = {2018}
+}
+
 ########################################################
 ## Proceedings references
 ########################################################
@@ -2202,6 +2763,24 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
+@proceedings{DBLP:conf/ccs/2018asia,
+  editor    = {Jong Kim and
+               Gail{-}Joon Ahn and
+               Seungjoo Kim and
+               Yongdae Kim and
+               Javier L{\'{o}}pez and
+               Taesoo Kim},
+  title     = {Proceedings of the 2018 on Asia Conference on Computer and Communications
+               Security, AsiaCCS 2018, Incheon, Republic of Korea, June 04-08, 2018},
+  publisher = {{ACM}},
+  year      = {2018},
+  url       = {https://doi.org/10.1145/3196494},
+  doi       = {10.1145/3196494},
+  timestamp = {Mon, 06 Sep 2021 15:03:33 +0200},
+  biburl    = {https://dblp.org/rec/conf/ccs/2018asia.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
 #  editor    = {Lorenzo Cavallaro and
 #               Johannes Kinder and
 #               XiaoFeng Wang and
@@ -2245,6 +2824,19 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   isbn      = {978-1-5090-2607-4},
   timestamp = {Fri, 22 Apr 2022 17:09:55 +0200},
   biburl    = {https://dblp.org/rec/conf/csfw/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/dac/2019,
+  title     = {Proceedings of the 56th Annual Design Automation Conference 2019,
+               {DAC} 2019, Las Vegas, NV, USA, June 02-06, 2019},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://doi.org/10.1145/3316781},
+  doi       = {10.1145/3316781},
+  isbn      = {978-1-4503-6725-7},
+  timestamp = {Thu, 30 Sep 2021 17:52:34 +0200},
+  biburl    = {https://dblp.org/rec/conf/dac/2019.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
@@ -2310,6 +2902,19 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   isbn      = {978-1-4503-9162-7},
   timestamp = {Wed, 13 Apr 2022 13:48:01 +0200},
   biburl    = {https://dblp.org/rec/conf/eurosys/2022.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/hotpar/2012,
+  editor    = {Hans{-}Juergen Boehm and
+               Luis Ceze},
+  title     = {4th {USENIX} Workshop on Hot Topics in Parallelism, HotPar'12, Berkeley,
+               CA, USA, June 7-8, 2012},
+  publisher = {{USENIX} Association},
+  year      = {2012},
+  url       = {https://www.usenix.org/conference/hotpar12},
+  timestamp = {Fri, 01 Oct 2021 11:57:46 +0200},
+  biburl    = {https://dblp.org/rec/conf/hotpar/2012.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
@@ -2463,6 +3068,20 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
+@proceedings{DBLP:conf/micro/2015,
+  editor    = {Milos Prvulovic},
+  title     = {Proceedings of the 48th International Symposium on Microarchitecture,
+               {MICRO} 2015, Waikiki, HI, USA, December 5-9, 2015},
+  publisher = {{ACM}},
+  year      = {2015},
+  url       = {https://doi.org/10.1145/2830772},
+  doi       = {10.1145/2830772},
+  isbn      = {978-1-4503-4034-2},
+  timestamp = {Tue, 07 Sep 2021 18:04:08 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/2015.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
 @proceedings{DBLP:conf/micro/2016,
   title     = {49th Annual {IEEE/ACM} International Symposium on Microarchitecture,
                {MICRO} 2016, Taipei, Taiwan, October 15-19, 2016},
@@ -2472,6 +3091,19 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   isbn      = {978-1-5090-3508-3},
   timestamp = {Mon, 18 Apr 2022 17:19:48 +0200},
   biburl    = {https://dblp.org/rec/conf/micro/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/micro/2019,
+  title     = {Proceedings of the 52nd Annual {IEEE/ACM} International Symposium
+               on Microarchitecture, {MICRO} 2019, Columbus, OH, USA, October 12-16,
+               2019},
+  publisher = {{ACM}},
+  year      = {2019},
+  url       = {https://dl.acm.org/citation.cfm?id=3352460},
+  isbn      = {978-1-4503-6938-1},
+  timestamp = {Tue, 07 Sep 2021 17:55:10 +0200},
+  biburl    = {https://dblp.org/rec/conf/micro/2019.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
@@ -2486,6 +3118,18 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
+@proceedings{DBLP:conf/ndss/2003,
+  title     = {Proceedings of the Network and Distributed System Security Symposium,
+               {NDSS} 2003, San Diego, California, {USA}},
+  publisher = {The Internet Society},
+  year      = {2003},
+  url       = {https://www.ndss-symposium.org/ndss2003/},
+  isbn      = {1-891562-16-9},
+  timestamp = {Tue, 20 Jul 2021 11:49:39 +0200},
+  biburl    = {https://dblp.org/rec/conf/ndss/2003.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
 @proceedings{DBLP:conf/ndss/2018,
   title     = {25th Annual Network and Distributed System Security Symposium, {NDSS}
                2018, San Diego, California, USA, February 18-21, 2018},
@@ -2494,6 +3138,18 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   url       = {https://www.ndss-symposium.org/ndss2018/},
   timestamp = {Thu, 18 Nov 2021 15:45:04 +0100},
   biburl    = {https://dblp.org/rec/conf/ndss/2018.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/ndss/2019,
+  title     = {26th Annual Network and Distributed System Security Symposium, {NDSS}
+               2019, San Diego, California, USA, February 24-27, 2019},
+  publisher = {The Internet Society},
+  year      = {2019},
+  url       = {https://www.ndss-symposium.org/ndss2019/},
+  isbn      = {1-891562-55-X},
+  timestamp = {Mon, 06 Sep 2021 15:06:52 +0200},
+  biburl    = {https://dblp.org/rec/conf/ndss/2019.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
@@ -2598,6 +3254,22 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
+@proceedings{DBLP:conf/sigmod/2015,
+  editor    = {Timos K. Sellis and
+               Susan B. Davidson and
+               Zachary G. Ives},
+  title     = {Proceedings of the 2015 {ACM} {SIGMOD} International Conference on
+               Management of Data, Melbourne, Victoria, Australia, May 31 - June
+               4, 2015},
+  publisher = {{ACM}},
+  year      = {2015},
+  url       = {http://dl.acm.org/citation.cfm?id=2723372},
+  isbn      = {978-1-4503-2758-9},
+  timestamp = {Mon, 07 Jun 2021 16:56:06 +0200},
+  biburl    = {https://dblp.org/rec/conf/sigmod/2015.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
 #  editor    = {James C. Browne and
 #               Juan Rodriguez{-}Rosell},
 @proceedings{DBLP:conf/sosp/1975,
@@ -2686,6 +3358,18 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   isbn      = {978-1-5090-0824-7},
   timestamp = {Fri, 22 Apr 2022 17:15:31 +0200},
   biburl    = {https://dblp.org/rec/conf/sp/2016.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+
+@proceedings{DBLP:conf/sp/2018,
+  title     = {2018 {IEEE} Symposium on Security and Privacy, {SP} 2018, Proceedings,
+               21-23 May 2018, San Francisco, California, {USA}},
+  publisher = {{IEEE} Computer Society},
+  year      = {2018},
+  url       = {https://ieeexplore.ieee.org/xpl/conhome/8418581/proceeding},
+  isbn      = {978-1-5386-4353-2},
+  timestamp = {Mon, 06 Sep 2021 15:01:28 +0200},
+  biburl    = {https://dblp.org/rec/conf/sp/2018.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
@@ -2855,43 +3539,21 @@ url = {https://www.microsoft.com/en-us/research/publication/spectector-principle
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@article{RocketChip,
-  title     = {The Rocket Chip Generator},
-  author    = {Asanovic, Krste and
-               Avizienis, Rimas and
-               Bachrach, Jonathan and
-               Beamer, Scott and
-               Biancolin, David and
-               Celio, Christopher and
-               Cook, Henry and
-               Dabbelt, Daniel and
-               Hauser, John and
-               Izraelevitz, Adam and
-               others},
-  journal   = {EECS Department, University of California, Berkeley, Tech. Rep. UCB/EECS-2016-17},
-  year      = {2016}
+@proceedings{DBLP:conf/wasa/2018,
+  editor    = {Sriram Chellappan and
+               Wei Cheng and
+               Wei Li},
+  title     = {Wireless Algorithms, Systems, and Applications - 13th International
+               Conference, {WASA} 2018, Tianjin, China, June 20-22, 2018, Proceedings},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {10874},
+  publisher = {Springer},
+  year      = {2018},
+  url       = {https://doi.org/10.1007/978-3-319-94268-1},
+  doi       = {10.1007/978-3-319-94268-1},
+  isbn      = {978-3-319-94267-4},
+  timestamp = {Tue, 07 Sep 2021 16:28:05 +0200},
+  biburl    = {https://dblp.org/rec/conf/wasa/2018.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 
-@misc{OpenSBI,
-  title     = {RISC-V open source supervisor binary interface},
-  author    = {riscv-software-src},
-  url       = {https://github.com/riscv-software-src/opensbi},
-  urldate   = {2022-05-01},
-  year      = {2022}
-}
-
-@misc{ARMAT,
-  title     = {Arm Armv8-A Architecture Registers},
-  author    = {Arm Limited (or its affiliates)},
-  url       = {https://developer.arm.com/documentation/ddi0595/2021-12/AArch64-Instructions/AT-S12E0R--Address-Translate-Stages-1-and-2-EL0-Read},
-  urldate   = {2022-05-01},
-  year      = {2022}
-}
-
-@misc{CortexA75,
-  title     = {Arm® Cortex®-A75 Core Technical Reference Manual},
-  author    = {Arm Limited (or its affiliates)},
-  url       = {https://documentation-service.arm.com/static/5e7e09f6a3736a0d2e862e90},
-  urldate   = {2022-05-01},
-  year      = {2018}
-}
