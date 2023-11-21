@@ -3,8 +3,8 @@ DOC := thesis
 TEX = $(wildcard *.sty *.cls)
 # INC = $(wildcard papers/*.tex)
 # FIG = $(call rglob,media,*)
-DEP = $(TEX) $(FIG) $(INC) $(PAPERS)
-PAPERS = papers/seccell-paper/seccell-core.tex papers/midas-paper/Midas-core.tex
+DEP = $(TEX) $(FIG) $(INC) $(CHAPTERS)
+CHAPTERS = chapters/seccell-core.tex chapters/Midas-core.tex
 
 # override define rglob
 # $(foreach d,$(wildcard $(1:=/*)),\
