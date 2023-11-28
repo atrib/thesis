@@ -77,6 +77,54 @@ In this thesis, we solve the two interfaces by:
         compartments, read from one two-D table.
 \end{itemize}
 
+% Solution:
+We solve the kernel TOCTTOU problem by maintaining a strong invariant:
+all reads from user memory return the same value throughout the lifetime of the system call.
+We implement multi-version concurrency through the user-memory read method (read from user).
+
+We solve the compartmentalization problem by defining a new architectural virtual memory
+interface, where the hardware isolates compartments based on permissions stored in a 
+two-dimensional table, and tracking per-core executing compartment, along with 
+userspace instructions for accelerating compartmentalization operations.
+
+\subsection{Kernel TOCTTOU Protection}
+
+Short introduction on the Kernel TOCTOTU problem.
+\begin{itemize}
+      \item User space uses system calls to request operating system kernel operations
+      \item System call arguments are passed through registers and through memory
+      \item Kernel reads userspace memory, sometimes in separate accesses for checks
+            and use (TOCTTOU)
+      \item Concurrent or parallel userspace threads sharing the address space can 
+            modify the arguments in memory
+      \item Earlier kernel code implicitly assumes that userspace is paused while
+            syscall executes. This assumption would be almost certain in less
+            adversarial environments, and on single-core computers.
+      \item Today, the kernel works with different threat assumptions, however, 
+            vulnerable code still remains, despite efforts to eliminate TOCTTOU.
+            Partly due to implicit assumptions
+            by developers, sometimes due to legacy code.
+\end{itemize}
+
+We recognize this assumption as a core assumption and develop a mitigation
+to enforce this implicit assumption.
+Our mitigation is based on a strong statement as an invariant. 
+Midas enforces that all accesses to user memory from kernel code returns
+the same value during the system call's lifetime.
+
+We eliminate TOCTTOU in a systematic solution which will:
+\begin{itemize}
+      \item Protect current (potentially unknown) TOCTTOU bugs in the kernel,
+      \item Protect vulnerable kernel modules or ebpf code developed 
+            by third parties,
+      \item Protect older systems with minor updates.
+\end{itemize}
+
+Our solution leverages the software user memory access routine, and
+hardware-enforced page table permissions.
+
+\subsection{Intra-address space compartmentalization}
+
 
 % \chapter{Compartmentalization}
 
@@ -107,9 +155,13 @@ Some stuff about goals?
 \section{Thesis statement}
 
 The design of interfaces between layers of the computing system stack decisively influence the 
-security and performance characteristics of the system. 
-Strong, well-defined guarantees at the interfaces allow developers to build well-protected high-performance systems.
-In this thesis, we 
+security and performance characteristics of the system --- 
+strong, well-defined guarantees at the interfaces allow developers to build well-protected 
+high-performance systems.
+This thesis improves the user-kernel interface by elevating an implicit assumption to 
+an explicit guarantee, preventing a class of data-race driven attacks.
+This thesis also proposes an architectural interface for compartmentalized virtual memory
+with strong isolation guarantees, by design, at high performance.
 
 \section{Thesis contributions}
 
