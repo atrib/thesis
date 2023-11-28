@@ -214,7 +214,41 @@ with strong isolation guarantees, by design, at high performance.
 
 \section{Thesis contributions}
 
-What did I contribute, I wonder?
+This thesis contributes the design and implementations of modern
+security- and performance-critical interfaces to support 
+current and future computing systems.
+Midas redesigns the userspace memory access interface to provide
+strong mitigations against data race attacks.
+SecureCells introduces compartmentalization to the architectural
+virtual memory interface.
+
+Midas' design is based on the following insights:
+\begin{itemize}
+  \item Modern OS kernels rely on softare interfaces to access
+        user memory, disabling and re-enabling related
+        protection measures like SMAP.
+  \item Non-adversarial userspace software will not modify
+        system call arguments passed by reference, as they
+        rely on the system call completing successfully.
+        Data races are, therefore, not the common case, and
+        the protection mechanism should be designed for better
+        performance when not under attack
+  \item Duplication of userspace memory is expensive, requiring
+        the corresponding memory allocation and expensive
+        metadata tracking.
+  \item The kernel does not need to duplicate userspace memory
+        except in the case of concurrent updates. In the common
+        case, duplication should be avoided.
+  \item MMU-based permission checks are ubiquitious in modern
+        architectures, allowing the hardware to efficiently
+        enforce read-only access to memory regions, and
+        notify the OS on violations.
+\end{itemize}
+This thesis contributes a design for system-call protection for Linux
+based on these insights.
+
+SecureCells contributions
+Enumeration of the requirements for compartmentalized software.
 
 \section{Thesis Organization}
 
