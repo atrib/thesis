@@ -68,7 +68,8 @@ Recent work has started tackling this problem at various levels.
 % interface but allow additional checks to be implemented, or as a redesign of the entire interface.
 In this thesis, we solve the two interfaces by:
 \begin{itemize}
-  \item System calls implicitly assume that their view of accessed user memory does not change
+  \item We recognize that
+        System calls implicitly assume that their view of accessed user memory does not change
         during the system call's lifetime. 
         The kernel uses a well-defined software interface to access user memory. 
         The clean separation of the access interface allow additional checks to assure that 
@@ -78,16 +79,32 @@ In this thesis, we solve the two interfaces by:
 \end{itemize}
 
 % Solution:
-We solve the kernel TOCTTOU problem by maintaining a strong invariant:
-all reads from user memory return the same value throughout the lifetime of the system call.
-We implement multi-version concurrency through the user-memory read method (read from user).
+We solve the security issues at the interfaces by:
+\begin{itemize}
+  \item Fixing the interface implementation. 
+        We introduce a mitigation at the kernel-user interface tasked with maintaining
+        the implicit assumption.
+        We solve the kernel TOCTTOU problem by maintaining a strong invariant:
+        all reads from user memory return the same value throughout the lifetime of the system call.
+        We implement multi-version concurrency through the user-memory read method (read from user).
+  \item Enriching the interface implementation to enable developers to express their
+        trust model and relationships. 
+        We solve the compartmentalization problem by defining a new architectural virtual memory
+        interface, where the hardware isolates compartments based on permissions stored in a 
+        two-dimensional table, and tracking per-core executing compartment, along with 
+        userspace instructions for accelerating compartmentalization operations.
+\end{itemize}
+\section{Kernel TOCTTOU Protection Overview}
 
-We solve the compartmentalization problem by defining a new architectural virtual memory
-interface, where the hardware isolates compartments based on permissions stored in a 
-two-dimensional table, and tracking per-core executing compartment, along with 
-userspace instructions for accelerating compartmentalization operations.
-
-\subsection{Kernel TOCTTOU Protection}
+% Itemize
+\begin{itemize}
+  \item The design of many modern operating system kernels heavily draw inspiration from UNIX.
+        These kernels have progressively developed to incorporate modern features and modern
+        security models.
+  \item System call interfaces were designed in the era of uniprocessors.
+  \item Userspace was suspended during kernel syscall processing.
+  \item Multi-threading was not commonplace.
+\end{itemize}
 
 Short introduction on the Kernel TOCTOTU problem.
 \begin{itemize}
@@ -111,6 +128,12 @@ to enforce this implicit assumption.
 Our mitigation is based on a strong statement as an invariant. 
 Midas enforces that all accesses to user memory from kernel code returns
 the same value during the system call's lifetime.
+Midas maintains this invariant by maintaining multiple concurrent versions
+of user pages when they are accessed by the kernel, in order to keep one
+current copy available for writes by userspace and the kernel, 
+with zero or more read-only copies available for reads by executing system calls.
+Copies are created on demand, only when a page locked by a system call sees
+a modifying write.
 
 We eliminate TOCTTOU in a systematic solution which will:
 \begin{itemize}
@@ -123,34 +146,60 @@ We eliminate TOCTTOU in a systematic solution which will:
 Our solution leverages the software user memory access routine, and
 hardware-enforced page table permissions.
 
-\subsection{Intra-address space compartmentalization}
+\section{Intra-address Space Compartmentalization Overview}
+
+SecureCells introduces a novel mechanism for intra-address space compartmentalization,
+aiming to provide secure, performant and flexible support for isolation between
+fine-grained compartments between a program. 
+
+SecureCells tackles the challenge of tailoring existing abstractions to keep up to date
+with modern threat models.
+Over the years, code sharing has become increasingly commonplace, essentially
+removing duplication of programmer effort, and allowing consumers to access
+vastly varying computing experiences.
+These experiences are enabled by:
+\begin{itemize}
+  \item Libraries (open-source or binary-only) distributed and shared widely across
+        programs, implementing widely-used operations like cryptography or
+        parsing common file formats. Often such code is available through package 
+        managers like apt or npm as source code or binary blobs. 
+        The intricate web of dependencies between libraries often results in
+        additional code being included.
+  \item Extensible frameworks like the linux kernel allow functionality to be added
+        on-demand, through the use of external code (such as kernel drivers or eBPF
+        payloads),
+  \item On-demand code being distributed to power interactive experiences on the web.
+        Websites are powered by vast code-bases of JavaScript, PHP and Wasm which are
+        dynamically loaded from servers and executed in sandboxes.
+\end{itemize}
+In all of these cases, an address space runs code written by a variety of different
+sources, with different levels of trust and testing, and with a significant code 
+churn.
+
+SecureCells proposes a novel architecture, comprising
+\begin{itemize}
+  \item Compartmentalized virtual memory, with the hardware MMU responsible for
+        enforcing access control to memory across isolated compartments, based on 
+        per-core compartment identifiers and permissions stored on an in-memory
+        two dimensional table storing per-compartment, per-virtual memory permissions,
+  \item Userspace instructions, securely accelerating common compartmentalization 
+        operations implemented as hardware execution units, microcode or firmware,
+  \item Software operations, flexibly adding the remaining functionality with the
+        same security or performance guarantees as hardware.
+\end{itemize}
+% \section{Thesis goals}
+
+% This thesis addresses the challenge of securing systems across an evolving
+% computing landscape, particularly at interfaces.
+% Interfaces within a system are particularly susceptible to security or
+% performance shortcomings.
+% Different threat models among components, or a misunderstanding of the
+% security guarantees of other components, can compromise an entire system.
+% Mismatched abstractions also impose performance overheads, as developers
+% adapt their code accordingly.
 
 
-% \chapter{Compartmentalization}
 
-% Background on Compartmentalization
-% The aim of this section is to provide background of compartmentalization as a software design principle to provide enhanced security. This section will explain the terminology of "monolithic" and "compartmentalized" programs. This section will also describe the attacker model for compartmentalization and what attacks can be prevented.
-% Compartmentalization and Principle of Least Privilege 
-% This subsection defines the Principle of Least Privilege, and how compartmentalization implements this principle within programs to reduce the impact of security bugs.
-% Compartmentalization and Modularity
-% This subsection will describe the modular organization of modern software, and how this can be leveraged for compartmentalization. Example of modular organization includes libraries and sandboxes. This section also explains how modules in a compartmentalized program should communicate using well-defined APIs.
-% Security Guarantees of Compartmentalization
-% This subsection will describe the security benefits of compartmentalization. This subsection should explain exactly what attack scenarios are protected and which ones are not. At the end of this section, the reader should be clear about what the security guarantees of compartmentalization are. Particularly, we should be clear that compartmentalization does not protect against buggy modules that allow compromise via their external interface.
-% Isolation and Communication in Compartmentalized Software
-% Following on from the previous paragraph, this subsection explains the allocation of private and shared memory regions for compartments, and what communication interfaces for compartmentalized software are for, and what they look like.
-% Compartmentalization Mechanism Requirements 
-% This subsection follows from the SecureCells Paper (section 2) which describes how a hardware compartmentalization mechanism will support a compartmentalized program, and consequently, what the requirements for the mechanism are. This will have the same general outline as in the paper, being divided into requirements for security, performance and flexibility.
-% Security
-% From SecureCells paper.
-% Performance
-% From SecureCells paper.
-% Flexibility
-% SecureCells paper.
-
-
-\section{Thesis goals}
-
-Some stuff about goals?
 
 \section{Thesis statement}
 
