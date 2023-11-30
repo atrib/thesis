@@ -174,17 +174,18 @@
 
 \graphicspath{{./media/}}
 
+\makeatletter
+\providecommand*{\input@path}{}
+\g@addto@macro\input@path{{./chapters/}} % append
+\makeatother
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SecureCells definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{namedscope}{seccell}+
-  \graphicspath{{./papers/seccell-paper/}}
+  \graphicspath{{./media/seccell/}}
 
-  \makeatletter
-  \providecommand*{\input@path}{}
-  \g@addto@macro\input@path{{./papers/seccell-paper/}} % append
-  \makeatother
 
   % \makeatletter
   % \providecommand*{\input@path}{}
@@ -299,7 +300,7 @@
 % Midas definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{namedscope}{midas}+
-  \graphicspath{{./papers/midas-paper/}}
+  \graphicspath{{./media/midas/}}
 
   \newenvironment{minilisting}
   {\minipage[b]{\linewidth}\verbatim}
@@ -401,7 +402,7 @@ I thank the Academy \dots
 
 Does anything change if I put some text here?
 
-\include{papers/seccell-paper/seccell-core}
+\input{chapters/seccell-core}
 \end{namedscope}
 
 \begin{namedscope}{midas}
@@ -410,7 +411,7 @@ Does anything change if I put some text here?
   \epigraph{Thanks, Uros, really.}%
           {\textit{Me}}
 
-\include{papers/midas-paper/Midas-core}
+\input{chapters/midas-core}
 \end{namedscope}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -418,7 +419,7 @@ Does anything change if I put some text here?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{namedscope}{seccell}
-\input{papers/seccell-paper/seccell-appendix}
+\input{chapters/seccell-appendix}
 \end{namedscope}
 
 

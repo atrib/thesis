@@ -1,6 +1,0 @@
-[submodule "papers/seccell-paper"]
-	path = papers/seccell-paper
-	url = git@github.com:HexHive/seccell-paper.git
-[submodule "papers/midas-paper"]
-	path = papers/midas-paper
-	url = git@github.com:atrib/midas-paper.git

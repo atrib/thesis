@@ -3,8 +3,9 @@ DOC := thesis
 TEX = $(wildcard *.sty *.cls)
 # INC = $(wildcard papers/*.tex)
 # FIG = $(call rglob,media,*)
-DEP = $(TEX) $(FIG) $(INC) $(CHAPTERS)
-CHAPTERS = chapters/seccell-core.tex chapters/Midas-core.tex
+MEDIA = data/seccells/32ksim/mycached_full.pdf data/seccells/network_1ktlb_sim/nfv_full.pdf
+DEP = $(TEX) $(FIG) $(INC) $(CHAPTERS) $(MEDIA)
+CHAPTERS = $(wildcard chapters/*.tex) 
 
 # override define rglob
 # $(foreach d,$(wildcard $(1:=/*)),\
@@ -14,10 +15,12 @@ CHAPTERS = chapters/seccell-core.tex chapters/Midas-core.tex
 
 # .PHONY: clean partial
 
-$(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf
-	make -C papers/seccell-paper
-	make -C papers/midas-paper midas
+$(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf 
 	rubber --unsafe --pdf $(DOC).tex 
+
+.SECONDEXPANSION:
+data/%.pdf: $$(@D)/data.csv
+	make -C $(@D)/ $@
 
 # resume.pdf: resume.tex
 # 	$(call pdflatex,resume)
@@ -27,7 +30,7 @@ $(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf
 # 		-interaction=nonstopmode -halt-on-error -shell-escape $<
 
 clean:
-	rm -rf $(DOC).pdf *-blx.bib *.log *.run.xml *.toc *.rubbercache *.aux _minted-*
+	rm -rf $(DOC).pdf *-blx.bib *.log *.run.xml *.toc *.rubbercache *.aux _minted-* ${MEDIA}
 # clean:
 # 	@rm -rf *.pdf $(call artifacts,*)
 

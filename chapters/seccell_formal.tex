@@ -1,0 +1,197 @@
+\begin{figure*}[!t]
+
+  \rule{\textwidth}{1pt}
+  \centering
+  \textbf{\seccells Program State\\}
+  \rule{\textwidth}{1pt}
+  \vspace{-2\baselineskip}
+  \begin{multicols}{2}
+    \begin{algorithmic}[1]
+      \State A set of $M$ \secdiv{}s ($S$), incl. $SD_{sup}$ for the supervisor
+      \State A set of $N$ cells ($C$) each of which is valid or invalid
+      \State Per-core register $SID$
+      \State Per-core register $RID$
+      \State \ptable $PT: S \times C \mapsto \mathscr{P}(\set{r, w, x})$
+      \State \gtable $GT: S \times C \mapsto S \times \mathscr{P}(\set{r, w, x})$
+    \end{algorithmic}
+  \end{multicols}
+  \vspace{-1.3\baselineskip}
+  \rule{\textwidth}{1pt}
+
+\begin{multicols}{2}
+\removelatexerror
+
+    % General notation:
+    % c_i         for a cell
+    % SD_j        for a secdiv
+    % p_{i,j}     for PT(SDj,ci)
+    % gp_{tgt}    for GT perms
+
+    % SDSwitch algorithm
+    \begin{algorithm}[H]
+      \caption{SDSwitch($addr$, $SD_{tgt}$) \\
+        Switch to $SD_{tgt}$ at instruction pointer $addr$   }
+        \begin{algorithmic}[1]
+
+          \State $c_i \gets cell(addr)$
+          \State \textbf{assert} $valid(c_i)$
+
+          \State \textbf{assert} instruction at $addr$ is $SDEntry$
+          \State \textbf{assert} $x \in PT(SD_{tgt}, c_i)$
+          \State instruction pointer $\gets addr$
+          \State $RID \gets SID$
+          \State $SID \gets SD_{tgt}$
+        \end{algorithmic}
+        \label{alg:sdswitch}
+    \end{algorithm}
+    \vspace{-0.5\baselineskip}
+
+    % SCProtect algorithm
+    \begin{algorithm}[H]
+      \caption{SCProt($addr$, $perm$) \\
+      Restrict rights to $addr$ to $perm$              }
+      \begin{algorithmic}[1]
+
+        \State $c_i \gets cell(addr)$
+        \State \textbf{assert} $valid(c_i)$
+
+        \State $p_{i,cur} \gets PT(SD_{cur}, c_i) $
+        \State \textbf{assert} $perm \subseteq p_{i,cur}$
+
+        \State $PT(SD_{cur}, c_i) \gets perm$
+      \end{algorithmic}
+      \label{alg:scprotect}
+    \end{algorithm}
+    \vspace{-0.5\baselineskip}
+
+    % SCGrant algorithm
+    \begin{algorithm}[H]
+      \caption{SCGrant($addr$, $SD_{tgt}$, $perm$) \\
+      Grant $SD_{tgt}$ $perm$ rights to $addr$             }
+      \begin{algorithmic}[1]
+
+        \State $c_i \gets cell(addr)$
+        \State \textbf{assert} $valid(c_i) \land perm \ne \phi$
+
+        \State $p_{i,cur} \gets PT(SD_{cur}, c_i)$
+        \State \textbf{assert} $perm \subseteq p_{i,cur}$
+
+        \State $GT(SD_{cur}, c_i) \gets (SD_{tgt}, p_{tgt})$
+      \end{algorithmic}
+      \label{alg:scgrant}
+    \end{algorithm}
+    \vspace{-0.5\baselineskip}
+
+    % SCRecv algorithm
+    \begin{algorithm}[H]
+      \caption{SCRecv($addr$, $SD_{src}$, $perm$) \\
+      Accept $perm$ rights to $addr$ from $SD_{src}$      }
+      \begin{algorithmic}[1]
+
+        \State $c_i \gets cell(addr)$
+        \State \textbf{assert} $valid(c_i) \land perm \ne \phi$
+
+        \State $(SD_{tgt}, gp_{tgt}) \gets GT(SD_{src}, c_i)$
+        \State $p_{i,cur} \gets PT(SD_{cur}, c_i)$
+        \State \textbf{assert} $SD_{cur} = SD_{tgt} \land perm \subseteq gp_{tgt}$
+
+        \If{$perm = gp_{tgt}$}
+          \State $GT(SD_{src}, c_i) \gets (SD_{inv}, \phi)$
+        \Else
+          \State $GT(SD_{src}, c_i) \gets (SD_{tgt}, gp_{tgt} - perm)$
+        \EndIf
+        \State $PT(SD_{cur}, c_i) \gets perm \cup p_{i, cur} $
+
+      \end{algorithmic}
+      \label{alg:screcv}
+    \end{algorithm}
+    \vspace{-\baselineskip}
+
+    % SCTfer algorithm
+    \begin{algorithm}[H]
+      \caption{SCTfer ($addr$, $SD_{tgt}$, $perm$) \\
+      Transfer all $perm$ rights for $addr$ to $SD_{tgt}$    }
+      \begin{algorithmic}[1]
+        \State SCGrant($addr$, $SD_{tgt}$, $perm$)
+        \State SCProtect ($addr$, $\phi$)
+      \end{algorithmic}
+      \label{alg:tfer}
+    \end{algorithm}
+    \vspace{-1.5\baselineskip}
+
+    % SCReval algorithm
+    \begin{algorithm}[H]
+      \caption{SCReval($addr$, $perm$)  \\
+      Re-validate address $addr$ with $perm$ rights}
+      \begin{algorithmic}[1]
+
+        \State $c_i \gets cell(addr)$
+        \State \textbf{assert} $invalid(c_i) \land perm \ne \phi$
+
+        \State Validate $c_i$
+        \State $PT(SD_{cur}, c_i) \gets perm$
+
+      \end{algorithmic}
+      \label{alg:screval}
+    \end{algorithm}
+    \vspace{-1.5\baselineskip}
+
+    % SCInval algorithm
+    \begin{algorithm}[H]
+      \caption{SCInval($addr$)  \\
+      Invalidate $addr$ cell}
+      \begin{algorithmic}[1]
+
+        \State $c_i \gets cell(addr)$
+        \State \textbf{assert} $valid(c_i)$
+
+        \ForAll{$SD_j \in S - \set{SD_{sup}, SD_{cur}}$}
+          \State $p_{i, j} \gets PT(SD_j, c_i)$
+          \State $(SD_{tgt}, gp_{tgt}) \gets GT(SD_j, c_i)$
+          \State \textbf{assert} $p_{i,j} = \phi \land gp_{tgt} = \phi \land SD_{tgt} = SD_{inv}$
+        \EndFor
+
+        \State $PT(SD_{src}, c_i) \gets \phi$
+        \State $GT(SD_{cur}, c_i) \gets (SD_{inv}, \phi)$
+
+        \State Invalidate $c_i$
+      \end{algorithmic}
+      \label{alg:scinval}
+    \end{algorithm}
+    \vspace{-1.5\baselineskip}
+
+    % SCExcl algorithm
+    \begin{algorithm}[H]
+      \caption{SCExcl($addr$, $perm$) \\
+      Verify exclusive $perm$ rights to $addr$       }
+      \begin{algorithmic}[1]
+
+        \State $c_i \gets cell(addr)$
+        \State \textbf{assert} $valid(c_i) \land perm \ne \phi$
+
+        \State $p_{i,cur} \gets PT(SD_{cur}, c_i) $
+        \State \textbf{assert} $perm \subseteq p_{i,cur}$
+
+        \State $ (SD_{tgt}, gp_{tgt}) \gets GT(SD_{cur}, c_i)$
+        \If{$ perm \cap gp_{tgt} \neq \phi$}
+          \State \textbf{return} $False$
+        \EndIf
+
+        \State $excl \gets True$
+        \ForAll{$SD_j \in S - \set{SD_{sup}, SD_{cur}}$}
+          \State $p_{i,j} \gets PT(SD_j, c_i)$
+          \State $(SD_{tgt}, gp_{tgt}) \gets GT(SD_j, c_i)$
+          \If{$ perm \cap p_{i,j} \neq \phi \lor perm \cap gp_{tgt} \neq \phi$}
+            \State $excl \gets False$
+          \EndIf
+        \EndFor
+        \State \textbf{return} $excl$
+      \end{algorithmic}
+      \label{alg:sccount}
+    \end{algorithm}
+    \vspace{-\baselineskip}
+  \end{multicols}
+
+  \caption{\seccells' state and userspace instructions.}
+  \label{fig:seccell_ops_formal}
+\end{figure*}

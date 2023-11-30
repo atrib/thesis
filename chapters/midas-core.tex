@@ -254,7 +254,7 @@ kernel accesses to userspace data explicit, allowing
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=.95\linewidth]{img/doublefetch.pdf}
+  \includegraphics[width=.95\linewidth]{media/midas/doublefetch.pdf}
   \caption{Example of a double-fetch bug.}
   \label{fig:doublefetch}
 \end{figure}
@@ -559,7 +559,7 @@ holding the latest state of the page.}
 
 \begin{figure*}[]
   \centering
-  \includegraphics[width=0.9\linewidth]{img/midas_states.pdf}
+  \includegraphics[width=0.9\linewidth]{media/midas/midas_states.pdf}
   \caption{State diagram for a page in \midas. Reads/writes from userspace/syscall
           code are marked (u)/(s) respectively. Shading is used to represent the
           mapping from snapshots to copies.}
@@ -568,7 +568,7 @@ holding the latest state of the page.}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.95\linewidth]{img/doublefetch_midas.pdf}
+  \includegraphics[width=0.95\linewidth]{media/midas/doublefetch_midas.pdf}
   \caption{Diagram illustrating \midas preventing exploitation of a
   double fetch of object \Code{X}.}
   \label{fig:doublefetch_midas}
@@ -860,7 +860,7 @@ Linux kernel.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{img/doublefetch_midas_twopages.pdf}
+  \includegraphics[width=\linewidth]{media/midas/doublefetch_midas_twopages.pdf}
   \caption{Diagram illustrating \midas preventing exploitation
   of a double fetch of an object \Code{X} spanning two pages.}
   \label{fig:copy_two_pages}
@@ -964,7 +964,7 @@ Only one syscall~(\Code{clone}) required code modification.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{img/book-keeping.pdf}
+  \includegraphics[width=\linewidth]{media/midas/book-keeping.pdf}
   \caption{Bookkeeping information for a page.}
   \label{fig:midas_bookeeping}
 \end{figure}
@@ -1023,7 +1023,7 @@ all address spaces for a page.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=0.8\linewidth]{img/copy_from_user.pdf}
+  \includegraphics[width=0.8\linewidth]{media/midas/copy_from_user.pdf}
   \caption{Flowchart for a syscall using the transfer function
           \Code{raw_copy_from_user}
           for reading from userspace.}
@@ -1087,7 +1087,7 @@ they can prove to be secure from double-fetch bugs.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{img/pagefault.pdf}
+  \includegraphics[width=\linewidth]{media/midas/pagefault.pdf}
   \caption{Flowchart for handling a page fault. Shaded
           operations are unmodified.}
   \label{fig:fault_handling}
@@ -1095,7 +1095,7 @@ they can prove to be secure from double-fetch bugs.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{img/pagefault_cow.pdf}
+  \includegraphics[width=\linewidth]{media/midas/pagefault_cow.pdf}
   \caption{Flowchart for handling a page fault to a COW page.}
   \label{fig:fault_handling_cow}
 \end{figure}
@@ -1434,7 +1434,7 @@ but instruments all syscalls including \Code{write}.
 
 \begin{figure*}[!t]
   \centering
-  \includegraphics[width=\linewidth]{img/midas_performance.pdf}
+  \includegraphics[width=\linewidth]{media/midas/midas_performance.pdf}
   \caption{\midas' performance on microbenchmarks, NPB and PTS benchmarks
           relative to the baseline kernel.}
   \label{fig:midas_performance}
@@ -1580,7 +1580,7 @@ memory overhead.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{img/overhead.pdf}
+  \includegraphics[width=\linewidth]{media/midas/overhead.pdf}
   \caption{Classification of overheads for various benchmarks due to \midas.}
   \label{fig:overhead_class}
 \end{figure}
@@ -1632,7 +1632,7 @@ a much larger overhead for TLB flushing, accounting for
 
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{img/nginx_performance.pdf}
+  \includegraphics[width=\linewidth]{media/midas/nginx_performance.pdf}
   \caption{Request rates and throughput served by the Nginx server for
           static pages.}
   \label{fig:nginx_perf}
