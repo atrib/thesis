@@ -16,7 +16,9 @@ CHAPTERS = $(wildcard chapters/*.tex)
 # .PHONY: clean partial
 
 $(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf 
+	# $(call pdflatex,$(DOC))
 	rubber --unsafe --pdf $(DOC).tex 
+	pdflatex -interaction=nonstopmode $(DOC).tex
 
 .SECONDEXPANSION:
 data/%.pdf: $$(@D)/data.csv
@@ -34,16 +36,16 @@ clean:
 # clean:
 # 	@rm -rf *.pdf $(call artifacts,*)
 
-# define pdflatex
-# pdflatex \
-# 	-interaction=nonstopmode -halt-on-error -shell-escape $(1).tex
-# bibtex $(1) || true # in case .bib is missing
-# pdflatex \
-# 	-interaction=nonstopmode -halt-on-error -shell-escape $(1).tex
-# pdflatex \
-# 	-interaction=nonstopmode -halt-on-error -shell-escape $(1).tex
-# # rm -rf $(call artifacts,$1)
-# endef
+define pdflatex
+pdflatex \
+	-interaction=nonstopmode -shell-escape $(1).tex
+bibtex $(1) || true # in case .bib is missing
+pdflatex \
+	-interaction=nonstopmode -shell-escape $(1).tex
+pdflatex \
+	-interaction=nonstopmode -shell-escape $(1).tex
+# rm -rf $(call artifacts,$1)
+endef
 
 # define artifacts
 # $$(cat $(1).aux 2>/dev/null | grep -oP '(?<=\\@input\{).*?(?=\})') \

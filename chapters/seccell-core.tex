@@ -1134,9 +1134,9 @@ transfer.
 %   L2 TLB       & ----   & ----  & -                & ---- & ----  & -               \\
     L2 TLB + PTW & 5000   & 3428  & 18KiB            & 3826 & 4596  & 0               \\
 %   Total(Core)  & ----   & ----  & -                & ---- & ----  & -               \\
-    % \midrule
+    \midrule
     % \rowstyle{\bfseries}
-    % MMU Total    & 9528   & 7362  & 18KiB            & 6627 & 6200  & 0               \\
+    MMU Total    & 9528   & 7362  & 18KiB            & 6627 & 6200  & 0               \\
     \bottomrule
   \end{tabular}
   \label{tab:fpga_resource}
@@ -1266,13 +1266,13 @@ stack switching.
     Instruction & \parbox[t]{0.7cm}{Trap\\ entry} 
                             & Dispatch  & Emulation & \parbox[t]{0.8cm}{Total \\Cycles} \\
     \midrule
-    \scprot     &           &   32      &   33      & 144 \\
-    \scinval    &           &   35      &   68      & 182 \\
-    \screval    &           &   39      &   44      & 162 \\
+    \scprot     & 79        &   32      &   33      & 144 \\
+    \scinval    & 79        &   35      &   68      & 182 \\
+    \screval    & 79        &   39      &   44      & 162 \\
     \screcv     & 79        &   54      &   69      & 202 \\
-    \scgrant    &           &   52      &   63      & 194 \\
-    \sctfer     &           &   61      &   62      & 202 \\
-    \scexcl     &           &   57      &   67      & 203 \\
+    \scgrant    & 79        &   52      &   63      & 194 \\
+    \sctfer     & 79        &   61      &   62      & 202 \\
+    \scexcl     & 79        &   57      &   67      & 203 \\
     \bottomrule
   \end{tabular}
   \label{tab:emulation}
