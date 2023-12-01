@@ -167,21 +167,36 @@ to provide better performance or making restrictive assumptions on
 use case.
 
 
-TOCTTOU comes in the insight that devs make an implicit assummption.
 % Insights: Problems with abstractions can be fixed. 
 % Fixes might require principled changes to the interfaces, as either mitigations which preserve the
 % interface but allow additional checks to be implemented, or as a redesign of the entire interface.
-In this thesis, we solve the two interfaces by:
-\begin{itemize}
-  \item We recognize that
-        System calls implicitly assume that their view of accessed user memory does not change
-        during the system call's lifetime. 
-        The kernel uses a well-defined software interface to access user memory. 
-        The clean separation of the access interface allow additional checks to assure that 
-        the implicit invariant is upheld.
-  \item The hardware is part of the TCB, and can be tasked with managing permissions for different
-        compartments, read from one two-D table.
-\end{itemize}
+% In this thesis, we solve the two interfaces by:
+% \begin{itemize}
+%   \item We recognize that
+%           TOCTTOU comes in the insight that devs make an implicit assummption.
+%         System calls implicitly assume that their view of accessed user memory does not change
+%         during the system call's lifetime. 
+%         The kernel uses a well-defined software interface to access user memory. 
+%         The clean separation of the access interface allow additional checks to assure that 
+%         the implicit invariant is upheld.
+%   \item The hardware is part of the TCB, and can be tasked with managing permissions for different
+%         compartments, read from one two-D table.
+% \end{itemize}
+Security guarantees should inform the design of interfaces --- either by 
+extending or redesigning interfaces.
+At the kernel-user interface, we see that data races require the kernel
+to access the same argument in user memory at least twice, which
+allows the user to modify the data in the meantime.
+In fact, such bugs which are generally called double-fetch bugs commonly 
+manifest from the same usage pattern.
+The kernel first loads arguments once to check their validity, then
+loads them at a later time in order to use them.
+This pattern earns these bugs the often-used moniker of 
+Time-of-Check-to-Time-of-Use (TOCTTOU) bugs.
+A double-fetch bug manifests from an implicit assumption by the developer
+that the fetched data is the same.
+The commonplace, software interface used by the allows us to extend the 
+kernel system call interface with a secure invariant.
 
 % Solution:
 We solve the security issues at the interfaces by:
