@@ -2,67 +2,172 @@
 \epigraph{Testing can only prove the presence of idiots, not their absence. Software is written---for the most part---by idiots.}%
          {\textit{Aristotle}}
 
+
 % Context, computers are running ever increasing code bases, which are impossible to definitively verify
 % and which are getting executed in shared environments all the time.
-Computer systems and computing environments have significantly evolved over time.
-\begin{itemize}
-  \item The complexity and scale of computing systems has increased exponentially for decades. 
-  \item The scale of modern systems allows, and also relies on, a large degree of sharing. 
-  \item The degree of code sharing has changed dramatically, 
-        from 
-        code written by individual tech-savvy developers and run on their personal machines
-        to 
-        code fully written and distributed by corporations and run by users on their personal machines
-        to
-        code written and distributed by a large variety of sources, and implicitly run in shared environments
-        by even unwitting users on personal machines.
-  \item Large amount of shared code cannot be vetted even by large corporations (e.g., popular libraries)
-  \item Shared code gets distributed by avenues with low checks or measures (e.g., package managers like crate, npm)
-  \item Browsers fetch and execute code on-demand from an infinitely varying set of sources.
-  \item Consequently, modern systems include a wider range of trust relationships compared to traditional systems.
-\end{itemize}
+% Computer systems and computing environments have significantly evolved over time.
+% \begin{itemize}
+%   \item The complexity and scale of computing systems has increased exponentially for decades. 
+%   \item The scale of modern systems allows, and also relies on, a large degree of sharing. 
+%   \item The degree of code sharing has changed dramatically, 
+%         from 
+%         code written by individual tech-savvy developers and run on their personal machines
+%         to 
+%         code fully written and distributed by corporations and run by users on their personal machines
+%         to
+%         code written and distributed by a large variety of sources, and implicitly run in shared environments
+%         by even unwitting users on personal machines.
+%   \item Large amount of shared code cannot be vetted even by large corporations (e.g., popular libraries)
+%   \item Shared code gets distributed by avenues with low checks or measures (e.g., package managers like crate, npm)
+%   \item Browsers fetch and execute code on-demand from an infinitely varying set of sources.
+%   \item Consequently, modern systems include a wider range of trust relationships compared to traditional systems.
+% \end{itemize}
+The computing landscape is one of rapid expansion and evolution.
+Modern computing systems inherit many of the abstractions and interfaces
+developed at the inception of personal computing and mainframe servers,
+but face a very different computing environment.
+First, the complexity and scale of computing systems have increased 
+exponentially over the decades, far outscaling the ability for developers to 
+exhaustively test and verify their systems, leading to an abundance of bugs.
+Second, this scaling in complexity relies on, and also enables, pervasive code
+sharing.
+A web browser (e.g., Firefox) along with the underlying operating 
+system (e.g., Linux) accounts for hundreds of millions of lines of code
+including
+\begin{inparaenum}
+      \item mainline kernel code written by a globally distributed consortium,
+      \item numerous device drivers written by the respective hardware 
+            vendors,
+      \item shared libraries and modules developed independently and 
+            written using a plethora of different languages,
+      \item code from websites, often including other embedded pages,
+            written by respective developers.
+\end{inparaenum}
+Modern systems need to include the threat of bugs in shared code
+compromising their security in the their threat model, and implement
+necessary mitigations.
+For example, a developer of web code must consider the threat that any of the
+thousands of JavaScript packages their code depends on might be malicious,
+currently or in the future.
+% See this example:
+% https://therecord.media/malware-found-in-npm-package-with-millions-of-weekly-downloads
+
 
 % The core problem: mismatch between interface design and modern computing trust relations
-Modern systems are implemented on legacy interfaces, incurring security or performance limitations.
-\begin{itemize}
-  \item modern systems continue to rely extensively on legacy interfaces. 
-  Examples  of these interfaces include the ISA interface and OS system call interface, both of which largely resemble systems from 20-40 years back.
-  For example, the virtual memory definition of traditional ISAs focus on isolating different virtual address spaces from each other, whereas modern systems mix code from various untrusted sources within the same address space.
-  \item Interfaces might lack the expressivity to express modern trust relations (virtual memory)
-  \item Interfaces might include implicit assumptions, including ones not noticed by the developers of the interface, which may be wilfully or unknowingly violated by malicious or buggy code.
-\end{itemize}
-Problems with two specific interfaces are tackled by this thesis.
-\begin{itemize}
-  \item The OS interface to userspace lacks protection against concurrent modification by userspace. 
-        A contributing factor to this problem could be the relative absence of concurrency, and absolute 
-        lack of parallelism when modern operating systems were conceived.
-  \item The ISA interface for virtual memory contains a single permission for any address, for all code
-        executing within that address space.
-        This design was sufficient when programs trusted all of their code, moreso since most computers 
-        ran code entirely designed and written by one corporation.
-        The relative infancy of the internet meant very limited code sharing, and only among developers when
-        at all.
-\end{itemize}
+% Modern systems are implemented on legacy interfaces, incurring security or performance limitations.
+% \begin{itemize}
+%   \item modern systems continue to rely extensively on legacy interfaces. 
+%   Examples  of these interfaces include the ISA interface and OS system call interface, both of which largely resemble systems from 20-40 years back.
+%   For example, the virtual memory definition of traditional ISAs focus on isolating different virtual address spaces from each other, whereas modern systems mix code from various untrusted sources within the same address space.
+%   \item Interfaces might lack the expressivity to express modern trust relations (virtual memory)
+%   \item Interfaces might include implicit assumptions, including ones not noticed by the developers of the interface, which may be wilfully or unknowingly violated by malicious or buggy code.
+% \end{itemize}
+% Problems with two specific interfaces are tackled by this thesis.
+% \begin{itemize}
+%   \item The OS interface to userspace lacks protection against concurrent modification by userspace. 
+%         A contributing factor to this problem could be the relative absence of concurrency, and absolute 
+%         lack of parallelism when modern operating systems were conceived.
+%   \item The ISA interface for virtual memory contains a single permission for any address, for all code
+%         executing within that address space.
+%         This design was sufficient when programs trusted all of their code, moreso since most computers 
+%         ran code entirely designed and written by one corporation.
+%         The relative infancy of the internet meant very limited code sharing, and only among developers when
+%         at all.
+% \end{itemize}
+While computing systems have evolved significantly, interfaces between many 
+parts of this system remain entrenched in antiquity.
+The designs of these interfaces reflect the requirements and threat landscape
+of their respective design periods, but fail to adequately address modern
+needs.
+One consequence is that interfaces might not adequately mitigate threats
+that have arisen or worsened \emph{after} the design of the interface.
+For example, the kernel system call has always considered the threat
+of attacks from untrusted userspace and system calls typically check the 
+validity of arguments passed from userspace.
+Meanwhile, computing has evolved to support increased concurrency and true 
+parallelism, with the rise in popularity of multicore CPUs and multi-threaded 
+programs.
+For system call arguments stored in user memory and passed by reference,
+this evolution has opened the gates for data races if the user program
+modifies the arguments from a second thread while the kernel executes
+a system call from one thread.
+A second consequence is that interfaces might not provide the correct
+abstractions to efficiently support program design that reflects
+modern trust relations.
+For example, the dominant abstraction for isolation within userspace code
+is a process, and different applications typically execute in different 
+processes to isolate applications from bugs in other applications.
+Isolation using processes is well suited to the historical state of software
+development where software vendors wrote their own applications with limited
+code sharing between vendors.
+Processes isolated code for one application, from one software vendor,
+from other applications, from other software vendors or for another user.
+With more code within applications originating from third-party developers
+and less trust of code run within a single process, intra-process isolation
+has become crucial.
+Security-critical programs, like browsers, microservices and microkernel
+operating systems (OSs), refactored to enforce intra-application isolation 
+using processes are limited by the high overheads of this abstraction, and 
+only support coarse-grained isolation to provide acceptable performance.
+
 
 % Prior work around fixing abstractions or introducing new ones
-Recent work has started tackling this problem at various levels. 
-\begin{itemize}
-  \item Papers have tried to remove this implicit assumption from the kernel by attempting to find and 
-        refactor code vulnerable to userspace TOCTTOU, using methods based on static and dynamic analysis.
-        Limitations of existing works includes:
-        - protection only against known bugs, 
-        - detection of subset of bugs triggered by dybnamic analysis,
-        - other shortcomings described in the paper.
-  \item Mechanisms (research and production) have tried to introduce additional access control within an
-        address space to isolate parts of a program which do not trust each other.
-        However, these mechanisms continue to trade-off performance and security guarantees. 
-        - Some existing mechanisms offer a thin additional layer of security for very little overhead.
-        - Others provide more comprehensive protection, but at high cost.
-        A common contributing factor to higher costs is a reliance on more traditional abstractions.
-        Particularly, the OS is included in the TCB and tasked with implementing switching between
-        protection domains or compartments, assuring security at high cost.
-\end{itemize}
+% Recent work has started tackling this problem at various levels. 
+% \begin{itemize}
+%   \item Papers have tried to remove this implicit assumption from the kernel by attempting to find and 
+%         refactor code vulnerable to userspace TOCTTOU, using methods based on static and dynamic analysis.
+%         Limitations of existing works includes:
+%         - protection only against known bugs, 
+%         - detection of subset of bugs triggered by dybnamic analysis,
+%         - other shortcomings described in the paper.
+%   \item Mechanisms (research and production) have tried to introduce additional access control within an
+%         address space to isolate parts of a program which do not trust each other.
+%         However, these mechanisms continue to trade-off performance and security guarantees. 
+%         - Some existing mechanisms offer a thin additional layer of security for very little overhead.
+%         - Others provide more comprehensive protection, but at high cost.
+%         A common contributing factor to higher costs is a reliance on more traditional abstractions.
+%         Particularly, the OS is included in the TCB and tasked with implementing switching between
+%         protection domains or compartments, assuring security at high cost.
+% \end{itemize}
+Continuing industrial and academic efforts have proposed various 
+improvements to improve the kernel-user boundary and add isolation within
+a process.
+The security of operating systems is an area of active research, and many
+methodologies have been proposed to fix the issue of data races at the system
+call interface, primarily focussing on finding and fixing instances of such
+bugs.
+One class of proposals~\cite{dftracker, deadline, dftinker} leverage static
+analysis to search the OS codebases for specific vulnerable patterns.
+Alternative proposals~\cite{schwartzDECAF,jurczyk2013bochspwn,wilhelm2016xenpwn}
+leverage dynamic analysis to detect instances of data races at runtime.
+Finally, DECAF~\cite{schwartzDECAF} repurposes a CPU-specific feature
+intended for accelerating database transactions to instead mitigate such
+bugs.
+Bug finding techniques, however, are insufficient --- they can only fix
+bugs found, and both static and dynamic analysis are incomplete.
+The significant churn in code further complicates the challenge, as every
+change potentially introduces a new such bug.
+DECAF's mitigation is also incomplete, since the protection depends on
+a vendor-specific feature, which has since also been deprecated on newer
+processors.
+The system call interface requires a more principled and reliant
+mitigation against data race attacks.
+Similarly, while researchers and processor vendors continue to propose 
+mechanisms for finer-grained isolation within a process' address space, 
+these mechanisms vary in their design goals, and do not adequately
+support widespread adoption.
+Mechanisms which prioritize backward compatibility with existing 
+systems~\cite{LittonVE0BD16, HsuHEP16, HedayatiGJCSSM19Hodor, LeeSK18, DuHXZC19XPC}
+introduce the security benefits of intra-address space isolation
+but continue to suffer the consequences of other legacy design choices, 
+such as expensive supervisor-mediated context switches.
+Some mechanisms~\cite{ParkLXMK19, HedayatiGJCSSM19Hodor} trade off 
+performance for security, either providing weaker security than processes
+to provide better performance or making restrictive assumptions on
+use case.
 
+
+TOCTTOU comes in the insight that devs make an implicit assummption.
 % Insights: Problems with abstractions can be fixed. 
 % Fixes might require principled changes to the interfaces, as either mitigations which preserve the
 % interface but allow additional checks to be implemented, or as a redesign of the entire interface.
