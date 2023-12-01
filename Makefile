@@ -16,9 +16,7 @@ CHAPTERS = $(wildcard chapters/*.tex)
 # .PHONY: clean partial
 
 $(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP) Resume.pdf 
-	# $(call pdflatex,$(DOC))
-	rubber --unsafe --pdf $(DOC).tex 
-	pdflatex -interaction=nonstopmode $(DOC).tex
+	$(call pdflatex,$(DOC))
 
 .SECONDEXPANSION:
 data/%.pdf: $$(@D)/data.csv
@@ -32,19 +30,17 @@ data/%.pdf: $$(@D)/data.csv
 # 		-interaction=nonstopmode -halt-on-error -shell-escape $<
 
 clean:
-	rm -rf $(DOC).pdf *-blx.bib *.log *.run.xml *.toc *.rubbercache *.aux _minted-* ${MEDIA}
+	rm -rf $(DOC).pdf $(MEDIA) *-blx.bib *.log *.run.xml *.toc *.rubbercache
+	rm -rf *.aux _minted-* *.blg *.bbl
+	rm -rf chapters/*.aux 
 # clean:
 # 	@rm -rf *.pdf $(call artifacts,*)
 
 define pdflatex
-pdflatex \
-	-interaction=nonstopmode -shell-escape $(1).tex
-bibtex $(1) || true # in case .bib is missing
-pdflatex \
-	-interaction=nonstopmode -shell-escape $(1).tex
-pdflatex \
-	-interaction=nonstopmode -shell-escape $(1).tex
-# rm -rf $(call artifacts,$1)
+pdflatex -interaction=nonstopmode -halt-on-error -shell-escape $(1).tex 
+bibtex $(1)  
+pdflatex -interaction=nonstopmode -halt-on-error -shell-escape $(1).tex 
+pdflatex -interaction=nonstopmode -halt-on-error -shell-escape $(1).tex 
 endef
 
 # define artifacts
