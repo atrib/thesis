@@ -87,7 +87,7 @@ unified \ptable-\gtable.
 
 The table contains a sorted list of cell descriptors, including a
 metadata ``cell'' used for storing its sizing parameters.
-As described in \autoref{sec:impl}, each cell descriptor stores virtual 
+As described in \autoref{sec:seccells:impl}, each cell descriptor stores virtual 
 and physical frame numbers uniquely identifying a VMA, as well as a 
 validity flag to track the cell's current validity.
 The metadata cell tracks the number of allocated \cell{}s ($N$), the
@@ -263,7 +263,7 @@ further restricting the availability of Spectre gadgets.
 microcontrollers with firmware emulation for added userspace
 instructions to server grade processors with microcode or hardware 
 implementations. In this section, we describe the trade-offs and 
-justify our implementation in \autoref{sec:impl}.
+justify our implementation in \autoref{sec:seccells:impl}.
 
 \paragraph{Firmware}
 On the simplest side of the spectrum, instructions can be emulated
@@ -313,3 +313,7 @@ leveraged to fix processor errata and bugs.
 While the simple RocketChip lacks a microcode sequencer, 
 we envision microcode to be ideal for implementing \seccells'
 permission transfer instructions for high-performance processors.
+
+
+
+TODO: Put details of SecureCells implementation (bits of instructions, etc.)

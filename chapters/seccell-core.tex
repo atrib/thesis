@@ -580,18 +580,18 @@ security.
 \seccells stores permissions in a centralized permissions table accessible 
 only by the supervisor and hardware.
 A novel, range-based memory management unit (MMU) and 
-lookaside buffer design (\autoref{sec:design:access_ctl})
+lookaside buffer design (\autoref{sec:seccells:design:access_ctl})
 allows single-cycle access control on the fast path satisfying 
 objectives \req{1a}, \req{1f}, \req{2a}, and \req{3a}.
 \seccells introduces fast, userspace instructions for common 
 compartmentalization operations (see \autoref{tab:seccell_ops}): 
 switching compartments, transferring permissions and validating
-exclusive access for data regions (\autoref{sec:design:instructions}).
+exclusive access for data regions (\autoref{sec:seccells:design:instructions}).
 These instructions satisfy requirements \req{1b}, \req{1e},
 \req{2b}, \req{2c}.
 \seccells delegates context isolation, call-stack maintenance,
 and argument validation to software.
-\autoref{sec:design:softmech} outlines how software can
+\autoref{sec:seccells:design:softmech} outlines how software can
 securely and efficiently implement context isolation and call-stack 
 maintenance.
 Software implementing these functions satisfy security (\req{1b}, \req{1c})
@@ -599,7 +599,7 @@ and flexibility (\req{3a}, \req{3b}) objectives.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\seccells}
-\label{sec:design}
+\label{sec:seccells:design}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}
@@ -677,7 +677,7 @@ in software leveraging the above hardware primitives.
 
 %-------------------------------
 \subsection{Access control}
-\label{sec:design:access_ctl}
+\label{sec:seccells:design:access_ctl}
 %-------------------------------
 The Permissions Table (\ptable) stores 
 per-cell, per-\secdiv permissions for the compartmentalized 
@@ -754,7 +754,7 @@ last-level cache.
 
 %-------------------------------
 \subsection{Userspace Instructions}
-\label{sec:design:instructions}
+\label{sec:seccells:design:instructions}
 %-------------------------------
 
 \begin{table}[]
@@ -812,7 +812,7 @@ and accounting costs.
 \seccells requires \sdswitch instructions for both
 forward and backward edges on cross-compartment calls.
 We show how software can implement cheap, secure call
-stacks in \autoref{sec:design:softmech}.
+stacks in \autoref{sec:seccells:design:softmech}.
 Programs are also allowed more flexibility, and can implement
 both remote procedure call (RPC)-like call-and-return (as in
 \autoref{fig:browser_eg})
@@ -932,7 +932,7 @@ the policy using \scexcl.
 
 %-------------------------------
 \subsection{Software Mechanisms}
-\label{sec:design:softmech}
+\label{sec:seccells:design:softmech}
 %-------------------------------
 
 \seccells delegates certain operations to software: 
@@ -1005,7 +1005,7 @@ per-compartment private stacks.
 
 %-------------------------------
 \subsection{Implementation}
-\label{sec:impl}
+\label{sec:seccells:impl}
 %-------------------------------
 
 Our implementation of \seccells augments and modifies the 
@@ -1195,7 +1195,7 @@ When uncompartmentalized, the WebApp can modify the Engine's stack enabling
 control- and data-flow attacks like ROP~\cite{Shacham07}.
 Using \seccells for separation, inter-compartment calls between the 
 Engine and the WebApp are protected through call gates 
-implementing context isolation (\autoref{sec:design:softmech}) including
+implementing context isolation (\autoref{sec:seccells:design:softmech}) including
 stack switching.
 \seccells successfully prevents the WebApp from accessing the Engine's stack.
 
