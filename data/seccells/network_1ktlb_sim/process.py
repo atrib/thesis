@@ -7,7 +7,7 @@ import numpy as np
 from pylab import rcParams
 
 cum_cycles_heading = 'cum_mcycles'
-text_size = 16
+text_size = 12
 
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42

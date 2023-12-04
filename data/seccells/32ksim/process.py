@@ -9,7 +9,7 @@ from pylab import rcParams
 insts_heading = 'minstret'
 cycle_heading = 'mcycle'
 tlb_miss_heading = 'tlbmisses'
-text_size = 18
+text_size = 12
 
 def get_dataset_size(nentries, entrysize = 64):
   netsize = nentries * entrysize
