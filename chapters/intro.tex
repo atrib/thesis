@@ -140,7 +140,7 @@ The security of operating systems is an area of active research, and many
 methodologies have been proposed to fix the issue of data races at the system
 call interface, primarily focussing on finding and fixing instances of such
 bugs.
-One class of proposals~\cite{dftracker, deadline, dftinker} leverage static
+One class of proposals~\cite{wang2019dftracker, deadline, dftinker} leverage static
 analysis to search the OS codebases for specific vulnerable patterns.
 Alternative proposals~\cite{schwartzDECAF,jurczyk2013bochspwn,wilhelm2016xenpwn}
 leverage dynamic analysis to detect instances of data races at runtime.
@@ -328,6 +328,7 @@ protection guarantees.
 % imperative to fortify kernel security intensifies, underscoring the 
 % exigency for robust defensive measures.
 
+
 % Short introduction on the Kernel TOCTOTU problem.
 % \begin{itemize}
 %       \item User space uses system calls to request operating system kernel operations
@@ -422,47 +423,168 @@ We also perform a security evaluation to demonstrate that Midas successfully
 stops an attack against a vulnerable system call.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Deeper dive into userspace compartmentalization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Intra-address Space Compartmentalization Overview}
 
-SecureCells introduces a novel mechanism for intra-address space compartmentalization,
-aiming to provide secure, performant and flexible support for isolation between
-fine-grained compartments between a program. 
+% Context
+% SecureCells tackles the challenge of tailoring existing abstractions to keep up to date
+% with modern threat models.
+% Over the years, code sharing has become increasingly commonplace, essentially
+% removing duplication of programmer effort, and allowing consumers to access
+% vastly varying computing experiences.
+% These experiences are enabled by:
+% \begin{itemize}
+%   \item Libraries (open-source or binary-only) distributed and shared widely across
+%         programs, implementing widely-used operations like cryptography or
+%         parsing common file formats. Often such code is available through package 
+%         managers like apt or npm as source code or binary blobs. 
+%         The intricate web of dependencies between libraries often results in
+%         additional code being included.
+%   \item Extensible frameworks like the linux kernel allow functionality to be added
+%         on-demand, through the use of external code (such as kernel drivers or eBPF
+%         payloads),
+%   \item On-demand code being distributed to power interactive experiences on the web.
+%         Websites are powered by vast code-bases of JavaScript, PHP and Wasm which are
+%         dynamically loaded from servers and executed in sandboxes.
+% \end{itemize}
+% In all of these cases, an address space runs code written by a variety of different
+% sources, with different levels of trust and testing, and with a significant code 
+% churn.
+The complexity and rapid pace of change of modern software systems inevitably
+leads to a plethora of bugs across the stack.
+Additionally, a system's software is extremely varied, including interacting
+subsystems, numerous different applications each relying on a extensive list
+of shared libraries, plugins, interpreted code and on-demand downloaded
+code, interacting over untrusted I/O interfaces such as the network, disks, 
+various accelerators and peripherals.
+To maintain sanity in this exploding heap of code, software heavily relies on
+abstraction and isolation ---
+an operating system kernel is tasked with system management, and with 
+isolating individual applications.
+The hardware provides the abstraction of separate privilege levels, aiding
+the kernel to isolate itself from untrusted userspace by inhabiting separate
+privilege levels.
+The kernel and hardware coordinate to provide the abstraction of processes,
+isolated and private virtual address spaces along with separate copies of
+kernel resources like file descriptors, used by userspace to isolate
+applications.
+These abstractions provide crucial security and robustness guarantees.
+Applications cannot access other applications' memory spaces, or the
+kernel's data.
+The kernel can gracefully handle an application faulting, killing the
+corresponding process without affecting itself or other applications.
+Essentially, these abstractions work to mirror the trust relations between
+components of the massive code base.
 
-SecureCells tackles the challenge of tailoring existing abstractions to keep up to date
-with modern threat models.
-Over the years, code sharing has become increasingly commonplace, essentially
-removing duplication of programmer effort, and allowing consumers to access
-vastly varying computing experiences.
-These experiences are enabled by:
-\begin{itemize}
-  \item Libraries (open-source or binary-only) distributed and shared widely across
-        programs, implementing widely-used operations like cryptography or
-        parsing common file formats. Often such code is available through package 
-        managers like apt or npm as source code or binary blobs. 
-        The intricate web of dependencies between libraries often results in
-        additional code being included.
-  \item Extensible frameworks like the linux kernel allow functionality to be added
-        on-demand, through the use of external code (such as kernel drivers or eBPF
-        payloads),
-  \item On-demand code being distributed to power interactive experiences on the web.
-        Websites are powered by vast code-bases of JavaScript, PHP and Wasm which are
-        dynamically loaded from servers and executed in sandboxes.
-\end{itemize}
-In all of these cases, an address space runs code written by a variety of different
-sources, with different levels of trust and testing, and with a significant code 
-churn.
+% Problem
+Rapid development in computing, supercharged by the explosion of the internet,
+have rendered traditional isolation abstractions insufficient to express modern
+trust relations.
+A browser, for example, contains hundreds of shared libraries and executes
+code downloaded from untrusted websites.
+To prevent website code, controlled by a remote adversary, from directly 
+accessing local resources, modern browsers are already compartmentalized into
+two components: 
+an outside-facing rendering engine running in one process 
+interacting with 
+a separate inside-facing kernel process
+using a well-defined API over remote procedure calls (RPCs).
+This architecture is motivated by the browser's strong security requirements,
+but limited by the coarse-grained abstraction of isolation (processes)
+available on traditional systems.
+Bugs in the sandbox within the rendering engine can still compromise all
+other components in the sandbox, including the just-in-time compiler.
+The key limitations of the process abstraction are:
+\begin{inparaenum}
+      \item all code within a process is equally privileged and can access all
+            of that process' resources including memory, and
+      \item interactions between processes incur microsecond-scale kernel
+            operations.
+\end{inparaenum}
+The first limitation prevents untrusting components within a process to
+isolate themselves, barring software sandboxing which can be buggy at scale.
+The second downside limits how finely applications can be decomposed into
+processes, due to considerations of performance overhead.
+However, the process abstraction is flexible and remains the mechanism 
+of choice for usable isolation.
 
-SecureCells proposes a novel architecture, comprising
-\begin{itemize}
-  \item Compartmentalized virtual memory, with the hardware MMU responsible for
-        enforcing access control to memory across isolated compartments, based on 
-        per-core compartment identifiers and permissions stored on an in-memory
-        two dimensional table storing per-compartment, per-virtual memory permissions,
-  \item Userspace instructions, securely accelerating common compartmentalization 
-        operations implemented as hardware execution units, microcode or firmware,
-  \item Software operations, flexibly adding the remaining functionality with the
-        same security or performance guarantees as hardware.
-\end{itemize}
+% Insight and design/solution
+Modern software requires an intra-address space compartmentalization mechanism
+that provides strong isolation within a process' address space, with
+low-overhead nanosecond-scale operations to support compartments with short
+nanosecond-scale execution timescales, all while maintaining the flexibility
+to support a variety of software trust relationships.
+In this work, we highlight that the limitations of the process abstraction
+stem from the software-hardware design of virtual memory.
+First, page-based virtual memory requires permission and translation tracking
+at page granularity, and near-core permission caching buffers (TLBs) whose
+entry count cannot scale with the rate of growth of memory.
+Second, the privileged kernel is tasked with changing between memory 
+permissions (involving changing page tables) and incurs the unacceptable
+cost of kernel entry and exits.
+% TODO: here, the text starts getting wishy-washy
+While the hardware is part of the trusted-computing base, its view of virtual
+memory remains rooted in the designs of the 80s.
+A compartmentalized abstraction of virtual memory, with the hardware capable
+of tracking compartments and enforcing the requisite permissions to memory
+can eliminate the kernel overheads, while preserving strong security checks.
+Further, the hardware can accelerate specific common compartmentalization
+operations for data and control flow if it is aware of compartments.
+Finally, operations which do not benefit from hardware acceleration can
+be retained in software, retaining the accompanying flexibility.
+
+% What does SecureCells do and provide?
+% SecureCells proposes a novel architecture, comprising
+% \begin{itemize}
+%   \item Compartmentalized virtual memory, with the hardware MMU responsible for
+%         enforcing access control to memory across isolated compartments, based on 
+%         per-core compartment identifiers and permissions stored on an in-memory
+%         two dimensional table storing per-compartment, per-virtual memory permissions,
+%   \item Userspace instructions, securely accelerating common compartmentalization 
+%         operations implemented as hardware execution units, microcode or firmware,
+%   \item Software operations, flexibly adding the remaining functionality with the
+%         same security or performance guarantees as hardware.
+% \end{itemize}
+In this work, we present a comprehensive set of objectives for a 
+compartmentalization mechanism to support widespread adoption.
+SecureCells presents a novel virtual memory architecture for secure, 
+high-performance, flexible intra-address space compartmentalization.
+SecureCells maintains the strong security guarantees of process-based isolation
+for fine-grained compartments within a process, with a mix of hardware and
+software support.
+SecureCells tracks the compartment executing on a core, and implements access
+control to memory regions based on a supervisor determined permission table
+stored in memory.
+Additionally, SecureCells provides unprivileged instructions to implement
+fast compartmentalization operations, specifically inter-compartment calls,
+zero-copy permission transfer to data regions, and to manage lifetimes for
+data regions.
+Each of these instructions includes specific checks and controls to maintain
+specific security properties, including preventing privilege escalation,
+code injection and data races.
+Finally, SecureCells delegates operations to software when the corresponding
+hardware implementation would bring no advantage.
+
+% Implementation and results
+This work also describes our prototype SecureCells implementation, including
+the RTL description of an in-order core based on the RISC-V RocketChip design,
+a QEMU port for quick emulation, porting of the seL4 microkernel operating
+system, and simplified versions of server benchmarks.
+We investigate the performance characteristics of our prototype core, using
+microbenchmarks designed to test the limits of access control, compartment 
+switching and dataflow between compartments, and compare them to related work.
+SecureCells' in-order core can switch between compartments (a key performance
+metric) in as few as 8 cycles, which compares favourably to state-of-the-art
+compartmentalization mechanisms and is orders of magnitude faster than the
+traditional process abstraction.
+We also demonstrate that SecureCells can help isolate the networking and
+data storage of a \Code{memcached}-like benchmark with a small ($<3\%$)
+overhead even for the smallest requests.
+These improvements are a direct consequence of tailoring the software-hardware
+interface to the requirements of modern programs.
+
 % \section{Thesis goals}
 
 % This thesis addresses the challenge of securing systems across an evolving
