@@ -376,51 +376,6 @@ The userspace memory access interface can be tasked with maintaining
 the core invariant: 
 \emph{through a syscall's lifetime, every read to an usespace object
 will return the same value}.
-Midas presents a multi-versioning concurrency control mechanism, inspired
-from database systems, for maintaining this invariant. 
-A \emph{security property} derived from this invariant is enforced ---
-Midas uses kernel metadata to track userspace pages accessed, maintains
-page-table permissions to enforce immutability and leverages page faults
-to on-demand duplicate pages where necesssary to preserve an original
-copy for a system call.
-A \emph{correctness property} is described and proved in this thesis,
-showing how the system execution remains correct under execution with
-Midas.
-The user-kernel interface is also performance-critical and affects the
-system's performance on syscall-intensive workloads.
-As concurrent writes to system call arguments is practically non-existent
-for well-behaved programs, we have optimized Midas' design to minimize 
-expensive page duplications.
-
-% Use cases
-% We eliminate TOCTTOU in a systematic solution which will:
-% \begin{itemize}
-%       \item Protect current (potentially unknown) TOCTTOU bugs in the kernel,
-%       \item Protect vulnerable kernel modules or ebpf code developed 
-%             by third parties,
-%       \item Protect older systems with minor updates.
-% \end{itemize}
-Midas can be used in various scenarios. 
-First, Midas protects systems against existing, even potentially unknown,
-double-fetch bugs on current and future production systems.
-Second, Midas can protect the kernel against double-fetch bugs in code
-dynamically added to the kernel such as modules and eBPF code.
-Third, Midas can help extend the functionality of system call filters,
-enabling examination of arguments passed by reference without the introduction
-of vulnerable double-fetches.
-Finally, Midas can protect older systems where updates for modules or other
-vulnerable components might be discontinued with a single update to the
-kernel core.
-
-% Results summarized
-We have also implemented Midas on the Linux kernel, demonstrating its
-practicality, and evaluated the system's performance during system-call
-dependent workloads from the NAS Parallel Benchmark Suite (NPB) and the
-Phoronix Test Suite (PTS).
-Midas results in an average performance overhead of $3.7\%$ on NPB and
-$3.4\%$ on PTS.
-We also perform a security evaluation to demonstrate that Midas successfully
-stops an attack against a vulnerable system call.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -535,6 +490,92 @@ operations for data and control flow if it is aware of compartments.
 Finally, operations which do not benefit from hardware acceleration can
 be retained in software, retaining the accompanying flexibility.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Zoom out, present the thesis statement
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Thesis goals}
+
+This thesis aims to present systems interfaces redesigned to satisfy the
+security and performance requirements of modern and future computing 
+systems, against contemporary threat models.
+Foremost, we prioritize the security of our proposed interfaces, but also
+consider performance as a crucial secondary requirement.
+For the user-kernel interface, we also consider backward compatibility with
+the existing system call semantics as an essential requirement.
+For intra-address space compartmentalization, we also deem the flexibility
+of the interface to support varying softare use-cases to be vital for adoption.
+
+\begin{center}
+      \textbf{Thesis statement}
+      
+\emph{
+The design of interfaces decisively influences the characteristics of 
+computing systems --- 
+strong, well-defined guarantees at the interfaces allow developers to build 
+well-protected high-performance systems.
+Systems software requires reimagined interfaces to reflect the security
+and performance requirements of modern software, particularly at the 
+user-kernel and intra-process boundaries.
+}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Thesis contributions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Thesis contributions}
+
+% Summary of contributions
+This thesis presents two redesigned security- and performance-critical 
+interfaces, particularly at the user-kernel boundary and within a process.
+
+\subsection{Midas}
+Midas presents a multi-versioning concurrency control mechanism, inspired
+from database systems, for maintaining this invariant. 
+A \emph{security property} derived from this invariant is enforced ---
+Midas uses kernel metadata to track userspace pages accessed, maintains
+page-table permissions to enforce immutability and leverages page faults
+to on-demand duplicate pages where necesssary to preserve an original
+copy for a system call.
+A \emph{correctness property} is described and proved in this thesis,
+showing how the system execution remains correct under execution with
+Midas.
+The user-kernel interface is also performance-critical and affects the
+system's performance on syscall-intensive workloads.
+As concurrent writes to system call arguments is practically non-existent
+for well-behaved programs, we have optimized Midas' design to minimize 
+expensive page duplications.
+
+% Use cases
+% We eliminate TOCTTOU in a systematic solution which will:
+% \begin{itemize}
+%       \item Protect current (potentially unknown) TOCTTOU bugs in the kernel,
+%       \item Protect vulnerable kernel modules or ebpf code developed 
+%             by third parties,
+%       \item Protect older systems with minor updates.
+% \end{itemize}
+Midas can be used in various scenarios. 
+First, Midas protects systems against existing, even potentially unknown,
+double-fetch bugs on current and future production systems.
+Second, Midas can protect the kernel against double-fetch bugs in code
+dynamically added to the kernel such as modules and eBPF code.
+Third, Midas can help extend the functionality of system call filters,
+enabling examination of arguments passed by reference without the introduction
+of vulnerable double-fetches.
+Finally, Midas can protect older systems where updates for modules or other
+vulnerable components might be discontinued with a single update to the
+kernel core.
+
+% Results summarized
+We have also implemented Midas on the Linux kernel, demonstrating its
+practicality, and evaluated the system's performance during system-call
+dependent workloads from the NAS Parallel Benchmark Suite (NPB) and the
+Phoronix Test Suite (PTS).
+Midas results in an average performance overhead of $3.7\%$ on NPB and
+$3.4\%$ on PTS.
+We also perform a security evaluation to demonstrate that Midas successfully
+stops an attack against a vulnerable system call.
+
+\subsection{SecureCells}
 % What does SecureCells do and provide?
 % SecureCells proposes a novel architecture, comprising
 % \begin{itemize}
@@ -547,7 +588,7 @@ be retained in software, retaining the accompanying flexibility.
 %   \item Software operations, flexibly adding the remaining functionality with the
 %         same security or performance guarantees as hardware.
 % \end{itemize}
-In this work, we present a comprehensive set of objectives for a 
+In this work, we also present a comprehensive set of objectives for a 
 compartmentalization mechanism to support widespread adoption.
 SecureCells presents a novel virtual memory architecture for secure, 
 high-performance, flexible intra-address space compartmentalization.
@@ -585,89 +626,56 @@ overhead even for the smallest requests.
 These improvements are a direct consequence of tailoring the software-hardware
 interface to the requirements of modern programs.
 
-% \section{Thesis goals}
 
-% This thesis addresses the challenge of securing systems across an evolving
-% computing landscape, particularly at interfaces.
-% Interfaces within a system are particularly susceptible to security or
-% performance shortcomings.
-% Different threat models among components, or a misunderstanding of the
-% security guarantees of other components, can compromise an entire system.
-% Mismatched abstractions also impose performance overheads, as developers
-% adapt their code accordingly.
+% This thesis contributes the design and implementations of modern
+% security- and performance-critical interfaces to support 
+% current and future computing systems.
+% Midas redesigns the userspace memory access interface to provide
+% strong mitigations against data race attacks.
+% SecureCells introduces compartmentalization to the architectural
+% virtual memory interface.
 
+% Midas' design is based on the following insights:
+% \begin{itemize}
+%   \item Modern OS kernels rely on softare interfaces to access
+%         user memory, disabling and re-enabling related
+%         protection measures like SMAP.
+%   \item Non-adversarial userspace software will not modify
+%         system call arguments passed by reference, as they
+%         rely on the system call completing successfully.
+%         Data races are, therefore, not the common case, and
+%         the protection mechanism should be designed for better
+%         performance when not under attack
+%   \item Duplication of userspace memory is expensive, requiring
+%         the corresponding memory allocation and expensive
+%         metadata tracking.
+%   \item The kernel does not need to duplicate userspace memory
+%         except in the case of concurrent updates. In the common
+%         case, duplication should be avoided.
+%   \item MMU-based permission checks are ubiquitious in modern
+%         architectures, allowing the hardware to efficiently
+%         enforce read-only access to memory regions, and
+%         notify the OS on violations.
+% \end{itemize}
+% This thesis contributes a design for system-call protection for Linux
+% based on these insights.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%% Zoom out, present the thesis statement
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Thesis statement}
-
-\begin{center}
-\emph{
-The design of interfaces decisively influences the characteristics of 
-computing systems --- 
-strong, well-defined guarantees at the interfaces allow developers to build 
-well-protected high-performance systems.
-Systems software requires reimagined interfaces to reflect the security
-and performance requirements of modern software, particularly at the 
-user-kernel and intra-process boundaries.
-}
-\end{center}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%% Thesis contributions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Thesis contributions}
-
-This thesis contributes the design and implementations of modern
-security- and performance-critical interfaces to support 
-current and future computing systems.
-Midas redesigns the userspace memory access interface to provide
-strong mitigations against data race attacks.
-SecureCells introduces compartmentalization to the architectural
-virtual memory interface.
-
-Midas' design is based on the following insights:
-\begin{itemize}
-  \item Modern OS kernels rely on softare interfaces to access
-        user memory, disabling and re-enabling related
-        protection measures like SMAP.
-  \item Non-adversarial userspace software will not modify
-        system call arguments passed by reference, as they
-        rely on the system call completing successfully.
-        Data races are, therefore, not the common case, and
-        the protection mechanism should be designed for better
-        performance when not under attack
-  \item Duplication of userspace memory is expensive, requiring
-        the corresponding memory allocation and expensive
-        metadata tracking.
-  \item The kernel does not need to duplicate userspace memory
-        except in the case of concurrent updates. In the common
-        case, duplication should be avoided.
-  \item MMU-based permission checks are ubiquitious in modern
-        architectures, allowing the hardware to efficiently
-        enforce read-only access to memory regions, and
-        notify the OS on violations.
-\end{itemize}
-This thesis contributes a design for system-call protection for Linux
-based on these insights.
-
-In this thesis, we also describe the design and implementation of
-SecureCells, our novel architecture for intra-address space
-compartmentalization.
-We
-\begin{itemize}
-  \item Explore the requirements for compartmentalization, and
-        categorize these requirements under performance, security
-        and flexibility umbrellas,
-  \item Present the design of three pillars of SecureCells: 
-        hardware access control, unprivileged userspace instructions
-        and softare operations.
-\end{itemize}
+% In this thesis, we also describe the design and implementation of
+% SecureCells, our novel architecture for intra-address space
+% compartmentalization.
+% We
+% \begin{itemize}
+%   \item Explore the requirements for compartmentalization, and
+%         categorize these requirements under performance, security
+%         and flexibility umbrellas,
+%   \item Present the design of three pillars of SecureCells: 
+%         hardware access control, unprivileged userspace instructions
+%         and softare operations.
+% \end{itemize}
 
 
-SecureCells contributions
-Enumeration of the requirements for compartmentalized software.
+% SecureCells contributions
+% Enumeration of the requirements for compartmentalized software.
 
 \section{Thesis Organization}
 
