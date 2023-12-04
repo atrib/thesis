@@ -212,8 +212,8 @@ on commodity hardware achieve millisecond-scale compartment switches at
 best.
 We notice that the traditional trusted-computing base includes the hardware
 alongside the supervisor.
-Hence, we can securely move some operations (access control, inter-compartment
-control and data flow) from the supervisor to the hardware improving 
+Hence, we can securely delegate some operations (access control, inter-compartment
+control and data flow) from the supervisor to the hardware, improving 
 performance while maintaining the same security guarantees.
 Improvements and trends in microarchitectural design, such as the trend towards
 VMA-based access control in the core's translation-lookaside buffer 
@@ -221,21 +221,40 @@ VMA-based access control in the core's translation-lookaside buffer
 
 
 % Solution:
-We solve the security issues at the interfaces by:
-\begin{itemize}
-  \item Fixing the interface implementation. 
-        We introduce a mitigation at the kernel-user interface tasked with maintaining
-        the implicit assumption.
-        We solve the kernel TOCTTOU problem by maintaining a strong invariant:
-        all reads from user memory return the same value throughout the lifetime of the system call.
-        We implement multi-version concurrency through the user-memory read method (read from user).
-  \item Enriching the interface implementation to enable developers to express their
-        trust model and relationships. 
-        We solve the compartmentalization problem by defining a new architectural virtual memory
-        interface, where the hardware isolates compartments based on permissions stored in a 
-        two-dimensional table, and tracking per-core executing compartment, along with 
-        userspace instructions for accelerating compartmentalization operations.
-\end{itemize}
+% We solve the security issues at the interfaces by:
+% \begin{itemize}
+%   \item Fixing the interface implementation. 
+%         We introduce a mitigation at the kernel-user interface tasked with maintaining
+%         the implicit assumption.
+%         We solve the kernel TOCTTOU problem by maintaining a strong invariant:
+%         all reads from user memory return the same value throughout the lifetime of the system call.
+%         We implement multi-version concurrency through the user-memory read method (read from user).
+%   \item Enriching the interface implementation to enable developers to express their
+%         trust model and relationships. 
+%         We solve the compartmentalization problem by defining a new architectural virtual memory
+%         interface, where the hardware isolates compartments based on permissions stored in a 
+%         two-dimensional table, and tracking per-core executing compartment, along with 
+%         userspace instructions for accelerating compartmentalization operations.
+% \end{itemize}
+In this thesis, we present secure designs for the kernel-user and user-user
+interfaces, both of which are security- and performance-critical.
+Midas provides systematic protection to the user-kernel interfaces against
+double-fetch attacks by maintaining an invariant:
+\emph{through a system call's lifetime, every read to a userspace object
+will return the same value}.
+Midas can also be extended as a sanitizer, enabling detection of TOCTTOU
+attacks against the kernel.
+To validate the design, we also present an implementation of Midas on the
+Linux kernel.
+SecureCells, meanwhile, is a compartmentalization mechanism providing isolation
+between interacting userspace compartments.
+SecureCells' design is based on three pillars: hardware-enforced access 
+control for isolation, unprivileged instructions for accelerating common
+operations and flexible software operations where necessary.
+SecureCells is the first mechanism to combine the security and performance
+requirements for flexible fine-grained intra-address space 
+compartmentalization.
+
 \section{Kernel TOCTTOU Protection Overview}
 
 % Itemize
