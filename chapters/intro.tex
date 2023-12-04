@@ -597,19 +597,26 @@ interface to the requirements of modern programs.
 % adapt their code accordingly.
 
 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Zoom out, present the thesis statement
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Thesis statement}
 
-The design of interfaces between layers of the computing system stack decisively influence the 
-security and performance characteristics of the system --- 
-strong, well-defined guarantees at the interfaces allow developers to build well-protected 
-high-performance systems.
-This thesis improves the user-kernel interface by elevating an implicit assumption to 
-an explicit guarantee, preventing a class of data-race driven attacks.
-This thesis also proposes an architectural interface for compartmentalized virtual memory
-with strong isolation guarantees, by design, at high performance.
+\begin{center}
+\emph{
+The design of interfaces decisively influences the characteristics of 
+computing systems --- 
+strong, well-defined guarantees at the interfaces allow developers to build 
+well-protected high-performance systems.
+Systems software requires reimagined interfaces to reflect the security
+and performance requirements of modern software, particularly at the 
+user-kernel and intra-process boundaries.
+}
+\end{center}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Thesis contributions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Thesis contributions}
 
 This thesis contributes the design and implementations of modern
