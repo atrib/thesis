@@ -253,17 +253,18 @@
 % \newrefformat{pat}{\hyperref[#1]{Patch~\ref*{#1}}}
 % \newrefformat{alg}{\hyperref[#1]{Algorithm~\ref*{#1}}}
 % Customizing reference formats for
+\addto\extrasenglish{%
 \renewcommand{\sectionautorefname}{Section}
 \let\subsectionautorefname\sectionautorefname
 \let\subsubsectionautorefname\sectionautorefname
+\renewcommand{\chapterautorefname}{Chapter}
+}
+
+
 \newcommand{\algorithmautorefname}{Instruction}
-
-\makeatletter
-\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
-\makeatother
-
 % Custom naming for algorithm, used for table of securecells instructions
 \makeatletter
+\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
 \renewcommand{\ALG@name}{Instruction}
 \makeatother
 
@@ -401,6 +402,17 @@ I thank the Academy \dots
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Midas CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Some actual work}
+\label{ch:midas}
+\epigraph{Thanks, Uros, really.}%
+        {\textit{Me}}
+
+\input{chapters/midas-core}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SecureCells CORE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Not this again}
@@ -410,17 +422,6 @@ I thank the Academy \dots
 
 Does anything change if I put some text here?
 \input{chapters/seccell-core}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Midas CORE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Some actual work}
-\label{ch:midas}
-\epigraph{Thanks, Uros, really.}%
-        {\textit{Me}}
-
-\input{chapters/midas-core}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Appendix stuff
