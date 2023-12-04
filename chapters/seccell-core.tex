@@ -194,7 +194,8 @@ two characteristic programs described below.
   \caption{Browser compartmentalization with three compartments.}
   \label{fig:browser_eg}
   \includegraphics[width=\linewidth]{media/seccells/dataflow_app.pdf}
-  \caption{Permission transfers for a packet between \seccells compartments. 
+  \caption[Permission transfers for a packet between \seccells compartments.]
+          {Permission transfers for a packet between \seccells compartments. 
             The figure shows the compartment executing on a core, the 
             relevant \seccells instructions.}
   \label{fig:dataflow_app}
@@ -605,7 +606,8 @@ and flexibility (\req{3a}, \req{3b}) objectives.
 \begin{figure}
   \centering
   \includegraphics[width=0.85\linewidth]{media/seccells/seccell_arch.pdf}
-  \caption{\seccells' architecture, highlighting modified hw/sw in gray.}
+  \caption[\seccells: Architecture.]
+          {\seccells' architecture, highlighting modified hw/sw in gray.}
   \label{fig:seccell_arch}
   %\Description[<short description>]{<long description>}
 \end{figure}
@@ -1416,7 +1418,8 @@ For simplicity, this benchmark utilizes the migrating thread model.
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{data/seccells/32ksim/mycached_full.pdf}
-  \caption{Comparison of cycles-per-request,   
+  \caption[\seccells performance comparison: \Code{memcached}]
+          {Comparison of cycles-per-request,   
           cycles-per-instruction (CPI), and
           TLB miss rate
           while executing compartmentalized \Code{memcached} benchmark on 
@@ -1479,7 +1482,8 @@ serve requests 9.3\% faster for a 32MB dataset.
 \begin{figure}
   \centering
   \includegraphics[width=0.9\linewidth]{data/seccells/network_1ktlb_sim/nfv_full.pdf}
-  \caption{Packet processing cycles-per-byte comparison.}
+  \caption[\seccells performance comparison: Network function]
+          {Packet processing cycles-per-byte comparison.}
   \label{fig:nfv_cpb}
   %\Description[<short description>]{<long description>}
 \end{figure}
