@@ -289,10 +289,9 @@
 \def\maketoc{%
   \cleardoublepage%
   \pdfbookmark{\contentsname}{toc}%
-  \let\baselinestretch@old\baselinestretch%
-  \def\baselinestretch{0.95} % no need for this; I just added it to fit my ToC
   \tableofcontents%
-  \let\baselinestretch\baselinestretch@old%
+  \listoffigures
+  \listoftables
   \setlength{\parskip}{1em}%
 }
 
