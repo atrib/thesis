@@ -277,7 +277,7 @@ and the supervisor.
 Exploitable bugs in the policy or TCB can lead to a compromise irrespective of the
 compartmentalization mechanism.
 While speculative side-channel attacks are outside the scope of our threat model,
-we discuss \seccells' speculative resiliency in Appendix~\ref{app:sidechannel}.
+we discuss \seccells' speculative resiliency in \autoref{sec:seccells:discussion}.
 
 %-------------------------------
 \subsection{Security Objectives}
@@ -671,8 +671,8 @@ outstanding permissions.
 Further, the design implements context isolation and secure call stacks
 in software leveraging the above hardware primitives.
 \autoref{fig:seccell_arch} summarizes \seccells's architecture.
-% The detailed layout of cell descriptors, the \ptable, and the \gtable 
-% are shown in Appendix~\ref{app:ptable}.
+The detailed layout of cell descriptors, the \ptable, and the \gtable 
+are shown in Appendix~\ref{app:ptable}.
 
 
 %-------------------------------
@@ -1041,7 +1041,7 @@ The unified \ptable-\gtable in memory starts with a sorted
 list of \cell descriptions, followed by the permissions held in the 
 \ptable, and then the mappings for the \gtable.
 % We don't have this layout any more
-% Appendix~\ref{app:ptable} shows the layout in detail.
+Appendix~\ref{app:ptable} shows the layout in detail.
 Each \cell is described by the base and bound virtual addresses, 
 the corresponding physical address base, and a single bit denoting
 validity.
@@ -1666,6 +1666,7 @@ compromised~\cite{AbateABEFHLPST18}.
 
 %%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
+\label{sec:seccells:discussion}
 %%%%%%%%%%%%%%%%%%%%
 
 \paragraph{Legacy program/OS support}
@@ -1768,11 +1769,46 @@ Essentially, the costly system call entrances can be replaced by cheaper
 \sdswitch instructions into the kernel.  
 
 \paragraph{Speculative-execution attacks (SEA)}
+We consider the threat of speculative side-channel attacks like 
+Spectre~\cite{KocherHFGGHHLM019} in \seccells' design, despite 
+omitting such attacks from our attacker model.
+\seccells{} introduces additional mechanisms for changing an executing
+thread's permissions, through userspace compartment switching and
+permission transfers.
+Fault-based attacks like Meltdown~\cite{lipp18sec} must be prevented in
+implementations by preventing faulting loads from accessing memory or
+forwarding their data to subsequent instructions~\cite{WeisseNLWK19}.
+
 \seccells does not mitigate existing SEA, but takes care
-not to introduce vulnerabilities (see Appendix~\ref{app:sidechannel}).
-Nonetheless, \seccells' access control limits the leakage scope of 
+not to introduce vulnerabilities.
+\seccells specifies that userspace instructions are serializing, 
+precluding speculative permission changes.
+An attacker cannot, for example, speculatively switch to a victim
+\secdiv using an \sdswitch following a long-latency branch and read 
+the victim's private data using the victim's permissions.
+\seccells' permission transfer instructions are atomic, preventing visibility 
+or exploitation of any intermediate permission state.
+An attacker \secdiv cannot, for example, drop permissions for a \cell
+using \scprot while transferring the same permissions using \sctfer in parallel.
+Our firmware (and future microcode) implementation use load-linked 
+store-conditional atomic operations commonly available across architectures
+to ensure atomicity.
+
+
+\seccells' access control limits the leakage scope of 
 Spectre attacks to a compartment's accessible \cell{}s, 
 weakening SEA.
+\seccells allows the pipeline to speculate as usual within a compartment's 
+execution, and speculative accesses are also subject to access control 
+by the MMU and cannot illegally access any \cell.
+Access control, therefore, also limits the leakage potential of existing
+Spectre gadgets.
+Whereas a Spectre gadget on a traditional processor can address and
+access any user memory in the process' address space, the same Spectre
+gadget can only access memory within the compartment's \cell{}s.
+\seccells also limits the code (speculatively) executable within a compartment,
+further restricting the availability of Spectre gadgets.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
