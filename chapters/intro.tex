@@ -184,6 +184,7 @@ use case.
 % \end{itemize}
 Security guarantees should inform the design of interfaces --- either by 
 extending or redesigning interfaces.
+% 
 At the kernel-user interface, we see that data races require the kernel
 to access the same argument in user memory at least twice, which
 allows the user to modify the data in the meantime.
@@ -194,9 +195,30 @@ loads them at a later time in order to use them.
 This pattern earns these bugs the often-used moniker of 
 Time-of-Check-to-Time-of-Use (TOCTTOU) bugs.
 A double-fetch bug manifests from an implicit assumption by the developer
-that the fetched data is the same.
-The commonplace, software interface used by the allows us to extend the 
-kernel system call interface with a secure invariant.
+that the fetched data is the same, which is violated by the attacking
+user.
+OS kernels generally use a softare interface to access user memory, to manage
+protections like Supervisor Memory Access Prevention (SMAP), and we can
+extend this interface with a secure invariant.
+% 
+Within userspace, however, the requirements for isolation have changed 
+drastically: from isolating per-user processes which occupy millisecond-scale
+scheduling slots to finer grained module or library-level isolation, which
+demands sub-microsecond operations (for example, compartment switching).
+An userspace process needs to be further divided into isolated compartments
+which can communicate along well-defined APIs.
+Software OS mechanisms are expensive --- even IPC-optimized supervisors
+on commodity hardware achieve millisecond-scale compartment switches at
+best.
+We notice that the traditional trusted-computing base includes the hardware
+alongside the supervisor.
+Hence, we can securely move some operations (access control, inter-compartment
+control and data flow) from the supervisor to the hardware improving 
+performance while maintaining the same security guarantees.
+Improvements and trends in microarchitectural design, such as the trend towards
+VMA-based access control in the core's translation-lookaside buffer 
+(TLB)~\cite{0003BOBFP21midgard} greatly assist in this transition.
+
 
 % Solution:
 We solve the security issues at the interfaces by:
