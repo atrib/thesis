@@ -266,7 +266,6 @@ compartmentalization.
 \section{Kernel TOCTTOU Protection Overview}
 
 % Context
-% Itemize
 % \begin{itemize}
 %   \item The design of many modern operating system kernels heavily draw inspiration from UNIX.
 %         These kernels have progressively developed to incorporate modern features and modern
@@ -298,6 +297,36 @@ multi-user, multi-tasking, multi-processing systems connected via internal
 or internet interfaces.
 Kernel security has come under ever-increasing threats, and requires stronger
 protection guarantees.
+% CHATGPT version:
+% The kernel of an operating system (OS) constitutes a pivotal element within
+% contemporary computer systems, assigned the critical task of resource 
+% multiplexing, including memory, execution time, and I/O distribution among 
+% users sharing a common machine or among diverse tasks initiated by the same user. 
+% As an integral component of the system's trusted computing base (TCB), the kernel 
+% engages with untrusted userspace processes through system calls (syscalls). 
+% The interface between userspace and the kernel emerges as a security-critical 
+% boundary, representing the primary avenue through which malicious processes may 
+% compromise the entire system. 
+% Consequently, the kernel must implement rigorous checks at this interface to 
+% safeguard itself against potentially malicious arguments passed through syscalls. 
+% The lineage of most contemporary OS kernels can be traced back to systems 
+% conceived or developed during the 1980s and 1990s. 
+% Noteworthy among these are the Linux, Darwin/XNU (utilized by MacOS), and 
+% FreeBSD kernels, all predominantly adhering to the POSIX interface, initially
+% formalized in 1988. 
+% The POSIX interface itself draws inspiration from the UNIX kernel, first 
+% documented in 1971. 
+% Across this temporal expanse, the landscape of computing has undergone 
+% profound transformation. 
+% While the original UNIX kernel lacked provisions for multitasking, the 
+% present-day computing milieu encompasses multi-user, multitasking, and 
+% multiprocessing systems interconnected through internal or internet 
+% interfaces, spanning desktops, servers, and mobile platforms. 
+% The escalating threats to kernel security necessitate heightened protection 
+% guarantees. 
+% As computing environments become more intricate and interconnected, the 
+% imperative to fortify kernel security intensifies, underscoring the 
+% exigency for robust defensive measures.
 
 % Short introduction on the Kernel TOCTOTU problem.
 % \begin{itemize}
