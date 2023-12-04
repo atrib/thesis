@@ -1,84 +1,4 @@
-\section{Formal Description and Analysis of \seccells' 
-Userspace Instructions}
-\label{app:instructions}
 
-We define the semantics of \seccells' unprivileged instructions
-in \autoref{fig:seccell_ops_formal} and discuss their corresponding
-security checks below.
-
-\paragraph{\sdswitch}
-This instruction checks that the jump target is valid, and holds
-an \sdentry instruction executable by the target \secdiv.
-With the precondition that the caller \secdiv does not have
-writable permission to any \cell executable by the target \secdiv,
-\sdswitch guarantees compartment entry at previously defined entry 
-points (helping implement call gates). 
-
-\paragraph{\scprot}
-This instruction checks that the target \cell is accessible by the
-\secdiv, and the new permissions are a subset of the existing permissions.
-After this instruction, the \secdiv is assured to have no more permissions
-than before.
-
-\paragraph{\scgrant, \screcv and \sctfer}
-\scgrant checks that the granting \secdiv has permissions to the
-\cell, and that the granted permissions are a subset of its existing
-permissions.
-\screcv, in turn, checks that the \secdiv is receiving permissions for a
-valid cell, that the permissions were previously granted by the
-specific \secdiv that the receiving \secdiv expects, and that the received
-permissions are a subset of the permissions granted.
-\sctfer includes the checks of both \scgrant and \scprot.
-The granting and receiving \secdiv{}s must cooperate in order to
-transfer permissions, and together finish with the same or fewer
-permissions than they began with.
-
-A correct compartment is defined to not grant or receive any permissions 
-or invalidate cells that it is not required to grant as per a correct
-compartmentalization policy.
-Considering a set of compromised attacker \secdiv{}s and their permissions 
-to \cell{}s and assuming that uncompromised compartments are correct,
-\seccells guarantees that the attackers can neither gain any new permissions 
-through any sequence of permission transfer instructions 
-nor elevate the permissions of any uncompromised compartment.
-Using \scgrant and \screcv instructions, the compromised compartments can
-transfer permissions between themselves but those grants cannot include 
-permissions which none of the attackers had initially.
-The only way for the attackers to gain permissions is from
-an uncompromised \secdiv either granting permissions to a \cell or from 
-invalidating a private \cell which one of the attackers can validate with \screval.
-The only way for the attackers to inject permissions is to have an
-uncompromised \secdiv receive them.
-By definition, uncompromised compartments will do neither of the above.
-Once again, we stress on the importance of a correct compartmentalization
-policy.
-No mechanism, including \seccells, can protect against an insecure policy
-where compartments transfer permissions from/to untrusted compartments
-without proper validation.
-
-\paragraph{\scinval} 
-This instruction allows a \secdiv to invalidate a \cell to which
-it has exclusive access, and to which no outstanding permission grants
-exist.
-The first condition can be true for a private region, or for one
-which other \secdiv{}s have willingly dropped permissions.
-Consequently, no other \secdiv will unwittingly lose permissions to
-the invalidated \cell as a consequence of \scinval.
-The second condition provides the assurance that no compartment can
-regain permissions to the cell without executing \screval.
-
-\paragraph{\screval} 
-This instruction checks that the address corresponds to an existing 
-\cell{} and that it is currently invalid. 
-Due to the initial invalidity of the \cell, no \secdiv{}s could have
-access to the cell to be revalidated.
-
-\paragraph{\scexcl}
-This instruction does not modify any permissions, only allowing a
-\secdiv{} to check if it has exclusive access to a \cell{} to which
-it already has access to.
-
-\begin{comment}
 \section{Memory layout of the unified \ptable-\gtable}
 \label{app:ptable}
 
@@ -100,7 +20,7 @@ supervisor must resize this table as required.
 The \cell descriptor list is followed by the \ptable, and then by the
 \gtable.
 
-\atri{Show how the limits on number of cells and secdivs is determined}
+% \atri{Show how the limits on number of cells and secdivs is determined}
 
 \begin{figure*}
   \centering
@@ -109,7 +29,6 @@ The \cell descriptor list is followed by the \ptable, and then by the
   \label{fig:ptable_layout}
   %\Description[<short description>]{<long description>}
 \end{figure*}
-\end{comment}
 
 \section{Justification for \autoref{tab:req_comparison}}
 \label{app:justification_table1}
