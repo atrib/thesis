@@ -62,12 +62,15 @@ concurrent writes.
 \end{inparaenum}
 To prevent attacks, all concurrent writes must be prohibited.
 \footnotetext{The attacker model includes both concurrent and parallel
-writes.}
+writes. For readability, this chapter refers to both writes as ``concurrent''.}
 
 % TODO key idea
-We base our defense on a single key invariant:
-\textbf{\emph{through a syscall's lifetime, every read to a userspace object
-will return the same value}}. From this invariant we derive a \emph{security
+\begin{center}
+  \textbf{\emph{``Through a syscall's lifetime, every read to a userspace object
+  will return the same value.''}}
+\end{center}
+We base our defense on one key invariant, stated above. 
+From this invariant we derive a \emph{security
 property} ensuring that every read during the execution of a syscall is
 tracked. Subsequent reads from the same address will always return the same value.
 For performance, multiple versions of an object may exist simultaneously,
@@ -77,8 +80,6 @@ Orthogonally, we derive a \emph{correctness
 property} that ensures the sharing of the correct version among inflight
 syscalls. All writes end up on the most recent version of
 the objects, allowing forward progress.
-% Mat: should we split it into security, correctness, and performance
-% properties, all driven by the core invariant?
 While we implement this invariant in our \midas prototype for the Linux kernel,
 this defense applies to any modern OS kernel.
 
@@ -122,18 +123,13 @@ why and how \midas protects syscalls from concurrent writes.
 \subsection{Page Tables and Memory Protection}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Virtually all modern architectures (e.g., x86, ARM, SPARC, and
+Virtually all contemporary architectures (e.g., x86, ARM, SPARC, and
 RISC-V) implement separate virtual and physical
 address spaces (AS) based on fixed-size regions called pages.
-%
-%% ANH: if it's irrelvant, do we need to mention it?
-%%Some architectures also include segmentation-based protection
-%%working in tandem with page tables, but segmentation is irrelevant for \midas.
-%
 Programs execute in their virtual address space while caches and main memory
-are accessed using physical addresses.
+are accessed with physical addresses.
 Architectures rely on page tables orchestrated by the operating system
-to translate between these address spaces and to protect such accesses.
+to translate between these address spaces and to protect memory accesses.
 Page tables are arranged as radix trees, where different bits of the
 virtual address are used as indices into successive levels of the page table.
 At the leaf page table, a unique pagetable entry (PTE) stores the
@@ -151,9 +147,11 @@ A PTE in x86-64 is a 64-bit value holding, among others, the following metadata:
 a \emph{Present bit (P)} to mark the PTE's validity;
 \emph{Protection bits (NX, R/W, U/S)} to restrict the type of
 access and the privilege level of the accessing code;
-\emph{Software-usable bits (SW1-SW4)} that are ignored by the MMU and used by the
-operating system to store metadata; and
+\emph{Software-usable bits (SW1-SW4)} that are ignored by the MMU and used by 
+the operating system to store metadata; and
 a \emph{Page Frame Number (PFN)} to identify the page's physical address.
+The \emph{U/S} separates kernel (supervisor) pages from user pages.
+The \emph{R/W} controls whether pages are writable or not.
 
 An access using a virtual address first reads the corresponding PTE's
 present bit to check its validity.
@@ -171,7 +169,17 @@ Buffers (TLBs) to reduce the cost of subsequent accesses.
 On most architectures, the OS is responsible for keeping TLBs coherent with
 the page table, necessitating entries to be flushed from TLBs when the
 corresponding PTE is updated.
-
+Modern multiprocessing CPUs have a TLB for each core, and PTE information
+may be cached in one or more TLBs.
+Therefore, when the OS changes a PTE value, the OS is also responsible for
+flushing remote TLBs (i.e., on another cores) as required.
+Commercial-off-the-shelf systems typically rely on an inter-process 
+interrupt (IPI) to the OS running on a remote core followed by a local TLB 
+invalidation.
+Due to the scalability limitations of broadcasting IPIs to remote cores, 
+the TLB invalidation process is highly optimized in software, and has
+received dedicated hardware support in more recent processors and in research
+proposals.\atri{cite, ask yuanlong}
 
 \subsection{Linux Memory Subsystem}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,22 +189,23 @@ memory---using the architecture's page tables.
 All threads within a Linux process share a single address space, and
 consequently use the same page table for translation and protection.
 Each page within the process' virtual address space may be mapped or
-unmapped. Mapped pages have separate read/write/execute permissions.
+unmapped. 
+Mapped pages have separate read/write/execute permissions.
 Programs typically have write-execute exclusion, meaning
 code pages cannot be written to and data pages cannot be executed.
 These permissions map directly to page-table bits.
-Pages in Linux may also be copy-on-write (COW) pages, which are mapped read-only
-in multiple address spaces, but duplicated when any process writes
+Pages in Linux may also be copy-on-write (COW) pages, which are mapped 
+read-only in multiple address spaces, but duplicated when any process writes
 to it, resulting in a separate copy.
 
 Linux maintains userspace and kernel mappings to memory in distinct
 parts of the virtual address space.
 The PTE entries for kernel mappings, located in the top half of the
-address space, have the U/S bit set.
+address space, have the $U/S$ bit set.
 These kernel mappings are identical for all address spaces, and are
 kept consistent across the corresponding page tables.
 In contrast, the PTE entries for userpace mappings, located in the 
-bottom half of the address space, have the U/S bit reset.
+bottom half of the address space, have the $U/S$ bit reset.
 A userspace page has atleast one userspace mapping and atleast one
 kernel mapping.
 Shared userspace memory is implemented by mapping a page in more than
@@ -213,6 +222,17 @@ Mapped file pages can therefore be accessed by the file-system driver using
 kernel addresses, and userspace programs using userspace addresses.
 Userspace pages not backed by a file are called \emph{anonymous pages}.
 
+Processes in Linux can also share memory pages, which might be set up
+implicitly by memory mapping pages from the same files, or explicitly
+through named shared memory objects.
+The same physical page might be mapped in two or more processes'
+virtual address spaces, and be accessible through the respective
+virtual addresses in each process.
+Linux maintains a reverse map for each physical page mapped to user virtual
+memory, linking from the pages' metadata to the PTEs for each mapping.
+Reverse mappings enable \midas to precisely and efficiently identify all 
+possible addresses that may be used to modify the contents of an user page.
+
 
 \subsection{Supervisor Memory Protection} %  and user-copy interfaces}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -226,15 +246,18 @@ Essentially, the attacker needs to set up either data structures
 or code within its accessible memory, then exploit a kernel
 bug to make the kernel use these data structures, or execute
 this code.
+This class of attacks is known as confused-deputy attacks, since the
+privileged softare (kernel) tasked with isolating userspace processes
+confuses its own code/data with the user's.
 
 Architectures and OSs have mitigated these vulnerabilities
 by introducing \emph{supervisor memory protection}.
-Under supervisor memory protection, kernel read/write/execute access to userspace memory
-raises a fault (depending on the state of a per-core system
+Under supervisor memory protection, kernel read/write/execute access to 
+userspace memory raises a fault (depending on the state of a per-core system
 register).
 On x86-64, these features are known as Supervisor Memory Access
-Protection (SMAP, for data accesses) and Supervisor Memory Execution
-Protection (SMEP, for code accesses). 
+Protection (SMAP) for data accesses, and Supervisor Memory Execution
+Protection (SMEP) for code accesses. 
 Bits in the CR4 register track whether these protections are active, 
 and the privileged \Code{stac}/\Code{clac} instructions are used to 
 quickly enable and disable SMAP.
@@ -247,14 +270,15 @@ use the access control instructions to disable SMAP before
 accessing userspace data, and then re-enable SMAP afterwards.  
 Transfer functions make
 kernel accesses to userspace data explicit, allowing
-\midas to reliably track and protect all kernel fetches from userspace memory.
+\midas to reliably track and protect \emph{every} kernel fetches 
+from userspace memory.
 
 \subsection{Double-Fetch Bugs}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=.95\linewidth]{media/midas/doublefetch.pdf}
+  \includegraphics[width=.6\linewidth]{media/midas/doublefetch.pdf}
   \caption{Example of a double-fetch bug.}
   \label{fig:doublefetch}
 \end{figure}
@@ -296,12 +320,14 @@ boundaries~\cite{lu2018untrusted}).
 
 % Nothing fancy -- the adversary is just trying to hack the system
 % No black magic allowed
-The attacker has access to a user account on the target machine. They can
-execute arbitrary userspace code, including syscalls. Some of the system
-calls have double-fetch vulnerabilities which the attacker wishes to exploit
-(e.g., for privilege escalation).
+The attacker has access to a user account on the target machine. 
+They can execute arbitrary userspace code, including syscalls. 
+Some of the system calls have double-fetch vulnerabilities which the attacker 
+wishes to exploit (e.g., for privilege escalation).
 The attacker may execute arbitrary sequences of syscalls on multiple CPU
 cores in parallel, or concurrently on the same core.
+However, the attacker is not allowed direct access to devices, as only the
+privileged root user is permitted this capability.
 
 \midas mitigates any unintended corruption or information leakage \emph{in the kernel}
 or \emph{in other user processes} that arises through double-fetch bugs.
@@ -317,8 +343,6 @@ tsafrir2008portably} are out of scope.
 
 \begin{table}
   \centering
-
-    \begin{adjustbox}{width=1.0\linewidth}
     \begin{tabular}{  l | l | l | l }
   \toprule
       & \textbf{Userspace} & \textbf{Kernel} & \textbf{Device} \\ \midrule
@@ -335,17 +359,17 @@ tsafrir2008portably} are out of scope.
       & \Code{swap}  &                       & MMIO page              \\
   \bottomrule
   \end{tabular}
-  \end{adjustbox}
   \caption{Attack vector classification for \tocttou exploits.}
   \label{tab:attack_class}
 \end{table}
 
-\midas guards data processed during a syscall's execution against concurrent modification.
+\midas guards data processed during a syscall's execution against concurrent 
+modification.
 We label the data fetched twice as vulnerable data.
 In this section, we classify attacks based on two criteria: the
 privilege level of the writer, and whether the mapping used for writing
-exists at the time of the first read. \autoref{tab:attack_class} summarizes our
-classification.
+exists at the time of the first read. 
+\autoref{tab:attack_class} summarizes our classification.
 Importantly, this classification helps understand existing attacks and how to
 protect against them, and where future attacks (bugs) may arise.
 The device column corresponds to attacks where a device
@@ -355,8 +379,8 @@ following attack vectors.
 
 Existing userspace mappings to a page can be used to modify
 vulnerable data which the targeted syscall is reading.
-Userspace can directly write to a mapped page, irrespective of whether the mapping is
-in the same address space or not.
+Userspace can directly write to a mapped page, irrespective of whether the 
+mapping is in the same address space or not.
 % Watson~\cite{watson2007exploiting} called such attacks
 % \emph{direct double fetch} attacks.
 Alternatively, a concurrently executing syscall can also modify the
@@ -380,8 +404,7 @@ Here, the attacker maps a file-backed page from the page cache into a
 userspace process and then passes as an argument in this page to the
 target syscall.
 The attacker then triggers a concurrent \Code{write} syscall to modify the
-vulnerable data using kernel mappings for the page cache
-pages.
+vulnerable data using kernel mappings for the page cache pages.
 % This attack is called \emph{inception double fetch}~\cite{watson2007exploiting}.
 % \mat{Did we call it inception double fetch?}
 The kernel does not explicitly track kernel addresses mapping to a page,
@@ -423,8 +446,7 @@ against writes from both user and kernel code.
 Finally, a device might modify vulnerable data if it is either
 allowed to DMA (direct memory access) to the page, or if the page is memory 
 mapped (MMIO) and is actually backed by the device.
-In the latter case, external factors can change the vulnerable
-data.
+In the latter case, external factors can change the vulnerable data.
 Existing discretionary access control rules typically prevent users
 (except a superuser) from mapping device-backed pages into their
 address spaces.
@@ -495,7 +517,8 @@ validity of the data) and will lead to the data being rejected
 straightaway.
 \midas' invariant therefore prevent exploitation of double-fetch
 vulnerabilities even when the fetched objects span multiple pages.
-We elaborate on this case with an example in \autoref{sec:midas:design:discussion}.
+We elaborate on this case with an example in 
+\autoref{sec:midas:design:discussion}.
 
 A major requirement for \midas is to allow concurrent access to pages
 by user/kernel code running in parallel with a syscall which reads from
@@ -506,23 +529,23 @@ read by a syscall until the syscall completes.
 The na\"ive design can deadlock because it introduces dependencies between
 tasks for forward progress, which we illustrate in the following example
 of a system with two tasks (A and B):
-\begin{inparaenum}[\itshape i\upshape)]
+\begin{itemize}
   \item Task A issues a blocking syscall which reads a user page and blocks, then
   \item Task B writes to the same user page before issuing a syscall which
   resumes task A.
-\end{inparaenum}
+\end{itemize}
 In this case, if Task A's read to the page preceeds Task B's write,
 Task B will be blocked waiting for A to complete its syscall.
 Task A will also remain blocked waiting for Task B's syscall,
 introducing a circular dependency, leading to deadlock.
 The na\"ive design also introduces unnecessary delays in other cases,
 such as the one described below, again with two tasks (C and D):
-\begin{inparaenum}[\itshape i\upshape)]
+\begin{itemize}
   \item Task C reads from a page and sleeps for a long while,
         but does not read from the page a second time, then
   \item Task D writes to the same page after task C has read from it,
         and blocks until Task C completes and is unnecessarily delayed.
-\end{inparaenum}
+\end{itemize}
 A more performant approach is to duplicate the concurrently accessed page:
 the copy is kept for task C for future fetches, and task D
 can write to the original and proceed without delays.
@@ -559,7 +582,7 @@ holding the latest state of the page.}
 
 \begin{figure*}[]
   \centering
-  \includegraphics[width=0.9\linewidth]{media/midas/midas_states.pdf}
+  \includegraphics[width=\linewidth]{media/midas/midas_states.pdf}
   \caption[State diagram for a page in \midas.]
           {State diagram for a page in \midas. Reads/writes from userspace/syscall
           code are marked (u)/(s) respectively. Shading is used to represent the
@@ -589,10 +612,10 @@ For a page, its corresponding state machine
 
 \autoref{fig:midas_states} shows the state machine for a single page.
 At every state, the page has two associated sets:
-\begin{inparaenum}[\itshape i\upshape)]
+\begin{enumerate}
   \item the copies set $C = \{C_L, C_0, \dots\}$ holds multiple copies of the page over time, and
   \item the snapshots set $S = \{L, S_0, S_1, \dots\}$ tracks logical versions of the page, each corresponding to one executing syscall and each mapping to a copy.
-\end{inparaenum}
+\end{enumerate}
 Reads from kernel code in a syscall use the \emph{snapshot's corresponding copy}.
 Writes from user/kernel code and reads from userspace access the \emph{latest
 copy} $C_L$, which is mapped in processes' address spaces.
@@ -705,28 +728,11 @@ writes from the syscall to be merged into the latest copy.
 \subsection{Discussion}
 \label{sec:midas:design:discussion}
 
-\begin{table}
-\begin{center}
-  \begin{tabular}{  l  l }
-  \toprule
-    \textbf{System Call} & \textbf{Exemption reason} \\
-  \midrule
-    \Code{futex} & Relies on concurrent write \\
-    \Code{execve} & Remaps address space \\
-    \Code{write} & Invulnerable, improves performance \\
-  \bottomrule
-  \end{tabular}
-\end{center}
-
-\caption{System calls uninstrumented by \midas.}
-\label{tab:except_syscall}
-\end{table}
-
 \paragraph{Correctness of syscalls directly updating snapshot $L$}
 \midas' design lets all writes, including those from syscalls, to directly
 update the latest copy of the page $C_L$ and this property maintains correctness
 of system execution.
-We now show that there is a valid, safe %\footnotemark
+We now show that there is a valid \emph{safe} 
 execution trace of a system not protected by \midas which generates the same
 sequence of writes to the page, and therefore generates the same contents
 of the page when the syscall ends.
@@ -744,9 +750,6 @@ to it (r-w-r pattern).
 Such syscalls do not exist in the Linux kernel, and are discussed below.
 Therefore, our syscalls write to an object after completing all of their reads
 of that object.
-
-% \footnotetext{A safe trace has no writes to vulnerable data between double fetches
-% by the kernel, and therefore does not trigger any existing \tocttou bugs.}
 
 Consider a page holding a single-byte object $O_0$, and the
 sequence of operations to this byte during a \midas syscall be
@@ -799,6 +802,23 @@ without affecting
 correctness, because an equivalent, valid, safe non-\midas trace
 exists where all of the writes have been postponed, in the same order
 to after the double fetch reads.
+
+\begin{table}
+  \begin{center}
+    \begin{tabular}{  l  l }
+    \toprule
+      \textbf{System Call} & \textbf{Exemption reason} \\
+    \midrule
+      \Code{futex} & Relies on concurrent write \\
+      \Code{execve} & Remaps address space \\
+      \Code{write} & Invulnerable, improves performance \\
+    \bottomrule
+    \end{tabular}
+  \end{center}
+  
+  \caption{System calls uninstrumented by \midas.}
+  \label{tab:except_syscall}
+  \end{table}
 
 \paragraph{Exemptions}
 Syscalls such as \Code{futex} rely on user data changing between double
@@ -881,7 +901,7 @@ second page:
 \item between the first and second fetches of X.
 \end{inparaenum}
 \midas ensures both fetches return \Code{X=(42,0)}.
-Critically, any existing TOCTTOU bugs are not triggered since both fetches
+Critically, any existing \tocttou bugs are not triggered since both fetches
 read the same, possibly invalid, value of the object.
 Note how the situation is identical to one where the malicious write
 to \Code{X[1]} happens before the syscall starts.
@@ -1076,7 +1096,7 @@ file descriptor passed as a register, a pointer to a user
 buffer and a count of bytes to be written to the file.
 While the write to the file's pages is sensitive, and
 \midas takes care to ensure that it follows the page state
-machine, the read from userspace is not.
+machine, the read from the userspace buffer is not.
 The syscall reads from userspace only once, and its data
 is only used for copying into the file.
 An attacker who modifies the user buffer concurrently with
@@ -1288,13 +1308,16 @@ A more efficient solution would be to have special hardware support
 for invalidating TLB entries globally, not just on the executing
 core.
 The AMD64 architecture manual~\cite{amd64prog} lists such an instruction
-(\Code{INVLPGB}), though it is yet to be implemented in any commercially
-available x86 processors.
+(\Code{INVLPGB}), though it is only implemented on a limited selection
+of server processors only (e.g., 3rd Generation AMD EPYC).
 The ARM v8-A architecture manual~\cite{armv8a} lists similar instructions
 \Code{TLBI ASIDE1}\texttt{\textbf{IS}} and \Code{TLBI ASIDE1}\texttt{\textbf{OS}} which invalidate all PTEs
 of a page within a cluster of cores but not for cores in other clusters
 (Inner Shareable Domain) and cores across clusters (Outer
 Shareable Domain) respectively.
+Academic proposals for hardware TLB 
+coherence~\cite{VillaviejaKVERMNCU11, YanVCB17, RomanescuLSB10} would also
+benefit \midas by reducing the overheads for PTE modification.
 
 Alternate architectures~\cite{0003BOBFP21midgard,ChaseLFL94SASOS} with a single,
 system-wide translation table

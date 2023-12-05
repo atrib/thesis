@@ -197,7 +197,7 @@ manifest from the same usage pattern.
 The kernel first loads arguments once to check their validity, then
 loads them at a later time in order to use them.
 This pattern earns these bugs the often-used moniker of 
-Time-of-Check-to-Time-of-Use (TOCTTOU) bugs.
+Time-of-Check to Time-of-Use (\tocttou) bugs.
 A double-fetch bug manifests from an implicit assumption by the developer
 that the fetched data is the same, which is violated by the attacking
 user.
@@ -246,7 +246,7 @@ Midas provides systematic protection to the user-kernel interfaces against
 double-fetch attacks by maintaining an invariant:
 \emph{through a system call's lifetime, every read to a userspace object
 will return the same value}.
-Midas can also be extended as a sanitizer, enabling detection of TOCTTOU
+Midas can also be extended as a sanitizer, enabling detection of \tocttou
 attacks against the kernel.
 To validate the design, we also present an implementation of Midas on the
 Linux kernel.
@@ -263,7 +263,7 @@ compartmentalization.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Deeper dive into kernel TOCTTOU protection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Kernel TOCTTOU Protection Overview}
+\section{Kernel \tocttou Protection Overview}
 
 % Context
 % \begin{itemize}
@@ -358,7 +358,7 @@ cve201610433, cve20195519,cve20168438}.
 For example, the user could pass a buffer, and its corresponding length
 as arguments, then later maliciously change the length to influence the
 kernel to access memory outside the buffer.
-A time-of-check to time-of-use (TOCTTOU) violation occurs when the
+A time-of-check to time-of-use (\tocttou) violation occurs when the
 first read is used to validate an argument (example, the length above)
 and the second read is to use the argument.
 Double-fetch bugs might be particularly difficult to identify, as the two
@@ -680,7 +680,7 @@ interface to the requirements of modern programs.
 This thesis is structured as follows.
 
 \autoref{ch:midas} describes Midas, the systematic mitigation to
-kernel TOCTTOU bugs.
+kernel double-fetch bugs.
 
 \autoref{ch:seccells} describes SecureCells, our novel mechanism for
 intra-address space compartmentalization.
@@ -692,7 +692,7 @@ intra-address space compartmentalization.
 This thesis was supervised by my advisors, Prof. Mathias Payer and Prof. Babak Falsafi.
 Portions of the thesis describe projects conducted in collaboration with academic peers, 
 namely Uros Tesic, Florian Hofhammer, Yuanlong Li, Siddharth Gupta, and Andres Sanchez.
-The investigation of TOCTTOU protection, described in \autoref{ch:midas},
+The investigation of \tocttou protection, described in \autoref{ch:midas},
 was published in the
 \emph{Proceedings of the 31st USENIX Security Symposium} in 2022.
 The design, implementation and evaluation of SecureCells, described in 
