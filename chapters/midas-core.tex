@@ -1618,7 +1618,7 @@ memory overhead.
 
 In this section, we explore the sources of \midas' overhead by analyzing
 \Code{perf} traces for three workloads: thread creation from OSBench, linux
-compilation from PTS and Nginx.
+compilation from PTS, and Nginx.
 We aim to classify overheads into the various kernel function we instrumented:
 \begin{inparaenum}[\itshape i\upshape)]
 \item user copy in transfer function,
@@ -1792,14 +1792,14 @@ vulnerabilities rely on Intel TSX, a hardware transactional
 memory implementation, to detect malicious writes to data read by the
 kernel.
 A defense based on TSX improves upon \midas by reducing the scope for
-false sharing from a page size to a cache size.
+false sharing from a page size to a cache line size.
 However, TSX suffers from major limitations which restrict its useability
 for general kernel implementations.
 Of note, TSX requires that the data working set for the critical section
 experiences no L1 cache evictions, even due to contention from a
 simultaneously-multithreaded (hyperthreading) core.
-Further, TSX is limited to processors from a specific manufacturer (Intel),
-leaving the vast majority
+Further, TSX is deprecated and limited to processors from a specific 
+manufacturer (Intel), leaving the vast majority
 of computing devices~(mobile, IoT, AMD processors) unprotected.
 
 %%%%%%%%%%%%%%%%%%%%
@@ -1807,7 +1807,7 @@ of computing devices~(mobile, IoT, AMD processors) unprotected.
 %%%%%%%%%%%%%%%%%%%%
 
 \midas mitigates double-fetch bugs in system calls and protects the operating
-system kernel by enforcing the invariant:  \emph{through a syscall's
+system interface by enforcing the invariant:  \emph{through a syscall's
 lifetime, every read to a userspace object will return the same value}.
 Our \midas implementation creates on-demand snapshots and copies of pages that
 are read and merges any writes through the execution of the system call.
