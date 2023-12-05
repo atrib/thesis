@@ -408,18 +408,45 @@ I thank the Academy \dots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Midas CORE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Some actual work}
+\chapter{Midas: Systematic Kernel TOCTTOU Protection}
 \label{ch:midas}
-\epigraph{Thanks, Uros, really.}%
-        {\textit{Me}}
+% \epigraph{Thanks, Uros, really.}%
+%         {\textit{Me}}
 
+Double-fetch bugs are a plague across all major operating system kernels. 
+These bugs occur when data is fetched twice across the user/kernel trust 
+boundary while allowing concurrent modification, violating an implicit
+assumption at this interface.
+Double-fetches enable an attacker to illegally access memory, cause 
+denial of service, or to escalate privileges.
+%
+So far, the only protection against double-fetch bugs is to detect and fix them.
+However, existing methods to find double-fetch bugs are incomplete.
+%
+The double-fetch problem also fundamentally prohibits efficient, kernel-based
+stateful system call filtering.
+Thus, we propose \emph{\midas} to mitigate double-fetch bugs and secure the
+system call interface.
+\midas creates on-demand
+snapshots and copies of accessed data, enforcing the key invariant
+that throughout a system call's lifetime, every read to a userspace object
+will return the same value.
+
+\midas shows no noticeable drop in performance when evaluated on compute-bound
+workloads. 
+On system call heavy workloads, \midas incurs~0.2--14\% performance overhead, 
+while protecting the kernel against any \tocttou attacks. 
+On average, \midas shows a~$3.4\%$ overhead on diverse workloads across two 
+benchmark suites.
+
+\newpage
 \input{chapters/midas-core}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SecureCells CORE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Not this again}
+\chapter{SecureCells: A Secure Compartmentalized Architecture}
 \label{ch:seccells}
 \epigraph{The real cool stuff was already done.}%
         {\textit{Me}}
