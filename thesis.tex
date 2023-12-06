@@ -344,9 +344,9 @@
 \renewcommand\itemautorefname{Attack}
 
 % Probably don't need DOI for artificat
-% \newcommand{\doinumber}{5753026}
-% \newcommand{\zenodorecord}[0]{\url{https://zenodo.org/record/\doinumber}}
-%   \newcommand{\zenododoi}[0]{10.5281/zenodo.\doinumber\xspace}
+\newcommand{\doinumber}{5753026}
+\newcommand{\zenodorecord}[0]{\url{https://zenodo.org/record/\doinumber}}
+\newcommand{\zenododoi}[0]{10.5281/zenodo.\doinumber\xspace}
 
 \newcommand{\footremember}[2]{%
    \footnote{#2}
@@ -457,9 +457,18 @@ Does anything change if I put some text here?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Appendix stuff
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \appendices
-% \input{chapters/seccell-appendix}
+\begin{appendices}
 
+\chapter{\midas Artifact}
+
+Detailed documentation for \midas is available on the project website 
+\url{https://hexhive.epfl.ch/midas}.
+
+\input{chapters/midas-appendix}
+
+\chapter{\seccells Details}
+\input{chapters/seccell-appendix}
+\end{appendices}
 
 %-------------------------------------------------------------------------------
 \backmatter

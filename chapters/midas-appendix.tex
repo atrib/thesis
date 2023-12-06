@@ -1,0 +1,224 @@
+\section{Artifact Appendix}
+
+For \midas{}, we present an artifact including the source code and 
+binaries for the prototype based on Linux, an exploit which demonstrate 
+that \midas{} mitigates a real CVE, and benchmarks for evaluating 
+\midas{}' performance, and scripts which simplify the process.
+In the following sections, we describe the artifact, its requirements 
+and how to run it, and what the expected results are.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Description}
+
+% {\em Obligatory. Briefly and informally describe your artifact including 
+% minimal hardware and software requirements, how it supports your paper, how 
+% it can be validated, and what is the expected result. It will be used to 
+% select appropriate reviewers. It will also help readers understand what was
+% evaluated and how.}
+
+The primary artifact for this paper is the code implementing \midas{} on the
+Linux kernel (v5.11), available on GitHub.
+We also provide a disk image suitable for recreating experiments from this
+paper, containing the kernel as both source code and as compiled binaries.
+The disk image contains the CVE exploit used to test correctness in the 
+paper, all benchmarks evaluated in the paper, and scripts to run these.
+This image allows recreation of all emperical evidence presented in the 
+paper's evaluation.
+Finally, we provide further information on the project website including
+a detailed description of the artifact, its contents, how to run it 
+and expected outputs.
+\begin{itemize}
+  \item Source code: \url{https://github.com/HexHive/midas}
+  \item Disk image: \zenodorecord
+  \item Project website: \url{https://hexhive.epfl.ch/midas}
+\end{itemize}
+
+\subsubsection{Hardware Dependencies}
+
+You can run the disk image within a QEMU virtual machine to test
+functionality.
+The host machine requies around 100GiB free disk space and at least
+8GiB memory.
+You should run the disk image on a real machine for performance
+tests.
+Our \midas{} prototype supports machines with 64-bit x86 processors, 
+and the results in the paper were obtained on a machine with an 
+Intel i7-9700 CPU.
+Further, the real machine requires an empty 1TiB disk, and a 
+EUFI-enabled motherboard.
+In both setups, a SSD is preferred for storage, as it leads to
+faster compilation should you choose to re-compile the kernel.
+Evaluating the Nginx benchmark requires a second, networked machine
+to act as a load generator.
+
+\subsubsection{Software Dependencies}
+
+Running the \midas{} disk image requires a guest operating system
+which supports running QEMU.
+The image was tested on QEMU version \texttt{4.2.1} on a machine running
+Ubuntu 20.04 with Linux kernel version \texttt{5.4.0-88-generic}.
+Other virtualization software should also be supported, but the 
+instructions focus on QEMU.
+Running the disk image on real hardware requires no special software 
+support, apart from a tool to write the image to a disk.
+On Linux, we can use \texttt{dd}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Installation}
+
+The installation procedure includes downloading and uncompressing 
+the provided compressed disk image, then either running a VM directly
+from this image, or by writing the image to a disk and booting from it.
+
+On Linux, the following command extracts the image.
+\begin{verbatim}
+  pv ae.img.xz | unxz -T <num threads> > ae.img
+\end{verbatim}
+The uncompressed disk image can then either be run with QEMU, or 
+written to a real disk.
+To run with QEMU, an example command is shown below.
+\begin{verbatim}
+qemu-system-x86_64                   \
+  -m 4G                              \
+  -cpu host                          \
+  -machine type=q35,accel=kvm        \
+  -smp 4                             \
+  -drive format=raw,file=ae.img      \
+  -display default                   \
+  -vga virtio                        \
+  -show-cursor                       \
+  -bios /usr/share/ovmf/OVMF.fd      \
+  -net user,hostfwd=tcp::2222-:22    \
+  -net nic
+\end{verbatim}
+To run on real hardware, copy the image to a real disk using the 
+command shown below, then install into the machine and start it.
+\begin{verbatim}
+  dd if=ae.img of=/dev/<disk> bs=100M
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Experiment Workflow}
+
+The experimental workflow compares the modified \midas{} kernel with
+the baseline Linux kernel.
+Detailed steps are available on the website at 
+\url{https://hexhive.epfl.ch/midas/docs/ae.html}.
+You can validate the artifact by executing the following steps:
+\begin{itemize}
+  \item Check that the code modifications described in the paper correspond 
+  to the code.
+  \item Compile the code to re-create the kernel binary.
+  \item Run a script to check that a CVE exploit is mitigated, as claimed 
+  in the paper.
+  \item Run scripts to execute the benchmarks presented in the paper, 
+  to verify their reported performance.
+\end{itemize}
+
+For the CVE exploitation test, the dmesg output must be checked 
+to ensure that \midas{} prevents exploitation.
+For the performance experiments, the results must be compiled 
+and compared to get the \midas{}' relative performance.
+The general workflow is:
+\begin{itemize}
+  \item boot with the correct kernel (baseline or \midas{}),
+  \item run the script for the benchmark/CVE exploit,
+  \item reboot with the other kernel, and 
+  \item run the same script again.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\balance
+\subsection{Expected Results}
+
+% {\em Obligatory. Start by listing the main claims in your paper. Next, list your key results and detail how they each support the main claims. Finally, detail all the steps to reproduce each of the key results in your paper by running the artifacts. Describe the expected results and the maximum variation of empirical results (particularly important for performance numbers).}
+
+\midas{} is evaluated to demonstrate effective mitigation of
+double-fetch bugs with low overhead. 
+The artifact enables you to verify this claim, that the 
+prototype provides the claimed protection and that it 
+performs as claimed.
+We demonstrate the first property by including checks in the
+kernel and running an exploit for CVE-2016-6516 to demonstrate 
+its mitigation.
+The remaining benchmarks measure performance, either as operations
+per second or as time taken to finish each operation.
+Below, we describe how to interpret the outputs of running the exploit
+and benchmarks.
+
+\midas{} protects the kernel against double-fetch bugs, and in 
+particular mitigates an exploit for CVE-2016-6516.
+In our prototype, you will execute the exploit with and without
+\midas{}' protections.
+When run with the baseline kernel, the exploit is triggered, and the 
+string \Code{"Triggered bug: CVE-2016-6516!"} will be printed to 
+\Code{dmesg} output.
+With the \midas{} kernel, the string is never printed.
+
+We also run kernel-intensive benchmarks which demonstrate that
+\midas{} has a low runtime overhead. 
+Our artifact also contains the performance benchmarks used for
+testing \midas{}' performance.
+The benchmarks must be run separately with both the baseline and
+\midas{} kernel. 
+We include a script to plot the relative performance vs. the 
+baseline kernel.
+\midas{}' performance is strongly dependent on the CPU used for
+evaluation, and exact performance values can vary significantly.
+However, we expect the trends of performance across benchmarks to
+roughly follow the following limits.
+\begin{itemize}
+  \item Microbenchmarks see results in line with paper.
+  \item NPB benchmarks experience 0-5\% overhead, and should follow the 
+        numbers from the paper.
+  \item PTS benchmarks - openssl, git, pybench, redis see an overhead <1\%.
+  \item PTS benchmarks - apache sees a overhead < 10-15\%.
+  \item PTS benchmarks - IPC benchmark sees overhead < 5\%.
+  \item Nginx shows a constant overhead as request size changes, until the
+        network link is saturated.
+\end{itemize}
+
+The setup for breaking down \midas{}' overhead is complicated, and omitted
+from this artifact.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Artifact meta-information}
+
+% {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
+% and remove the rest. This information is needed to find appropriate reviewers and gradually 
+% unify artifact meta information in Digital Libraries.}
+
+
+\begin{itemize}
+  \item {\bf Program: } NASA Parallel Benchmarks (NPB), 
+    Phoronix Test Suite (PTS), Nginx, the Linux kernel, and exploits for 
+    CVE-2016-6516. 
+    All benchmarks and code are publicly available, and are installed 
+    in the provided disk image.
+  \item {\bf Binaries: } The disk image provides the compiled Linux kernel (v5.11)
+    with and without \midas{}' protections.
+  \item {\bf Hardware: } 
+    For functionality evaluation, one machine with ~100GiB free disk 
+    space, and QEMU (version 4.2).
+    For results reproduction, one machine with modern Intel x86 CPU, and 
+    a free 1TiB disk.
+    In both setups, a SSD is preferred.
+  \item {\bf Run-time state: } The disk image includes a program for fixing
+    CPU frequency, eliminating run-time variance. This only works on native 
+    hardware, not QEMU.
+  \item {\bf Metrics: } NPB workloads report execution rate. PTS
+    workloads report either execution time or operation rate. 
+    Nginx reports both request rate and throughput.
+  \item {\bf Output: } Most benchmarks and tests output to a console.
+  \item {\bf Experiments: } Experiments have been prepared within the disk image,
+    and can be run using provided scripts.
+  \item {\bf How much time is needed to prepare workflow (approximately)?: } 
+    3-4 hours, on a machine with an SSD.
+  \item {\bf How much time is needed to complete experiments (approximately)?: } 
+    For performance evaluation, approx. 8 hours.
+  \item {\bf Publicly available?: } All code is publicly available.
+  \item {\bf Code license: } GPL v2.0
+  \item {\bf Archived?: } 
+    DOI \zenododoi available at \zenodorecord.
+\end{itemize}
