@@ -3,7 +3,7 @@
 \label{app:ptable}
 
 \autoref{fig:ptable_layout} shows the detailed implementation of the
-unified \ptable-\gtable.
+unified \ptable-\gtable in our prototype \seccells implementation.
 
 The table contains a sorted list of cell descriptors, including a
 metadata ``cell'' used for storing its sizing parameters.
@@ -19,13 +19,20 @@ If the request overflows the bounds imposed by factors $R$ and $T$, the
 supervisor must resize this table as required.
 The \cell descriptor list is followed by the \ptable, and then by the
 \gtable.
+This layout assumes, and is optimized, for a cache line size of 64 bytes.
 
-% \atri{Show how the limits on number of cells and secdivs is determined}
+The size of parameters $M$ and $N$, holding the current number of \cell{}s
+and \secdiv{}s, in the metadata cell is 32 bits each.
+The maximum supported number of \cell{}s in our implementation, therefore,
+is $2^{32}$.
+The number of \secdiv{}s, however, are limited by the grant table layout.
+The 32-bit grant table entries use 29 bits for grantee \secdiv{} identifiers,
+thereby limiting the maximum number of \secdiv{}s to $2^{29}$.
 
 \begin{figure*}
   \centering
   \includegraphics[height=0.95\textheight]{media/seccells/ptable_layout.pdf}
-  \caption{Layout of the unified \ptable-\gtable.}
+  \caption{Layout of \seccells{}' unified \ptable-\gtable.}
   \label{fig:ptable_layout}
   %\Description[<short description>]{<long description>}
 \end{figure*}
@@ -198,5 +205,5 @@ we envision microcode to be ideal for implementing \seccells'
 permission transfer instructions for high-performance processors.
 
 
-\ab{TODO}
+\atri{TODO}
 TODO: Put details of SecureCells implementation (bits of instructions, etc.)
