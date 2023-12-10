@@ -185,6 +185,16 @@ To assure the above, inter-compartment control flow must follow call gates
 which implement the requisite checks.
 Call gates must be entered at the start, to prevent ROP-style attacks.
 
+Suppose a compartment starts with argument validation and then proceeds to
+using the arguments, lack of call gates can allow an attacker to run the 
+compartment directly with invalid arguments by entering just after the
+checks.
+
+Migrating threads can similarly cause issues if an attacker calls a victim
+with malicious register state.
+An attacker might, for example, force a victim to execute with an illegal,
+attacker-crafted stack.
+
 Execution following a call-gate entry must stay secure, specially if using
 migrating thread model where the execution continues with the caller's 
 context.
