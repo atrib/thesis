@@ -163,3 +163,73 @@ Implicitly has code access control.
 Also has data checks.
 
 MMP has both code and data access control.
+
+\subsection{Intra compartment call gates}
+
+Compartments typically implement separate functionality, and
+need to coordinate to achieve the program's desired functionality.
+Programs will have some compartment call another compartment to
+do some processing.
+When compartments interact, 
+\begin{itemize}
+      \item Compartments must implement checks to secure the interface:
+            Arguments must be checked, caller-callee pair must be
+            allowed.
+            Other restrictions might apply, based on application.
+      \item Checks can be in hardware or software, or a mix of both.
+            Common checks can be in hardware, software allows 
+            application-specific checks.
+      \item Should not be possible to elide checks.
+\end{itemize}
+To assure the above, inter-compartment control flow must follow call gates
+which implement the requisite checks.
+Call gates must be entered at the start, to prevent ROP-style attacks.
+
+Execution following a call-gate entry must stay secure, specially if using
+migrating thread model where the execution continues with the caller's 
+context.
+Migrating thread model is insecure in the general case. 
+Can be made secure through formal checks on code (possible for small code)
+or through adaptation into static threading through the addition of context
+switching.
+
+Requirements are:
+- checked entry point(s)
+- secure execution/secure context switch.
+
+Processes have secure entry points, and use static threading.
+Kernel system call return points following IPC wait calls are implicit
+entry points. 
+Callers cannot enter at arbitrary address.
+Kernel also maintains thread context during system call, so context is
+restored before system call returns.
+
+XPC maintains the same model as processes, but maintains entry points/call
+stacks in hardware.
+Also maintains state, maybe.
+
+MPK lacks call gates. 
+PKRU value can be changed any time, but no intra-address space control-flow
+guards are provided.
+MPK also lacks explicit tracking of executing compartment.
+Therefore, no way to distinguish whether context is correct/switch to correct
+context.
+libmpk adds nothing more.
+
+ERIM adds call gates to MPK.
+Call gates cannot be bypassed, therefore control flow attacks become impossible.
+However, big performance penalty.
+
+Donky adds the pseudo-privileged library to protection keys.
+Similar to processes, this maintains control flow integrity and entry points.
+(Gotto check) Donky reverts to static threading.
+
+CHERI also relies on the supervisor, and provides both checked entry points
+and contexts.
+
+SecureCells has lightweight inter-compartment entry checks.
+Static threading can be implemented on this base.
+
+CODOMs does not have call gates. 
+Any jump will implicitly switch compartments based on the source and target
+instruction pointers.
