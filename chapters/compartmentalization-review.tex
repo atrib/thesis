@@ -118,4 +118,48 @@ How do these affect the performance of the complete program?
 
 Take from google doc
 
+\subsection{Access Control Permissions}
 
+Compartments are under access control. 
+
+First, data accesses need to be checked. 
+Otherwise, an attacker can compromise a compartment to directly access another
+compartment's data.
+Second, an attacker can "inject" fake data in their own compartment, and 
+manipulate the victim to access it (maybe confusing this data for their own).
+With data checks, the second step will fail even if the first succeeds.
+
+Instruction accesses need to be checked, without which three are a 
+couple (? maybe only one) of different attack vectors.
+First, code injection becomes simplified without instruction access checks.
+An attacker can inject malicious code in their own compartment, then needs
+to influence the victim to execute that code (leveraging some existing bug).
+With instruction checks, the second step will fault, even if the first step
+succeeds.
+Second, data can be held in executable sections, encoded in instructions for example.
+Imagine a JavaScript sandbox whose code is generated on the fly. 
+The existence/lack of particular code can indicate particular JavaScript which has
+been executed, and thereby linked back to specific secrets in JavaScript.
+Cross-sandbox code execution can, therefore, leak data through this side channel.
+
+Processes implement both data and code access checks. 
+Further, each process decides what data/files get mapped into their address space.
+However, this can also lead to problems where a process can map a file without
+consent (refer to a separate subsection).
+
+XPC and lwc are based on process-like abstractions, and both have proper
+code and data access control.
+
+MPK implements data checks, but lacks code checks. 
+This is likely motivated by performance reasons/ease of implementation.
+ERIM and libmpk, which build on MPK also lacks code access checks.
+Donky, which is inspired by MPK, also lacks code checks.
+
+CHERI compartmentalization requires capabilities for code execution and
+data access. Satisfactory security.
+
+CODOMs link code to compartments, and has no code sharing.
+Implicitly has code access control.
+Also has data checks.
+
+MMP has both code and data access control.
