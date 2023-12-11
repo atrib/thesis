@@ -243,3 +243,68 @@ Static threading can be implemented on this base.
 CODOMs does not have call gates. 
 Any jump will implicitly switch compartments based on the source and target
 instruction pointers.
+
+\subsection{Zero Copy data movement}
+
+When compartments communicate, they also send data across the interface.
+A common framework for data transfer between processes uses protobufs
+to serialize data (aggregate data from different data structures into
+a serial form), copy data via a system call (likely sendmsg for Linux),
+and deserialize the information at the receiver.
+
+The Communication interface also comes with a potential security
+issue.
+If a compartment can unilaterally inject permission to code or data
+into another compartment, that can lead to confused deputy attacks where
+the target uses the transferred information under the confusion that the
+data is its own. 
+
+While the RPC framework is flexible, it suffers from limited performance.
+In specific cases, systems can benefit from moving permissions to memory
+instead of copying the data over.
+This advantage becomes more pronounced for larger data movements.
+In particular cases, zero-copy data transfer offer the sole practical
+opportunity to satisfy strong performance requirements. 
+Key example is networking functions.
+However, the RPC interface is also secure. 
+The receiver of the RPC must explicitly use a syscall to accept an 
+incoming RPC.
+Further, incoming RPCs necessarily appear as data, not code.
+
+A trade-off for zero-copy data movement is that the involved data needs
+to be serialized, and programs that naturally deal with serialized buffers
+profit with ease.
+
+CHERI's capability model offers a natural fit to zero-copy permissions 
+transfers, as access to a buffer passes along with the pointer when passed
+as cross-compartment capability arguments along with all contained 
+capabilities.
+A single capability argument can grant access to a complex data structure
+across multiple regions, alleviating the need for serialization.
+This power, however, must be used with care.
+If any unwanted capability is leaked, anywhere within the nested structures,
+CHERI can be compromised.
+CHERI's capabilities also resemble unilateral information transfers.
+
+XPC offers hardware support for zero-copy transfer for one segment, which can
+be subsequently monotonically shrunk in nested RPC calls.
+Great for performance, but limited use cases: only those programs which can
+be shoehorned into this shell.
+XPC's information injection is also restricted to data, but is unilateral.
+
+Protection key-based methods (MPK/libmpk/ERIM) can offer zero-copy permission
+transfer to all pages with the same color, simply by writing the correct
+permissions to the target compartment's key.
+However, this is all or nothing.
+Protection keys give very little protection against injection of code/data.
+
+SecureCells allows zero-copy permission movement. 
+Crucially, 
+\begin{itemize}
+      \item transfers require a handshake
+      \item it allows unlimited segments to be moved
+\end{itemize}
+However, all or nothing: entire cell gets transferred.
+SecureCells does not support efficient shrinking of data regions.
+
+
