@@ -26,24 +26,41 @@
 %   \item Browsers fetch and execute code on-demand from an infinitely varying set of sources.
 %   \item Consequently, modern systems include a wider range of trust relationships compared to traditional systems.
 % \end{itemize}
-The computing landscape is one of rapid expansion and evolution.
+The computing landscape is one of rapidly growing software and hardware
+complexity.
 Modern computing systems inherit many of the abstractions and interfaces
 developed at the inception of personal computing and mainframe servers,
 but face a very different computing environment.
 First, the complexity and scale of computing systems have increased 
 exponentially over the decades, far outscaling the ability for developers to 
 exhaustively test and verify their systems, leading to an abundance of bugs.
+Popular software runs hundreds of millions of lines of source code, with
+millions of lines worth of changes every year.
+Transistor counts for processors have roughly followed Moore's law for
+near 50 years, and a modern Apple M2 chip has more than a $10^{11}$
+transistors compared to the 68,000 transistors of the Motorola 68k processor
+from 1979.
 Second, this scaling in complexity relies on, and also enables, pervasive code
 sharing.
 A web browser (e.g., Firefox) along with the underlying operating 
 system (e.g., Linux) accounts for hundreds of millions of lines of code
 including
 \begin{inparaenum}
-      \item mainline kernel code written by a globally distributed consortium,
+      % this point is meant to demonstrate the somewhat lack of formal structure
+      % in Linux development. 
+      % Individual devs are allowed to contribute their own improvements, 
+      % alongside improvements planned centrally by Linus, maintainers and co.
+      \item mainline kernel code written by a informal melange of developers
+            distributed across the globe and varying 
+            industrial/academic/governmental/individual affiliation,
+      % fragmentation of sources/developers
       \item numerous device drivers written by the respective hardware 
             vendors,
+      % absolute fragmentation of library development. popular libs developed
+      % independently, and were incrementally adopted based on popularity
       \item shared libraries and modules developed independently and 
             written using a plethora of different languages,
+      % again, fragmentation of sources, but particularly on lack of trust
       \item code from websites, often including other embedded pages,
             written by respective developers.
 \end{inparaenum}
@@ -92,7 +109,7 @@ Meanwhile, computing has evolved to support increased concurrency and true
 parallelism, with the rise in popularity of multicore CPUs and multi-threaded 
 programs.
 For system call arguments stored in user memory and passed by reference,
-this evolution has opened the gates for data races if the user program
+this evolution has enabled data races if the user program
 modifies the arguments from a second thread while the kernel executes
 a system call from one thread.
 A second consequence is that interfaces might not provide the correct
@@ -140,18 +157,31 @@ The security of operating systems is an area of active research, and many
 methodologies have been proposed to fix the issue of data races at the system
 call interface, primarily focussing on finding and fixing instances of such
 bugs.
-One class of proposals~\cite{wang2019dftracker, deadline, dftinker} leverage static
-analysis to search the OS codebases for specific vulnerable patterns.
-Alternative proposals~\cite{schwartzDECAF,jurczyk2013bochspwn,wilhelm2016xenpwn}
-leverage dynamic analysis to detect instances of data races at runtime.
-Finally, DECAF~\cite{schwartzDECAF} repurposes a CPU-specific feature
+One class of proposals leverage static analysis to search the 
+OS codebases for specific vulnerable patterns.
+DFTinker~\cite{dftinker} and Wang et. al.~\cite{wang2017double} use
+pattern matching derived from known double fetch bugs.
+DFTracker~\cite{wang2019dftracker} and Deadline~\cite{deadline} further
+generalize the search using symbolic execution.
+Alternative proposals
+leverage dynamic analysis to detect instances of data races at runtime
+by tracking kernel memory accesses running various common 
+workloads (for e.g., booting up, running a browser, playing multimedia).
+Bochspwn~\cite{jurczyk2013bochspwn} runs the target OS in an emulator, 
+whereas DECAF~\cite{schwartzDECAF} and Xenpwn~\cite{wilhelm2016xenpwn}
+run on native hardware and rely on hardware tracing functionality.
+Eliminating the found data races through bug fixes in source code allows the
+kernel to present a more secure interface, though the invulnerability to 
+data races remains an informal assumption rather than a guarantee.
+% schwartsDECAF has decaf - detection, dropit - mitigation.
+Finally, DropIt~\cite{schwartzDECAF} repurposes a CPU-specific feature
 intended for accelerating database transactions to instead mitigate such
 bugs.
 Bug finding techniques, however, are insufficient --- they can only fix
 bugs found, and both static and dynamic analysis are incomplete.
 The significant churn in code further complicates the challenge, as every
 change potentially introduces a new such bug.
-DECAF's mitigation is also incomplete, since the protection depends on
+DropIt's mitigation is also incomplete, since the protection depends on
 a vendor-specific feature, which has since also been deprecated on newer
 processors.
 The system call interface requires a more principled and reliant
@@ -199,8 +229,8 @@ loads them at a later time in order to use them.
 This pattern earns these bugs the often-used moniker of 
 Time-of-Check to Time-of-Use (\tocttou) bugs.
 A double-fetch bug manifests from an implicit assumption by the developer
-that the fetched data is the same, which is violated by the attacking
-user.
+that the fetched data is the same, which may be violated by another thread
+through a concurrent modification.
 OS kernels generally use a softare interface to access user memory, to manage
 protections like Supervisor Memory Access Prevention (SMAP), and we can
 extend this interface with a secure invariant.
@@ -414,9 +444,11 @@ subsystems, numerous different applications each relying on a extensive list
 of shared libraries, plugins, interpreted code and on-demand downloaded
 code, interacting over untrusted I/O interfaces such as the network, disks, 
 various accelerators and peripherals.
-To maintain sanity in this exploding heap of code, software heavily relies on
-abstraction and isolation ---
-an operating system kernel is tasked with system management, and with 
+To manage this growth, software developers heavily rely on
+abstraction and isolation.
+Each software component hides much of its complexity behind an accessible
+interface (commonly called Application Programming Interfaces or APIs).
+An operating system kernel is tasked with system management and with 
 isolating individual applications.
 The hardware provides the abstraction of separate privilege levels, aiding
 the kernel to isolate itself from untrusted userspace by inhabiting separate
@@ -495,9 +527,12 @@ be retained in software, retaining the accompanying flexibility.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Thesis goals}
 
-This thesis aims to present systems interfaces redesigned to satisfy the
+This thesis aims to redesign systems interfaces to satisfy the
 security and performance requirements of modern and future computing 
 systems, against contemporary threat models.
+While the security of current systems is of paramount importance, the
+performance of these systems must also satisfy strict deployment 
+requirements.
 Foremost, we prioritize the security of our proposed interfaces, but also
 consider performance as a crucial secondary requirement.
 For the user-kernel interface, we also consider backward compatibility with
@@ -508,14 +543,22 @@ of the interface to support varying softare use-cases to be vital for adoption.
 \begin{center}
       \textbf{Thesis statement}
 
+% \emph{
+% The design of interfaces decisively influences the characteristics of 
+% computing systems --- 
+% strong, well-defined guarantees at the interfaces allow developers to build 
+% well-protected high-performance systems.
+% Systems software requires reimagined interfaces to reflect the security
+% and performance requirements of modern software, particularly at the 
+% user-kernel and intra-process boundaries.
+% }
+
 \emph{
-The design of interfaces decisively influences the characteristics of 
-computing systems --- 
-strong, well-defined guarantees at the interfaces allow developers to build 
-well-protected high-performance systems.
-Systems software requires reimagined interfaces to reflect the security
-and performance requirements of modern software, particularly at the 
-user-kernel and intra-process boundaries.
+      Critical software systems are limited by legacy interfaces, 
+      and require redesigned interfaces to protect against the modern 
+      threat landscape while satisfying strict performance requirements.
+      User-kernel and intra-user interfaces particularly benefit from 
+      better low-overhead isolation.
 }
 \end{center}
 
@@ -524,13 +567,16 @@ user-kernel and intra-process boundaries.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Thesis contributions}
 
+\mat{What about using the attack as motivation?}
+\atri{Not sure, which attack?}
 % Summary of contributions
 This thesis presents two redesigned security- and performance-critical 
 interfaces, particularly at the user-kernel boundary and within a process.
 
 \subsection{Midas}
 Midas presents a multi-versioning concurrency control mechanism, inspired
-from database systems, for maintaining this invariant. 
+from database systems, for maintaining its invariant during user data
+accesses.
 A \emph{security property} derived from this invariant is enforced ---
 Midas uses kernel metadata to track userspace pages accessed, maintains
 page-table permissions to enforce immutability and leverages page faults
@@ -566,7 +612,7 @@ vulnerable components might be discontinued with a single update to the
 kernel core.
 
 % Results summarized
-We have also implemented Midas on the Linux kernel, demonstrating its
+We have implemented a Midas prototype for the Linux kernel, demonstrating its
 practicality, and evaluated the system's performance during system-call
 dependent workloads from the NAS Parallel Benchmark Suite (NPB) and the
 Phoronix Test Suite (PTS).
@@ -685,6 +731,9 @@ kernel double-fetch bugs.
 \autoref{ch:seccells} describes SecureCells, our novel mechanism for
 intra-address space compartmentalization.
 
+\mat{what about the SoK on top of secure cells?}
+\atri{In progress, and will be added here}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Reference the included papers and contributors
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -699,4 +748,5 @@ The design, implementation and evaluation of SecureCells, described in
 \autoref{ch:seccells}, was published as a conference paper in the 
 \emph{Proceedings of the $44^{th}$ IEEE Symposium on Security and Privacy, SP 2023}.
 
-
+\mat{Other publications not part of this thesis.}
+\atri{Not sure what you want about other publications. Should I list them, or their co-authors?}
