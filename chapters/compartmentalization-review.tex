@@ -129,6 +129,8 @@ Not strictly hierarchical:
 a) sandboxes should have execute permissions on generated code but not JIT
 b) sandboxes do not trust each other.
 
+\atri{TODO: add illustration for the browser.}
+
 \subsection{Process-based compartmentalization}
 
 The traditional abstraction of isolation is based on processes.
@@ -265,15 +267,116 @@ The major change is that IPC system calls are replaced by \Code{lwSwitch}
 system calls.
 
 \subsection{Mondrian Memory Protection (MMP)}
-
 % Context and introduction of MMP
+MMP tackles the challenge of flexible, fine-grained intra-address space 
+isolation.
+Intra-address space compartmentalization differs from previous mechanisms,
+all of which have separate memory address spaces for each compartment.
+In contrast, compartments in MMP and the following mechanisms all share the
+same address space.
+Isolation between compartments relies on different 
+memory views, i.e., different permissions to the same address for 
+different compartments.
+Intra-address space compartmentalization can simplify the process of
+porting monolithic programs to compartmentalize them, and allow
+smaller compartments with fine-grained memory permissions.
+Data transfer for intra-address space compartmentalization can be simpler
+than with IPC, since addresses remain valid across compartments.
 
 % Explain how MMP allow compartmentalization
 % Isolation part
+Each compartment in a program compartmentalized under MMP maps to a protection
+domain, with an unique \emph{Domain ID}.
+The virtual address space is split into a number of segments.
+Each compartment has its own permission table which holds per-segment permissions,
+essentially allowing the domain to have its own view of permissions to memory.
+The permission tables can be configured to allow segments to be private (only one 
+domain has permissions), or shared.
+MMP also describes different structures for the permissions table in memory, and
+the hardware structures to read and cache permissions.
+MMP's permissions tables separate permissions from translation, and are
+independent of page tables.
+Crucially, MMPs permission tables allow segments starting and ending at
+word boundaries instead of page boundaries, allowing spatially fine-grained
+permissions.
 % Communication part
+Compartments in MMP can call each other through system calls or traps, 
+which also modify the permissions table base pointer register in hardware.
+The paper also proposes that hardware can be used to accelerate this switch,
+though the mechanism is not clearly explained.
+MMP requires call gates to prevent control flow attacks at inter-compartment
+boundaries.
+Data can also be passed between domains during switching, by marshalling
+data into copied buffers.
+However, MMP also introduces the concept of zero-copy data passing between
+compartments by modifying the permissions to the segments holding passed data.
+However, few details on maintaining coherence of on-chip permission buffers 
+are discussed.
 
 % Explain how MMP compartmentalize a browser
+In MMP, the browser fits in a single address space with separate protection 
+domains assigned to the JIT compiler, and for each of the sandboxes.
+For each sandbox, the generated code can be assigned a separate segment
+which has separate permissions for the JIT domain (rw), and for the sandbox
+domain (rx).
+Further, transitions between the sandboxes and the JIT engine use protected
+calls with call gates which ensure proper checks on these transitions.
 
+\subsection{Code-centric Memory Domains (CODOMs)}
+% Context and introduction of CODOM
+CODOMs enabled fine-grained intra-address space compartmentalization
+with a novel architecture where domains are identified by the executing
+instruction pointer (hence the "code-centric" name), and with permissions
+to data regions determined by the executing domain. 
+Essentially, bits of page table entries identify the domain owning that
+page.
+Executing an instruction from a page tagged with a domain ID equates to
+executing as that domain.
+
+% Explain how CODOM allow compartmentalization
+% Isolation part
+Domains in CODOM each have permission to specific pages of memory: 
+those tagged with that domain's tag in the corresponding page-table entry.
+A domain cannot access data belonging to other domains, except if
+explicitly allowed during access protection lists (APLs).
+% Communication part
+Compartments can communicate with function calls, which implicitly
+cause compartment switches when the domain of the target address page
+differs from that of the source.
+APLs specify the ability of some domains to call other compartment,
+as well as for the caller to share their data with the callee.
+While APLs allow domains to permanently share data with other domains,
+CODOMs also proposes the use of capabilities to temporarily share
+permissions to data during cross-compartment calls.
+
+% Explain how CODOM compartmentalize a browser
+Under CODOM, a browser must have separate pages corresponding to the
+JIT engine and for each sandbox. 
+Each domain's pages must be correctly tagged in the page table to allow
+the domain to be identified by the hardware.
+Each sandbox must own the pages holding their code regions, and have
+'rx' permissions in the page tables. 
+The JIT engine can generate new code using additional permissions specified
+in the APLs, where the engine should be granted write permission to
+each sandbox's domain pages.
+\atri{note: APLs enable access to all of a domain's stuff. sigh.}
+
+\subsection{Intel Memory Protetion Keys (MPK)}
+% Context and introduction of MPK
+While the concept of protection keys to regions of memory predates 
+Intel's MPK extension, previous implementations in PA-RISC,
+Itanium and POWER-6 rely on supervisor managed protection keys whereas
+MPK enables the user to modify permission keys stored in a dedicated
+PKRU register.
+MPK uses bits of the page table entry to assign each page a 4-bit color,
+and uses permission bits in the PKRU register to control permissions to
+each page color.
+
+% Explain how MPK allow compartmentalization
+% Isolation part
+% Communication part
+
+% Explain how MPK compartmentalize a browser
 
 \subsection{XXXXX}
 
