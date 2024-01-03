@@ -361,39 +361,225 @@ in the APLs, where the engine should be granted write permission to
 each sandbox's domain pages.
 \atri{note: APLs enable access to all of a domain's stuff. sigh.}
 
-\subsection{Intel Memory Protetion Keys (MPK)}
+\subsection{Intel Memory Protection Keys (MPK)}
 % Context and introduction of MPK
-While the concept of protection keys to regions of memory predates 
-Intel's MPK extension, previous implementations in PA-RISC,
-Itanium and POWER-6 rely on supervisor managed protection keys whereas
-MPK enables the user to modify permission keys stored in a dedicated
-PKRU register.
-MPK uses bits of the page table entry to assign each page a 4-bit color,
-and uses permission bits in the PKRU register to control permissions to
-each page color.
+Memory Protection Keys assign keys to regions of memory, and maintain
+a separate set of access permissions for each key.
+While previous implementations in PA-RISC, Itanium and POWER-6 rely on 
+supervisor managed protection key permissions, Intel's MPK extension
+makes permission changes cheap by allowing userspace modification to
+permissions.
+MPK uses bits of the page table entry to assign each page a 4-bit color key,
+and uses permission bits in the per-core PKRU register to control permissions
+to each page color.
+PKRU permissions can be arbitrarily changed by userspace, using a special
+instruction (\Code{wrpkru}).
+A software library (libmpk), can be used to virtualize page colors, allowing
+the use of more than 16 page colors.
 
 % Explain how MPK allow compartmentalization
 % Isolation part
+When executing a compartment, MPK uses permissions in the PKRU register
+to enforce additional restrictions on memory access. 
+Each core's PKRU register should only have permissions for page colors as
+per the compartment executing on that core.
 % Communication part
+Compartments in MPK can implicitly switch between each other using the 
+\Code{wrpkru} instruction to change the core's accessible page colors.
+Along with the permission changes, the application can also use 
+function calls to implement cross-compartment procedure calls.
+Data can be transferred between compartments using shared page colors.
+Changing page colors requires page table entry modifications, implying a
+system call, and cannot be done as fast as PKRU writes.
+MPK lacks call gates, and software must take care to manage control flow
+integrity.
 
 % Explain how MPK compartmentalize a browser
+A browser can be compartmentalized with MPK, with one page color for the JIT
+engine and different colors for each of the sandbox regions.
+The PTEs for all generated code regions must have 'rwx' permissions, 
+since PTE permissions are also enforced.
+During JIT execution, the PKRU register holds 'rw' permissions for the
+sandbox code regions.
+During sandbox execution, the PKRU register holds 'rx' permissions for that
+sandbox's code region, and no permissions for any non-sandbox regions.
 
-\subsection{XXXXX}
+\subsection{ERIM}
+% Context and introduction of ERIM
+ERIM builds on top of Intel MPK to implement strict call gates for
+compartment switching, mitigating MPK's main shortcoming.
+Essentially, ERIM limits the existence of instructions which can
+modify the PKRU value (\Code{wrpkru} and \Code{xrstor}) to within
+software call gates.
+However, ERIM must inspect all newly loaded code, including shared
+library or module loading, to ensure that new instructions which
+modify the PKRU register are not injected.
 
-% Context and introduction of XXXXX
-
-% Explain how XXXXX allow compartmentalization
+% Explain how ERIM allow compartmentalization
 % Isolation part
+ERIM relies on the same set of MPK permissions described above to
+isolate compartments.
 % Communication part
+ERIM's main differentiating feature are its call gates, which should
+be the only parts in the program with executable \Code{wrpkru} or
+\Code{xrstor} instructions.
+The key feature of ERIM's call gates are that \Code{wrpkru} instructions
+are immediately followed by a call to trusted code, or by a condition which
+checks the value in the PKRU register. 
+The latter check allows control flow attacks which try to load invalid
+permissions to be immediately detected.
 
-% Explain how XXXXX compartmentalize a browser
+% Explain how ERIM compartmentalize a browser
+A browser compartmentalized with ERIM essentially looks the same as with
+MPK, with the JIT engine occupying a trusted compartment, and each sandbox
+occupying one untrusted compartment. 
+Data can be passed through pointers directly, just as with MPK, though 
+compartment transitions use ERIM's aforementioned call gates.
 
+\subsection{Donky}
+% Context and introduction of Donky
+Donky aims to retain MPK's primary performance advantage, by allowing
+changing memory views in userspace, while mitigating its main weakness, 
+where an attacker with arbitrary code execution can immediately bypass
+MPK's protections.
+Donky replaces Intel's PKRU register register with a new DKRU register
+which cannot be directly modified by userspace.
+Donky effectively introduces a new privilege level within userspace, 
+running a special software monitor called the Donky monitor solely 
+capable of modifying the DKRU register.
+The Donky monitor can be trapped-into by userspace software, enabling the
+monitor to serve inter-compartment call requests, among other requests
+which modify memory keys.
+While Donky's monitor does not run within the supervisor privilege level,
+its design of entry-exit through hardware traps and ability to modify
+registers not accessible to normal userspace code makes the Donky monitor
+similar to previous works of supervisor-mediated compartmentalization.
+
+% Explain how Donky allow compartmentalization
+% Isolation part
+Compartments in Donky use separate regions of memory, with permission
+enforced as per the DKRU register, similar to compartmentalization with
+MPK.
+These permissions allow memory isolation for compartmentalization.
+% Communication part
+Compartments can call each other using \Code{dcall}s, essentially trapping
+into the monitor which modifies permissions in the DKRU register and
+sanitizes register values before dropping into the callee.
+
+% Explain how Donky compartmentalize a browser
+A browser compartmentalized with Donky uses separate Donky domains for the 
+JIT engine and for each sandbox, created by calls to the Donky monitor.
+The browser can also install \Code{dcall}s between the engine and each
+sandbox, but prohibit \Code{dcall}s between sandboxed domains directly.
+Each transition between domains using a \Code{dcall} is interposed by the
+monitor.
+Arguments must be passed through either registers, or through shared memory
+between domains.
+
+\subsection{CHERI}
+% Context and introduction of CHERI
+CHERI introduces architectural support for memory capabilities.
+Architecturally, pointers are replaced capabilities, which track 
+spatial bounds of memory accessible using that capability. 
+CHERI compartmentalization repurposes CHERI capabilities, with a customized
+kernel to provide intra address-space compartmentalization.
+CHERI provides compartmentalization based on the object-capability model, 
+where each compartment is represented as an object encapsulating capabilities
+for the compartment's code and data regions.
+CHERI is drastically different from the previously mentioned mechanisms,
+as access permissions for a compartment are not stored in a centralized
+permissions table or permissions register.
+Instead, CHERI relies on capabilities distributed within a compartment's 
+registers and data regions.
+
+% Explain how CHERI allow compartmentalization
+% Isolation part
+CHERI uses the capabilities to memory to spatially limit the memory regions
+accessible to a compartment.
+When executing, CHERI requires one or more code and data capabilities. 
+For compartmentalization, each compartment encapsulates its code and data
+capability within an object, and sealed by an object type capability 
+field (\Code{otype}). 
+When running as that compartment, those capabilities are installed in CPU
+capability registers, allowing the compartment to only access its code and data.
+% Communication part
+Compartments can call each other using a system call to the CheriBSD kernel,
+which securely saves the caller's state to its object, and unseals the
+callee's code and data capabilities and installs them in the core's registers 
+before dropping into the callee.
+Further, CHERI's capabilities greatly simplify passing permission to arguments
+during an inter-compartment call.
+A CHERI caller can simply pass a capability to the argument in memory during
+the call, allowing the callee to use the capability to access the corresponding
+memory.
+One consequence, which the caller must be careful about, is that the callee can
+use any capabilities stored in this argument memory region to further access other
+regions of memory.
+CHERI compartmentalization, though, lacks a mechanism for revocation,
+instead suggesting the use of garbage collectors for eventual revocation.
+A key concern for developers will be regarding "leaked capabilities" passed during
+inter-compartment calls.
+
+% Explain how CHERI compartmentalize a browser
+With CHERI, each of the browser's compartments must be allocated a separate
+object encapsulating that compartment's code and data.
+Both the JIT engine and sandboxes must each hold capabilities to the
+sandbox's code region. 
+The JIT engine can use its own capability to a sandbox's code region,
+permitting 'rw' operations, to generate new code for the sandbox.
+The sandbox's own capability for this region must only allow 'rx' operations.
+Finally, the JIT engine can pass temporary capabilities to sandboxes
+when they are required to process certain data, including new data packets,
+with zero-copy.
+
+\subsection{SecureCells}
+% Context and introduction of SecureCells
+SecureCells introduces a compartmentalization mechanism based on hardware
+access control to variable-sized regions of memory, hardware tracked
+compartment identifiers, a unified permissions table for all compartments,
+and unprivileged instructions for securely accelerating common operations.
+SecureCells' permissions table stores permissions for each compartment to
+each data region.
+Further, SecureCells' userspace instructions enable control flow and
+zero-copy data movement between compartments with unprivileged instructions.
+SecureCells' unprivileged instructions implement hardware checks in order
+to prevent privilege escalation.
+
+% Explain how SecureCells allows compartmentalization
+% Isolation part
+Each compartment in SecureCells is assigned a \secdiv{}, whose accesses
+to memory regions are checked with an in-memory permissions table.
+Properly configured permissions allow compartments to have private regions
+to which on that compartment has permission, and selectively shared regions
+with specific other compartments having permission. 
+When executing code for a compartment, a core tracks the executing compartment
+identifier in a system register, and accordingly presents a view of memory.
+% Communication part
+Compartments can also interact with unprivileged \Code{SDSwitch} instructions
+which atomically  switch to a different compartment and jump to the callee's
+entry point.
+To aid zero-copy data transfer, SecureCells also includes unprivileged instructions
+which move permissions for regions between compartments.
+
+% Explain how SecureCells compartmentalize a browser
+A browser compartmentalized with SecureCells will require separate
+\secdiv{}s for each sandbox and for the JIT engine.
+The permissions table is set up with per-sandbox private regions, to which
+only each sandbox and the JIT engine have permission.
+The permissions can allow the JIT engine 'rw' permissions and a sandbox
+'rx' permissions to that sandbox's code region.
+The JIT engine can use \Code{SDSwitch} to enter and exit sandboxes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Introducing the classification metrics
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Points of Classification/metrics}
 
+\subsection{Threat Model}
+Hierarchy?
+Single trusted?
+OS trusted?
+Code injection allowed?
 
 \subsection{Access Control Permissions}
 
