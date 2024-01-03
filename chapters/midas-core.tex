@@ -580,7 +580,7 @@ holding the latest state of the page.}
 
 \subsection{Page State Machine}
 
-\begin{figure*}[]
+\begin{figure}[]
   \centering
   \includegraphics[width=\linewidth]{media/midas/midas_states.pdf}
   \caption[State diagram for a page in \midas.]
@@ -588,11 +588,11 @@ holding the latest state of the page.}
           code are marked (u)/(s) respectively. Shading is used to represent the
           mapping from snapshots to copies.}
   \label{fig:midas_states}
-\end{figure*}
+\end{figure}
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.95\linewidth]{media/midas/doublefetch_midas.pdf}
+  \includegraphics[width=0.6\linewidth]{media/midas/doublefetch_midas.pdf}
   \caption[Diagram illustrating \midas preventing double-fetch exploitation]
           {Diagram illustrating \midas preventing exploitation of a
            double fetch of object \Code{X}.}
@@ -882,7 +882,7 @@ Linux kernel.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{media/midas/doublefetch_midas_twopages.pdf}
+  \includegraphics[width=0.7\linewidth]{media/midas/doublefetch_midas_twopages.pdf}
   \caption[Diagram illustrating \midas preventing multi-page double-fetch exploitation]
           {Diagram illustrating \midas preventing exploitation
           of a double fetch of an object \Code{X} spanning two pages.}
@@ -987,7 +987,7 @@ Only one syscall~(\Code{clone}) required code modification.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{media/midas/book-keeping.pdf}
+  \includegraphics[width=0.75\linewidth]{media/midas/book-keeping.pdf}
   \caption[\midas{}' bookkeeping information for a page.]
           {Bookkeeping information for a page.}
   \label{fig:midas_bookeeping}
@@ -1047,7 +1047,7 @@ all address spaces for a page.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=0.8\linewidth]{media/midas/copy_from_user.pdf}
+  \includegraphics[width=0.6\linewidth]{media/midas/copy_from_user.pdf}
   \caption[\midas: Flowchart for the transfer function \Code{raw_copy_from_user}]
           {Flowchart for a syscall using the transfer function
           \Code{raw_copy_from_user}
@@ -1112,7 +1112,7 @@ they can prove to be secure from double-fetch bugs.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{media/midas/pagefault.pdf}
+  \includegraphics[scale=0.85]{media/midas/pagefault.pdf}
   \caption[\midas{}: Flowchart for handling a page fault.]
           {Flowchart for handling a page fault. Shaded
           operations are unmodified.}
@@ -1121,7 +1121,7 @@ they can prove to be secure from double-fetch bugs.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=\linewidth]{media/midas/pagefault_cow.pdf}
+  \includegraphics[scale=0.85]{media/midas/pagefault_cow.pdf}
   \caption[\midas: Flowchart for handling a page fault to a COW page.]
           {Flowchart for handling a page fault to a COW page.}
   \label{fig:fault_handling_cow}
@@ -1462,14 +1462,14 @@ For particular benchmarks, we also run the \emph{\midas{+}write}
 configuration which also runs our prototype \midas kernel
 but instruments all syscalls including \Code{write}.
 
-\begin{figure*}[!t]
+\begin{figure}[!t]
   \centering
   \includegraphics[width=\linewidth]{media/midas/midas_performance.pdf}
   \caption[\midas performance comparison]
           {\midas' performance on microbenchmarks, NPB and PTS benchmarks
           relative to the baseline kernel.}
   \label{fig:midas_performance}
-\end{figure*}
+\end{figure}
 
 \begin{table}
   \centering
@@ -1611,7 +1611,7 @@ memory overhead.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{media/midas/overhead.pdf}
+  \includegraphics[width=0.7\linewidth]{media/midas/overhead.pdf}
   \caption{Classification of overheads for various benchmarks due to \midas.}
   \label{fig:overhead_class}
 \end{figure}
@@ -1661,9 +1661,9 @@ a much larger overhead for TLB flushing, accounting for
 \subsection{Case study: Nginx}
 %%%%%%%%%%%%%%%%%%%%
 
-\begin{figure}
+\begin{figure}[ht!]
   \centering
-  \includegraphics[width=\linewidth]{media/midas/nginx_performance.pdf}
+  \includegraphics[width=0.75\linewidth]{media/midas/nginx_performance.pdf}
   \caption[\midas: Request rates and throughput for the Nginx server]
           {Request rates and throughput served by the Nginx server for
           static pages.}
