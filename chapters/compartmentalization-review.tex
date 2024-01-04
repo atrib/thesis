@@ -1,14 +1,19 @@
-Compartmentalization brings security benefits to programs, and can reduce the
-costs of other programs.
-
-Compartmentalization can be implemented on various mechanisms.
-
-These mechanisms can lead to varying degrees of isolation and performance.
-
+A compartmentalized program consists of isolated compartments with controlled
+communication paths between them, as defined by a 
+compartmentalization \emph{policy}.
+A compartmentalization \emph{mechanism} is responsible for upholding the
+isolation and communication rules as described by the \emph{policy}.
+A developer has a choice between a plethora of academic and industrial 
+mechanisms proposed to support compartmentalization.
+However, mechanisms differ in the threat models they are designed to protect
+against, their performance characteristics, the use cases they support, and
+their compatibility with existing or upcoming system architectures.
 A survey of compartmentalization mechanisms is required to understand the
-properties and guarantees of different proposals.
-
-Deep dive into different features.
+properties and guarantees of different proposals, and compare their
+suitability for compartmentalization use cases.
+In this chapter, we will take a deeper dive into a wide range of 
+compartmentalization mechanisms and compare them on security and performance
+properties.
 
 %%%%% Parts of this background are already discussed in the SecureCells paper.
 %%%%% However, we need not repeat this stuff in this section.
