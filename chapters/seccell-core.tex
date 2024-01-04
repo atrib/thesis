@@ -14,7 +14,7 @@ An attacker who exploits one component can corrupt other parts ---
 for example, a buggy Linux driver can compromise
 core kernel data structures.
 The traditional process abstraction for running monolithic software
-violates the Principle of Least Privilege~\cite{SaltzerS75}
+violates the principle of least privilege~\cite{SaltzerS75}
 which requires components to only have access to the data necessary
 for their operation.
 Instead, all code running within a process' address space has 
@@ -158,57 +158,152 @@ In this chapter, we:
 \label{sec:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Principles supporting Compartmentalization}
+Compartmentalization is built on a few basic principles:
+modularity, least privilege, and defence in depth.
+Compartmentalization mechanisms implement these principles to provide security
+to applications through two major properties, isolation of compartments
+and controlled communication between compartments.
+In these section, we will explain the principles supporting 
+compartmentalization and see how these principles lead to security
+properties.
+The following sections list key objectives for a compartmentalization
+mechanism in order to guarantee these security properties.
 
-\paragraph{Modularity and Principle of Least Privilege}
-Explaining modularity.
-\begin{itemize}
-  \item Modularity is a key principle in modern software design
-  \item Modularity helps handle exploding code complexity, simplifies design
-  \item Modules are clustered around separate functionality
-  \item Modularity lends itself to extensibility - code sharing relies on modularity
-  \item Modules force developers to think of, and implement interfaces
-  \item Modularity lends itself to PoLP: modules don't need access to everything
-\end{itemize}
+%-------------------------------
+\subsection{Principles supporting compartmentalization}
+\label{sec:background:principles}
+%-------------------------------
 
-Explaining PoLP.
-\begin{itemize}
-  \item Principle of Least Privilege recommends that principals only have
-        the minimal access (do data or other resources) required to perform
-        their functionality
-  \item Implies complicated programs should be further decomposed
-  \item Modularity simplifies decomposition, we already have logical parts
-  \item PoLP extends to compartments within a program.
-  \item PoLP should be temporal too (privileges last only as long as required)
-  \item PoLP helps mitigate bugs. A bug is not able to access as much data or stuff.
-  \item PoLP forces interfaces, and enables checks at these interfaces
-\end{itemize}
+\paragraph{Abstraction and modularity}
+Both software and hardware engineering rely heavily on abstraction, and the
+related principle of modularity to manage the every exploding complexity of
+computer systems.
+Logical parts of systems, for example, are separated into modules, each of 
+which hide internal complexity behind well defined interfaces
+(commonly called application programming interfaces, or APIs).
+One module can use abstract functionality implemented by a separate module
+using the module's API without being aware of much of the implementation
+complexity.
+Modules are typically structured around a specific functionality, and
+each module is distributed as a single package.
+Common examples of modules include libraries for implementing
+cryptographic processing, threading, mathematical operations, compression
+and standard language features.
+Modularity can also be used to separate instances of the same code running on
+logically separate data. 
+For example different connections being handled by a server can be separated
+into individual modules, as is done by the Apache webserver.
+Modularity lends itself to extensibility, allowing the functionality of
+applications to be gradually extended beyond its original purpose as more and
+more code modules get added.
+Modularity has two consequences which greatly benefits compartmentalization
+efforts.
+First, developers need to develop well-defined interfaces for modules to
+enable inter-module communication.
+These interfaces can be reused as interfaces if modules are isolated within
+compartments.
+Second, modules often need to define dependencies or privileges required to 
+function.
+A compartmentalized system should limit a compartmentalized module's privileges
+to those necessary for functioning.
 
-\subsection{Isolation and Communication}
+\paragraph{Least privilege}
+Least privilege, defined by Saltzer~\cite{SaltzerS75}, states that every
+part of a system should operate using the least set of privileges necessary
+to perform their function.
+This principle aims to control the consequences resulting from a malicious or
+buggy module by limiting the potential interactions each module is allowed
+to perform.
+For example, a media decoding module running on a smartphone application
+might be allowed to access the file system to read media files, but should be
+denied access to the device's location or to the internet.
+Further, an application which downloads media from the internet and plays
+it can be split to isolate the two privileges to separate modules.
+One module can be allowed to use the internet and save media to a file, and
+the second module can be allowed to play media from that file and write to
+the device's screen.
+A compromised media decoding module, therefore, will be unable to directly
+leak information to the internet.
+Least privileges also applies to the ability to call functions in
+other modules.
+For example, a media decoder should be allowed to call functions to open
+and read media files, but not to other file system operations like
+modifying a file's permissions or owner.
+The principle of least privilege should also restrict a module's permissions
+to the temporal period where it requires specific privileges.
+Privileged programs (like webservers) typically drop elevated privileges 
+as soon no longer required, following this principle.
 
-A program cannot execute entirely with isolated compartments.
-Compartments need to coordinate to get the job done, i.e., compartments need
-to request work from other compartments.
+Least privileges require applications to be decomposed into modules 
+implementing logically different functionality or working on logically
+different data.
+Implementing least privilege for modern applications can leverage the
+modularity on which systems are already built.
 
-Compartments have interfaces, from which other compartments can request work.
-This means there will be control flow between compartments.
+\paragraph{Defence in depth}
+Defence in depth poses that systems should not rely on a single layer of
+defence, instead using multiple protective measures for the same objective.
+Defence in depth mitigates possible shortcomings in a particular defence by
+relying on one of the other defences to mitigate attacks.
+This principle essentially removes the single point of failure for defences.
+For systems software, developers should rely on more than one defence
+mechanism to provide stronger security guarantees.
+While compartmentalization and memory safety, for example, can both defend
+against some memory corruption attacks, each of them can protect against
+attacks which the other cannot.
+For example, compartmentalization provides no defence against a function
+overflowing one of its stack objects into another, which is prevented with
+memory safety.
+However, memory safety mechanisms might not detect a malicious arbitrary
+write from one module to another module's data, but this attack should be
+mitigated through compartmentalization.
+In general, defence in depth posits that mitigations for memory safety and
+compartmentalization complement each other, rather than replacing each other.
 
-For improved security, compartmentalization requires isolation of resources.
-Typically, this requires - 
-\begin{itemize}
-  \item Isolation in memory. Memory access needs to be restricted according to
-        the policy. This allows compartments to have private data, or to
-        share data between a specific set of compartments.
-  \item Isolation in control flow. Restrictions on which compartment can call
-        which other compartment. 
-        For example, sandboxed code should only be able to call into the
-        runtime compartment, not directly other sandboxes or to supervisor.
-  \item Isolation in system resources, such as file descriptors, semaphores
-        and threads. 
-        Particularly useful in Linux, where all resources are described as
-        files, and file descriptors are used ubiquitously for system resources.
+%-------------------------------
+\subsection{Compartmentalization properties}
+\label{sec:background:properties}
+%-------------------------------
+A compartmentalized program consists of compartments, each of which is
+isolated from other compartments but can communicate through well-defined
+APIs.
+Isolation and controlled communication aim to limit unintended interactions
+between compartments, limiting the damage from such interactions.
 
-\end{itemize}
+\paragraph{Isolation}
+Compartmentalization provides isolation between compartments. 
+Essentially, each compartment has access permitted to a subset of a system's
+resources, including memory, ability to call other compartments, and 
+OS resources like files, execution threads or I/O.
+Compartments can have private resources, for which no other compartment has
+permissions, or resources shared between a subset of compartments.
+The compartmentalization mechanism then guarantees that no compartment
+without permission can use these resources.
+Essentially, a compartment's private resources are isolated from access or
+use by other compartments.
+
+With isolation, a compartment is protected from data and control flow attacks
+from misbehaving compartments.
+With fault isolation or fault handling, an application can also ensure that
+faults in one compartment only crash that compartment and not the entire 
+application.
+Hence, isolation is the first key feature of compartmentalization.
+
+\paragraph{Controlled Communication}
+For functionality, compartments require processing by other compartments.
+Similar to remote procedure calls, a compartmentalized program requires support
+for inter-compartment calls.
+Compartments have interfaces, from which other compartments can request 
+processing.
+A compartment's interface represents the main attack surface for the
+compartment, and requires protection.
+First, compartments must only be allowed to call authorized compartments.
+Second, inter compartment calls must enter the callee at fixed entry points,
+allowing call gates to be implemented.
+Call gates allow a compartment to ensure the validity of arguments and
+switch context, if required, before processing a request.
+Therefore, controlled communication is a second key feature of 
+compartmentalized programs.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Objectives For Architectural Isolation}
