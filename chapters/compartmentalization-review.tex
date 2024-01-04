@@ -48,16 +48,19 @@ properties.
 % This section will also describe the attacker model for compartmentalization and what attacks can be prevented.
 
 
-%-------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Description of use cases and threats}
 \label{sec:compreview:usecases}
-%-------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In this section, we introduce some characteristic use cases for 
 compartmentalization, and 
 describe some typical attacker models.
 These examples will allow us to compare the mechanisms described later.
 
+%-------------------------------
 \subsection{Hierarchical trust} 
+\label{sec:compreview:usecases:hierarchical}
+%-------------------------------
 Let us consider a system with hierarchical notions of trust.
 In \autoref{sec:seccells:reqs}, we have already encountered the example of
 a browser running untrusted code from a web application.
@@ -110,7 +113,10 @@ Compartmentalization must, nonetheless, protect the Engine and other WebApp
 from a malicious WebApp which exploits the buggy Engine's code generation.
 \atri{How many systems break with arbitrary code exec}
 
+%-------------------------------
 \subsection{Mutual distrust} 
+\label{sec:compreview:usecases:distrust}
+%-------------------------------
 A workload similar to \Code{memcached} described in 
 \autoref{sec:seccells:evaluation:memcached} can have mutual distrust
 between directly communicating compartments.
@@ -143,7 +149,10 @@ Likewise, the caller must be able to restore its own state when the callee
 returns control.
 \atri{Systems mandating migrating threading will fail}
 
+%-------------------------------
 \subsection{Trusting but wary}
+\label{sec:compreview:usecases:wary}
+%-------------------------------
 A workload such as the network function (NFV) pipeline described in 
 \autoref{sec:seccells:reqs} might be developed within a more trusted
 ecosystem, and have stronger trust relations between compartments.
@@ -169,23 +178,110 @@ The main goals for the pipeline would be to
 \label{sec:compreview:properties}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+In this section, we describe some of the possible guarantees or protections
+that compartmentalization mechanisms can provide.
+We will also describe the common operations for compartmentalized programs,
+which will allow us to explore the performance potential of different
+mechanisms.
+
+%-------------------------------
 \subsection{Security Properties}
-This subsection will describe the security benefits of compartmentalization. This subsection should explain exactly what attack scenarios are protected and which ones are not. At the end of this section, the reader should be clear about what the security guarantees of compartmentalization are. Particularly, we should be clear that compartmentalization does not protect against buggy modules that allow compromise via their external interface.
+%-------------------------------
+Compartmentalization mechanisms aim to provide mitigations for applications
+where one or more compartments have been compromised, specifically opposing
+further corruption of remaining compartments or the rest of the system.
+As described in \autoref{sec:compreview:usecases:hierarchical}, common threat
+models assume that a compromised compartment either gives an attacker arbitrary
+memory pointer dereference or arbitrary code execution as that compartment.
+In this section, we describe possible security properties and how mechanisms
+might provide these properties.
+We must assume compartments which harden their interface against attacks
+which can be triggered through maliciously crafted arguments, as no
+mechanism can fully protect an improperly compartmentalized program.
 
-We will also discuss how specific protections can be provided by mechanisms, and
-why they each matter.
+\atri{We can expand greatly on the consequences of lacking security properties
+in this section}
+\atri{Me might want to make these shortcomings concrete through examples of
+actual attacks}
 
-For example, why does lack of code-checks in MPK matter?
+Compartmentalization prevents direct cross-compartment memory access, by 
+defining separate memory address spaces for compartments or by 
+enforcing per-compartment access rights for intra-address space compartments.
+Mechanisms implement access control through variations of page table entries,
+segments, permission tables, protection keys or memory capabilities.
+Therefore, a compromised compartment cannot directly leak or corrupt a 
+different compartment's memory.
+Memory access control can also be used for access control to memory-mapped
+I/O.
 
-Why does the lack of exclusive access matter?
+Memory access control must extend to code fetch besides data read/write
+accesses.
+Modern programming languages rely on code pointers stored in memory or
+registers, and indirect calls and returns which use code pointers.
+Without access control on code fetch, a victim compartment might be fooled 
+into executing code for a different compartment by merely corrupting a
+code pointer used during the victim's execution. 
+Malicious code injection can be mitigated with permission checks on the
+code fetch paths.
 
+Compartmentalization also controls access to system resources.
+Mechanisms can separate namespaces for system resource handlers between
+compartments, introduce an interposing layer on system calls or 
+implement compartment-aware system call filtering.
+Separate namespaces prevent compartments from naming other compartments'
+resources (e.g., each process has independent file descriptor tables).
+System call interposition or filtering can both prevent compartments from
+using some system calls or use syscalls with malicious arguments.
+For using system call filtering, the mechanism must enable the kernel to
+definitively identify the calling compartment.
+
+\atri{call other compartments, limit who can call whom}
+Either make allow-matrix, or make caller-callee identifiable
+
+\atri{call gates and fixed entry points}
+
+\atri{secure context storage and switching}
+
+\atri{communicate through permission passing}
+copying through shared memory always as a backup
+\atri{permission passing handshake}
+\atri{permission passing revocation} SecureCells lacks revocation in general
+\atri{permission passing with shrinking}
+\atri{permission passing to select regions, not all}
+
+\atri{exclusive access}
+
+
+% This subsection will describe the security benefits of compartmentalization. This subsection should explain exactly what attack scenarios are protected and which ones are not. At the end of this section, the reader should be clear about what the security guarantees of compartmentalization are. Particularly, we should be clear that compartmentalization does not protect against buggy modules that allow compromise via their external interface.
+
+% We will also discuss how specific protections can be provided by mechanisms, and
+% why they each matter.
+
+% For example, why does lack of code-checks in MPK matter?
+
+% Why does the lack of exclusive access matter?
+
+%-------------------------------
 \subsection{Performance Properties}
+%-------------------------------
 
 What sort of actions do we expect from compartmentalization?
 
 What is their frequency?
 
 How do these affect the performance of the complete program?
+
+\atri{cheap forwarding of permissions/data}
+
+%-------------------------------
+\subsection{Usability Properties}
+%-------------------------------
+
+\atri{Flexibility}
+
+\atri{Compatibility}
+
+\atri{Automation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Introducing the surveyed mechanisms
@@ -198,15 +294,10 @@ mechanism, and understand their model for compartmentalization.
 We want to understand what a program looks like under this model.
 What are the relevant abstractions and what their semantics are.
 
-We will attempt to explain what a compartmentalized web browser looks like.
-A browser has: 1 JIT compartment, 1 or more sandboxed compartments.
-Not strictly hierarchical:
-a) sandboxes should have execute permissions on generated code but not JIT
-b) sandboxes do not trust each other.
 
-\atri{TODO: add illustration for the browser.}
-
+%-------------------------------
 \subsection{Process-based compartmentalization}
+%-------------------------------
 
 The traditional abstraction of isolation is based on processes.
 We will describe process-based compartmentalization in UNIX-like OSs
@@ -258,7 +349,9 @@ This region is mapped rw for the JIT and rx for the sandbox.
 Further communication happens through kernel-based message passing.
 
 
+%-------------------------------
 \subsection{XPC}
+%-------------------------------
 
 % Context and introduction of XPC
 XPC shares much of the abstractions from the process-based isolation, but
@@ -305,7 +398,10 @@ The JIT and each sandbox occupy separate processes.
 The major change is that IPC system calls are replaced by 
 \Code{xcall}/\Code{xret} pairs.
 
+%-------------------------------
 \subsection{Light-weight Contexts (lwC)}
+%-------------------------------
+
 % Context and introduction of lwc
 This paper introduces a new eponymous OS abstraction,
 Light-weight contexts (lwCs),
@@ -341,7 +437,9 @@ The JIT and each sandbox occupy separate contexts, instead of processes.
 The major change is that IPC system calls are replaced by \Code{lwSwitch}
 system calls.
 
+%-------------------------------
 \subsection{Mondrian Memory Protection (MMP)}
+%-------------------------------
 % Context and introduction of MMP
 MMP tackles the challenge of flexible, fine-grained intra-address space 
 isolation.
@@ -397,7 +495,9 @@ domain (rx).
 Further, transitions between the sandboxes and the JIT engine use protected
 calls with call gates which ensure proper checks on these transitions.
 
+%-------------------------------
 \subsection{Code-centric Memory Domains (CODOMs)}
+%-------------------------------
 % Context and introduction of CODOM
 CODOMs enabled fine-grained intra-address space compartmentalization
 with a novel architecture where domains are identified by the executing
@@ -436,7 +536,9 @@ in the APLs, where the engine should be granted write permission to
 each sandbox's domain pages.
 \atri{note: APLs enable access to all of a domain's stuff. sigh.}
 
+%-------------------------------
 \subsection{Intel Memory Protection Keys (MPK)}
+%-------------------------------
 % Context and introduction of MPK
 Memory Protection Keys assign keys to regions of memory, and maintain
 a separate set of access permissions for each key.
@@ -479,7 +581,9 @@ sandbox code regions.
 During sandbox execution, the PKRU register holds 'rx' permissions for that
 sandbox's code region, and no permissions for any non-sandbox regions.
 
+%-------------------------------
 \subsection{ERIM}
+%-------------------------------
 % Context and introduction of ERIM
 ERIM builds on top of Intel MPK to implement strict call gates for
 compartment switching, mitigating MPK's main shortcoming.
@@ -511,7 +615,9 @@ occupying one untrusted compartment.
 Data can be passed through pointers directly, just as with MPK, though 
 compartment transitions use ERIM's aforementioned call gates.
 
+%-------------------------------
 \subsection{Donky}
+%-------------------------------
 % Context and introduction of Donky
 Donky aims to retain MPK's primary performance advantage, by allowing
 changing memory views in userspace, while mitigating its main weakness, 
@@ -551,7 +657,9 @@ monitor.
 Arguments must be passed through either registers, or through shared memory
 between domains.
 
+%-------------------------------
 \subsection{CHERI}
+%-------------------------------
 % Context and introduction of CHERI
 CHERI introduces architectural support for memory capabilities.
 Architecturally, pointers are replaced capabilities, which track 
@@ -607,7 +715,9 @@ Finally, the JIT engine can pass temporary capabilities to sandboxes
 when they are required to process certain data, including new data packets,
 with zero-copy.
 
+%-------------------------------
 \subsection{SecureCells}
+%-------------------------------
 % Context and introduction of SecureCells
 SecureCells introduces a compartmentalization mechanism based on hardware
 access control to variable-sized regions of memory, hardware tracked
