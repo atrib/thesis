@@ -280,12 +280,12 @@ from userspace memory.
   \centering
   \includegraphics[width=.6\linewidth]{media/midas/doublefetch.pdf}
   \caption{Example of a double-fetch bug.}
-  \label{fig:doublefetch}
+  \label{fig:midas:doublefetch}
 \end{figure}
 
 Double-fetch bugs occur when a privileged environment (such as the kernel)
 reads untrusted memory multiple times, returning different values each time.
-Such a situation is depicted in \autoref{fig:doublefetch}, 
+Such a situation is depicted in \autoref{fig:midas:doublefetch}, 
 where the value of \Code{X} in memory is changed by an attacker
 between two reads by the target thread.
 Exploiting such a bug requires a race condition i.e. accesses 
@@ -307,7 +307,7 @@ boundaries~\cite{lu2018untrusted}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\section{Attack vectors}
-%\label{sec:threats}
+%\label{sec:midas:threats}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % In this section, we describe the threat model for exploiting double-fetch
@@ -315,7 +315,7 @@ boundaries~\cite{lu2018untrusted}).
 % data is modified between vulnerable double fetches.
 
 \section{Threat Model}
-\label{sec:threatmodel}
+\label{sec:midas:threatmodel}
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Nothing fancy -- the adversary is just trying to hack the system
@@ -338,7 +338,7 @@ tsafrir2008portably} are out of scope.
 
 
 \section{Attack Classification}
-\label{sec:attacks}
+\label{sec:midas:attacks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{table}
@@ -360,7 +360,7 @@ tsafrir2008portably} are out of scope.
   \bottomrule
   \end{tabular}
   \caption{Attack vector classification for \tocttou exploits.}
-  \label{tab:attack_class}
+  \label{tab:midas:attack_class}
 \end{table}
 
 \midas guards data processed during a syscall's execution against concurrent 
@@ -369,7 +369,7 @@ We label the data fetched twice as vulnerable data.
 In this section, we classify attacks based on two criteria: the
 privilege level of the writer, and whether the mapping used for writing
 exists at the time of the first read. 
-\autoref{tab:attack_class} summarizes our classification.
+\autoref{tab:midas:attack_class} summarizes our classification.
 Importantly, this classification helps understand existing attacks and how to
 protect against them, and where future attacks (bugs) may arise.
 The device column corresponds to attacks where a device
@@ -466,7 +466,7 @@ attacks from this user falls outside of our threat model.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\midas Design}
-\label{sec:midas:design}
+\label{sec:midas:midas:design}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \midas maintains a single, core, \emph{invariant}:
@@ -518,7 +518,7 @@ straightaway.
 \midas' invariant therefore prevent exploitation of double-fetch
 vulnerabilities even when the fetched objects span multiple pages.
 We elaborate on this case with an example in 
-\autoref{sec:midas:design:discussion}.
+\autoref{sec:midas:midas:design:discussion}.
 
 A major requirement for \midas is to allow concurrent access to pages
 by user/kernel code running in parallel with a syscall which reads from
@@ -587,7 +587,7 @@ holding the latest state of the page.}
           {State diagram for a page in \midas. Reads/writes from userspace/syscall
           code are marked (u)/(s) respectively. Shading is used to represent the
           mapping from snapshots to copies.}
-  \label{fig:midas_states}
+  \label{fig:midas:midas_states}
 \end{figure}
 
 \begin{figure}[h]
@@ -596,7 +596,7 @@ holding the latest state of the page.}
   \caption[Diagram illustrating \midas preventing double-fetch exploitation]
           {Diagram illustrating \midas preventing exploitation of a
            double fetch of object \Code{X}.}
-  \label{fig:doublefetch_midas}
+  \label{fig:midas:doublefetch_midas}
 \end{figure}
 
 To track multiple versions of the contents of a page when being concurrently
@@ -610,7 +610,7 @@ For a page, its corresponding state machine
   the correct contents to subsequent reads. % by these syscalls.
 \end{inparaenum}
 
-\autoref{fig:midas_states} shows the state machine for a single page.
+\autoref{fig:midas:midas_states} shows the state machine for a single page.
 At every state, the page has two associated sets:
 \begin{enumerate}
   \item the copies set $C = \{C_L, C_0, \dots\}$ holds multiple copies of the page over time, and
@@ -630,8 +630,8 @@ protected states (1 and 3).
 In the following paragraphs, we describe how the state machine for a single,
 writable user page transitions between its states, what triggers each transition,
 and what changes are made to the copies and snapshot sets on a transition.
-In \autoref{fig:doublefetch_midas}, we illustrate how the state machine protects the
-syscall from \autoref{fig:doublefetch}.
+In \autoref{fig:midas:doublefetch_midas}, we illustrate how the state machine protects the
+syscall from \autoref{fig:midas:doublefetch}.
 
 \paragraph{State 0}
 A page starts as \texttt{(unprotected, unduplicated)}.
@@ -642,7 +642,7 @@ All processes where this page is mapped have unrestricted userspace read and wri
 access, and unrestricted kernel write access.
 The remaining operation, a read from kernel code, triggers a transition to
 State 1.
-In \autoref{fig:doublefetch_midas}, the snapshot $L$ initially contains
+In \autoref{fig:midas:doublefetch_midas}, the snapshot $L$ initially contains
 the value $42$.
 
 \paragraph{State 1}
@@ -653,19 +653,19 @@ trapping writes to the page but allowing concurrent userspace reads to continue.
 A new snapshot, $S_0$ linked to this syscall is allocated for this page.
 For the rest of its lifetime, this syscall will only read this page from this snapshot.
 Both snapshots $S_0$ and $L$ refer to the same copy $C_L$ (shown by the
-blue cross-thatch in \autoref{fig:midas_states}).
+blue cross-thatch in \autoref{fig:midas:midas_states}).
 Prior to any writes to this page, any other syscalls which also read the page
 get their own snapshots (e.g., $S_1$) all pointing to the single copy $C_L$.
 The page's read-only status causes the hardware to fault on any write,
 notifying \midas to transition the page to State 2.
-In \autoref{fig:doublefetch_midas}, the page transitions to State 1 when
+In \autoref{fig:midas:doublefetch_midas}, the page transitions to State 1 when
 the syscall first reads it, and adds a snapshot $S_0$.
 
 \paragraph{State 2}
 A page in State 1 transitions to the \texttt{(unprotected, duplicated)} state
 on any write from user or kernel code.
 \midas duplicates the old contents of the page from copy $C_L$, creating a
-read-only copy $C_0$ (shown by green shading in \autoref{fig:midas_states}).
+read-only copy $C_0$ (shown by green shading in \autoref{fig:midas:midas_states}).
 Snapshots except $L$ (i.e. $S_0$ and $S_1$) previously mapping to $C_L$ are
 mapped to the copy $C_0$.
 The write then modifies the latest copy $C_L$, which is made writable again.
@@ -681,7 +681,7 @@ and kernel code.
 Further, \midas does not need to merge writes from userspace and syscall code
 on a syscall's completion, since both directly modify the same copy $C_L$.
 All other copies $C_i$ are immutable.
-When the attacker writes to the page in \autoref{fig:doublefetch_midas}, the
+When the attacker writes to the page in \autoref{fig:midas:doublefetch_midas}, the
 page moves to State 2, linking the snapshot $S_0$ to a copy holding the
 original value $42$.
 The writes from both the attacker and the syscall itself both affect
@@ -716,7 +716,7 @@ If $S_i$ is mapped to any other duplicate $C_i$, \midas frees the copy along
 with the snapshot if $S_i$ is the last remaining snapshot mapped to $C_i$.
 If the page was in State 2, $C_L$ was writable and unmapped by any snapshot,
 so \midas changes the page to State 0.
-This transition is shown in \autoref{fig:doublefetch_midas}, where the
+This transition is shown in \autoref{fig:midas:doublefetch_midas}, where the
 snapshot $S_0$ and the copy $C_0$ are both discarded.
 If the page was in State 3, $C_L$ was read-only and mapped by some other
 snapshot, so \midas moves the page to State 1.
@@ -726,7 +726,7 @@ Therefore, dropping a snapshot $S_i$ is trivial and does not require
 writes from the syscall to be merged into the latest copy.
 
 \subsection{Discussion}
-\label{sec:midas:design:discussion}
+\label{sec:midas:midas:design:discussion}
 
 \paragraph{Correctness of syscalls directly updating snapshot $L$}
 \midas' design lets all writes, including those from syscalls, to directly
@@ -817,14 +817,14 @@ to after the double fetch reads.
   \end{center}
   
   \caption{System calls uninstrumented by \midas.}
-  \label{tab:except_syscall}
+  \label{tab:midas:except_syscall}
   \end{table}
 
 \paragraph{Exemptions}
 Syscalls such as \Code{futex} rely on user data changing between double
 fetches to implement their functionality and cannot be protected by
 \midas.
-These syscalls are listed in \autoref{tab:except_syscall}.
+These syscalls are listed in \autoref{tab:midas:except_syscall}.
 The \Code{futex} syscall implements a fast synchronization mechanism
 for userspace and relies on atomic writes from concurrent userspace
 threads to update a condition the syscall is waiting for.
@@ -886,11 +886,11 @@ Linux kernel.
   \caption[Diagram illustrating \midas preventing multi-page double-fetch exploitation]
           {Diagram illustrating \midas preventing exploitation
           of a double fetch of an object \Code{X} spanning two pages.}
-  \label{fig:copy_two_pages}
+  \label{fig:midas:copy_two_pages}
 \end{figure}
 
 \paragraph{Example: Objects spanning multiple pages}
-\autoref{fig:copy_two_pages} shows \midas protecting a syscall which
+\autoref{fig:midas:copy_two_pages} shows \midas protecting a syscall which
 has a double fetch for an object spanning multiple pages.
 Here, the two pages containing the object \Code{X} are accessed as
 \Code{X[0]} and \Code{X[1]}.
@@ -949,15 +949,15 @@ prune false positives.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\midas Implementation}
-\label{sec:midas:impl}
+\label{sec:midas:midas:impl}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Our \midas prototype implements the state machine described in
-\autoref{sec:midas:design} on Linux version 5.11, targeting the x86-64
+\autoref{sec:midas:midas:design} on Linux version 5.11, targeting the x86-64
 architecture.
 A page protected by \midas transitions between states on
 either a kernel read to user memory, or when user or kernel code
-writes to protected, read-only memory (see \autoref{fig:midas_states}).
+writes to protected, read-only memory (see \autoref{fig:midas:midas_states}).
 \midas can be implemented on any operating system kernel that
 \begin{inparaenum}[\itshape i\upshape)]
 \item systematically uses transfer functions for reading from userspace, and
@@ -990,12 +990,12 @@ Only one syscall~(\Code{clone}) required code modification.
   \includegraphics[width=0.75\linewidth]{media/midas/book-keeping.pdf}
   \caption[\midas{}' bookkeeping information for a page.]
           {Bookkeeping information for a page.}
-  \label{fig:midas_bookeeping}
+  \label{fig:midas:midas_bookeeping}
 \end{figure}
 
 \midas needs to track the state for every userspace page, including
 its snapshot and copy sets.
-\autoref{fig:midas_bookeeping} shows the data structures used to
+\autoref{fig:midas:midas_bookeeping} shows the data structures used to
 track a page's state in our prototype.
 Linux maintains a \Code{struct page} object for every frame of
 physical memory.
@@ -1052,7 +1052,7 @@ all address spaces for a page.
           {Flowchart for a syscall using the transfer function
           \Code{raw_copy_from_user}
           for reading from userspace.}
-  \label{fig:copy_from_user}
+  \label{fig:midas:copy_from_user}
 \end{figure}
 
 Syscalls reading from user memory the first time triggers the
@@ -1060,7 +1060,7 @@ allocation of a new snapshot.
 If the page is not protected (states 1 and 3), the read also
 triggers a state change where the kernel protects the page
 in all address space that it is mapped in.
-\autoref{fig:copy_from_user} shows the flowchart of the steps
+\autoref{fig:midas:copy_from_user} shows the flowchart of the steps
 implemented by the kernel function \Code{raw_copy_from_user} for
 reading from user memory.
 This function also uses the kernel's \Code{mark_page_accessed}
@@ -1073,7 +1073,7 @@ We also implement \Code{get_user} and \Code{unsafe_get_user}
 \paragraph{Exemptions}
 Our prototype \midas kernel exempts a couple of functions
 from \midas' invariant (in addition to those described in
-\autoref{sec:midas:design:discussion}), and these functions are
+\autoref{sec:midas:midas:design:discussion}), and these functions are
 therefore not instrumented
 to follow the aforementioned steps while accessing userspace
 memory.
@@ -1116,7 +1116,7 @@ they can prove to be secure from double-fetch bugs.
   \caption[\midas{}: Flowchart for handling a page fault.]
           {Flowchart for handling a page fault. Shaded
           operations are unmodified.}
-  \label{fig:fault_handling}
+  \label{fig:midas:fault_handling}
 \end{figure}
 
 \begin{figure}[]
@@ -1124,7 +1124,7 @@ they can prove to be secure from double-fetch bugs.
   \includegraphics[scale=0.85]{media/midas/pagefault_cow.pdf}
   \caption[\midas: Flowchart for handling a page fault to a COW page.]
           {Flowchart for handling a page fault to a COW page.}
-  \label{fig:fault_handling_cow}
+  \label{fig:midas:fault_handling_cow}
 \end{figure}
 
 The memory management unit generates a fault when kernel or user code accesses
@@ -1135,7 +1135,7 @@ A common OS mechanism, copy-on-write (COW) pages, also uses
 permissions in the PTE to detect when COW pages need to be copied.
 The PTE's present bit are used to store pointers to file-backed pages
 when they are swapped to disk.
-\autoref{fig:fault_handling} shows the flowchart implemented by
+\autoref{fig:midas:fault_handling} shows the flowchart implemented by
 \Code{handle_pte_fault} to handle faults for userspace addresses.
 
 The page-fault handler first checks if the PTE is NULL, and if so
@@ -1168,7 +1168,7 @@ violation, sending a signal to the process.
 COW pages represent separate virtual pages from different
 address spaces mapped to the same physical page.
 An example of a COW page protected by \midas is shown in
-\autoref{fig:fault_handling_cow}, where logically-separate pages A and B
+\autoref{fig:midas:fault_handling_cow}, where logically-separate pages A and B
 are actually mapped to the COW page.
 COW pages cannot be in states 2 or 3, since they cannot have multiple
 \midas copies.
@@ -1176,13 +1176,13 @@ COW pages in state 0 can be dealt with by the kernel's standard
 duplication method (not \midas' duplication).
 For a COW page in state 1, its list of snapshots can correspond to
 reads from syscalls for threads in different address spaces.
-In \autoref{fig:fault_handling_cow}, we show snapshots $S_A$ and
+In \autoref{fig:midas:fault_handling_cow}, we show snapshots $S_A$ and
 $S_B$ corresponding to syscalls for threads in different address
 spaces (containing A and B respectively).
 These snapshots correspond to different logical pages, but are
 all squashed into the snapshots list of the single COW page.
 Therefore, after the kernel duplicates the COW page (new page
-B created, in \autoref{fig:fault_handling_cow}), \midas moves
+B created, in \autoref{fig:midas:fault_handling_cow}), \midas moves
 the snapshots for the faulting process ($S_B$) to the new page.
 Here, \midas also updates the protected page list in the
 affected syscalls' \Code{task_struct}s so that these structures
@@ -1366,7 +1366,7 @@ which heavily rely on the kernel's performance.
 \begin{lstlisting}[language=C, escapeinside={<@}{@>},
                   basicstyle=\ttfamily, frame=single, numbers=left,
                   captionpos=b,
-                  label=lst:cve-2016-6516,
+                  label=lst:midas:cve-2016-6516,
                   caption={CVE-2016-6516: Vulnerable double fetch in \Code{ioctl_file_dedupe_range}.
                           Lines in green show the fix and testing code.},
                   float]
@@ -1389,7 +1389,7 @@ which heavily rely on the kernel's performance.
 
 CVE-2016-6516 is a known vulnerability in kernels prior to version
 4.7 in a file-system \Code{ioctl}.
-The vulnerable code is shown in \autoref{lst:cve-2016-6516} and is
+The vulnerable code is shown in \autoref{lst:midas:cve-2016-6516} and is
 triggered when the value of the \Code{dest_count} object differs between
 the two fetches (in lines 2 and 7).
 \Code{memdup_user} uses the value from the first fetch for allocating a buffer
@@ -1417,7 +1417,7 @@ returned the same value on every call.\\
 
 
 \subsection{Performance evaluation}
-\label{sec:perf}
+\label{sec:midas:perf}
 %%%%%%%%%%%%%%%%%%%%
 
 We evaluate \midas on
@@ -1468,7 +1468,7 @@ but instruments all syscalls including \Code{write}.
   \caption[\midas performance comparison]
           {\midas' performance on microbenchmarks, NPB and PTS benchmarks
           relative to the baseline kernel.}
-  \label{fig:midas_performance}
+  \label{fig:midas:midas_performance}
 \end{figure}
 
 \begin{table}
@@ -1484,7 +1484,7 @@ but instruments all syscalls including \Code{write}.
     \bottomrule
   \end{tabular}
   \caption{Prominent syscalls used by OSBench microbenchmarks.}
-  \label{tab:osbench_syscalls}
+  \label{tab:midas:osbench_syscalls}
 \end{table}
 
 \paragraph{Microbenchmarks}
@@ -1494,9 +1494,9 @@ OSBench~\cite{osbench}.
 The programs use \Code{libc} interfaces such as \Code{fopen},
 \Code{pthread_create}, \Code{fork} and \Code{malloc} for creating files,
 threads, processes and for memory allocation respectively.
-\autoref{tab:osbench_syscalls} lists the prominent syscall usage
+\autoref{tab:midas:osbench_syscalls} lists the prominent syscall usage
 for these workloads.
-\autoref{fig:midas_performance} shows \midas' performance
+\autoref{fig:midas:midas_performance} shows \midas' performance
 (time per operation)
 on OSBench relative to the baseline kernel, with overheads ranging from
 zero to 5.3\%.
@@ -1527,7 +1527,7 @@ and are all long enough for the kernel to reach equilibrium.
 Certain benchmarks require a parallelism number which is a perfect square.
 On our 8-core CPU, having 4 compute-bound threads/processes instead of 16 allows
 all threads to run without time sharing.
-\autoref{fig:midas_performance} shows \midas' performance for both MPI and OpenMP,
+\autoref{fig:midas:midas_performance} shows \midas' performance for both MPI and OpenMP,
 normalized to the performance of the baseline system with the same parallelization
 framework.
 On average, \midas achieved $96.3\%$ of the baseline system's performance on
@@ -1553,7 +1553,7 @@ buffers between processes which spends all of its time in syscalls
 and whose performance is entirely dependent on kernel IPC performance.
 
 We plot \midas' performance relative to the baseline kernel on
-these benchmarks in \autoref{fig:midas_performance}, roughly ordering
+these benchmarks in \autoref{fig:midas:midas_performance}, roughly ordering
 workloads in increasing order of syscall dependence from left to right.
 For benchmarks for which PTS reports runtime, we compute the inverse
 of the runtime as performance.
@@ -1613,7 +1613,7 @@ memory overhead.
   \centering
   \includegraphics[width=0.7\linewidth]{media/midas/overhead.pdf}
   \caption{Classification of overheads for various benchmarks due to \midas.}
-  \label{fig:overhead_class}
+  \label{fig:midas:overhead_class}
 \end{figure}
 
 In this section, we explore the sources of \midas' overhead by analyzing
@@ -1634,9 +1634,9 @@ After identifying one binary for the workload from the FlameGraph, we estimate
 the overhead for a function as the difference in execution time attributed to
 that function between the baseline and \midas systems.
 The total overhead is estimated from the throughput figures obtained from
-\autoref{sec:perf}.
+\autoref{sec:midas:perf}.
 
-\autoref{fig:overhead_class} shows the breakdown of overheads for three
+\autoref{fig:midas:overhead_class} shows the breakdown of overheads for three
 workloads.
 As expected, metadata tracking and duplication causes most overheads
 for the user copy and fault handling functions respectively.
@@ -1667,7 +1667,7 @@ a much larger overhead for TLB flushing, accounting for
   \caption[\midas: Request rates and throughput for the Nginx server]
           {Request rates and throughput served by the Nginx server for
           static pages.}
-  \label{fig:nginx_perf}
+  \label{fig:midas:nginx_perf}
 \end{figure}
 
 To better understand \midas' behavior under varying syscall
@@ -1680,7 +1680,7 @@ connections (chosen to maximize throughput) over a 1Gbps link.
 The clients send http requests for files ranging between 20B and
 10000B.
 
-In \autoref{fig:nginx_perf}, we plot the request rate and throughput
+In \autoref{fig:midas:nginx_perf}, we plot the request rate and throughput
 for Nginx servers running with one and eight workers.
 For all configurations, we can see that the rate of requests served
 remains almost constant while increasing payload size until the network

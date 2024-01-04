@@ -1,5 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+\label{sec:seccells:intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % bugs allow access to data/code outside of the current module
@@ -155,7 +156,7 @@ In this chapter, we:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
-\label{sec:background}
+\label{sec:seccells:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Compartmentalization is built on a few basic principles:
@@ -171,7 +172,7 @@ mechanism in order to guarantee these security properties.
 
 %-------------------------------
 \subsection{Principles supporting compartmentalization}
-\label{sec:background:principles}
+\label{sec:seccells:background:principles}
 %-------------------------------
 
 \paragraph{Abstraction and modularity}
@@ -262,7 +263,7 @@ compartmentalization complement each other, rather than replacing each other.
 
 %-------------------------------
 \subsection{Compartmentalization properties}
-\label{sec:background:properties}
+\label{sec:seccells:background:properties}
 %-------------------------------
 A compartmentalized program consists of compartments, each of which is
 isolated from other compartments but can communicate through well-defined
@@ -308,7 +309,7 @@ compartmentalized programs.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Objectives For Architectural Isolation}
 % \section{The case for a novel compartmentalization mechanism}
-\label{sec:reqs}
+\label{sec:seccells:reqs}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Compartmentalization mechanisms are characterized by a specific set of 
@@ -344,18 +345,18 @@ two characteristic programs described below.
   \centering
   \includegraphics[width=0.65\linewidth]{media/seccells/browser_webapp.pdf}
   \caption{Browser compartmentalization with three compartments.}
-  \label{fig:browser_eg}
+  \label{fig:seccells:browser_eg}
   \includegraphics[width=\linewidth]{media/seccells/dataflow_app.pdf}
   \caption[Permission transfers for a packet between \seccells compartments.]
           {Permission transfers for a packet between \seccells compartments. 
             The figure shows the compartment executing the relevant \seccells 
             instructions on one core.}
-  \label{fig:dataflow_app}
+  \label{fig:seccells:dataflow_app}
   %\Description[<short description>]{<long description>}
 \end{figure}
 
 \paragraph{Use case: Browser}
-The first program, a browser (\autoref{fig:browser_eg}), consists of
+The first program, a browser (\autoref{fig:seccells:browser_eg}), consists of
 a just-in-time (JIT) compilation engine (Engine), 
 a sandboxed web application (WebApp) compiled and executed by the Engine, and 
 a cryptographic library (CryptoLib) storing a secret key for encryption.
@@ -373,7 +374,7 @@ context switching and compartment switching.
 
 \paragraph{Use case: Network Function Virtualization}
 The second program is a virtual network function pipeline 
-(\autoref{fig:dataflow_app}) consisting of three stages progressively
+(\autoref{fig:seccells:dataflow_app}) consisting of three stages progressively
 performing processing steps on a stream of packets.
 In particular, this pipeline has three compartmentalized stages, 
 implementing the network card driver (Driver) which
@@ -398,7 +399,7 @@ through permission transfer.
 
 %-------------------------------
 \subsection{Threat Model}
-\label{sec:reqs:threat}
+\label{sec:seccells:reqs:threat}
 %-------------------------------
 
 Our threat model assumes an attacker who wants to compromise a 
@@ -434,7 +435,7 @@ we discuss \seccells' speculative resiliency in \autoref{sec:seccells:discussion
 
 %-------------------------------
 \subsection{Security Objectives}
-\label{sec:reqs:security}
+\label{sec:seccells:reqs:security}
 %-------------------------------
 A secure mechanism must enforce restrictions on a compartmentalized program,
 as described below.
@@ -442,7 +443,7 @@ as described below.
 \paragraph{Obj. \req{1a}}
 Mechanisms must implement \emph{access control},
 validating every memory access against the policy.
-For the browser in \autoref{fig:browser_eg}, the table
+For the browser in \autoref{fig:seccells:browser_eg}, the table
 holds policy-defined permissions for each compartment and memory region.
 Mechanisms must, for example, prevent all accesses by the compromised
 WebApp from reading the Engine or CryptoLib's private regions as per the
@@ -531,7 +532,7 @@ registers.
 
 %-------------------------------
 \subsection{Performance Objectives}
-\label{sec:reqs:performance}
+\label{sec:seccells:reqs:performance}
 %-------------------------------
 Low-overhead checks and operations allow performance-critical
 programs to be compartmentalized.
@@ -587,7 +588,7 @@ system calls, precluding their use for practical compartmentalization.
 
 %-------------------------------
 \subsection{Flexibility}
-\label{sec:reqs:flexibility}
+\label{sec:seccells:reqs:flexibility}
 %-------------------------------
 
 A mechanism demands flexibility to be suitable
@@ -631,7 +632,7 @@ since every compartment switch incurs the same non-negotiable overheads
 
 %-------------------------------
 \subsection{Alternate Visions for Compartmentalization}
-\label{sec:reqs:related}
+\label{sec:seccells:reqs:related}
 %-------------------------------
 
 % Text for the camera ready. Reinstate.
@@ -679,9 +680,9 @@ Meanwhile, trends in applications and memory architectures have led to a
 resurgence in range-based translations and protections among academic 
 proposals~\cite{BasuGCHS13,YanLNB19,PhamVJB12,0003BOBFP21midgard,KarakostasGACHM15}
 and commercial processors including AMD's Zen lineup~\cite{preservingvma}.
-\autoref{tab:req_comparison} summarizes the objectives satisfied by related 
-mechanisms (justification in Appendix~\ref{app:justification_table1}).
-We discuss related mechanisms further in \autoref{sec:related}.
+\autoref{tab:seccells:req_comparison} summarizes the objectives satisfied by related 
+mechanisms (justification in Appendix~\ref{app:seccells:justification_table1}).
+We discuss related mechanisms further in \autoref{sec:seccells:related}.
  
 % Camera ready TODO: Should I make figure and table styles consistent?
 % If yes, follow the procedure described here
@@ -690,7 +691,7 @@ We discuss related mechanisms further in \autoref{sec:related}.
   \centering
   \caption[Qualitative comparison of compartmentalization mechanisms]
           {Comparison of compartmentalization mechanisms based on 
-          compliance with the objectives described in \autoref{sec:reqs}.
+          compliance with the objectives described in \autoref{sec:seccells:reqs}.
           Limited compliance is marked with ``$\sim$''.
           }
 % \begin{tabular}{l | c c c c c c | c c c | c c |}
@@ -709,7 +710,7 @@ We discuss related mechanisms further in \autoref{sec:related}.
   CHERI       & \yes  & \yes  & \yes  &       &       &       &       &       & \yes  & \yes  &               \\
   \seccells   & \yes  & \yes  & \yes  & \yes  & \yes  & \yes  & \yes  & \yes  & \yes  & \yes  & \yes          \\ \bottomrule
   \end{tabular}
-  \label{tab:req_comparison}
+  \label{tab:seccells:req_comparison}
 \end{table}
 
 \paragraph{Complementary requirements}
@@ -738,7 +739,7 @@ lookaside buffer design (\autoref{sec:seccells:design:access_ctl})
 allows single-cycle access control on the fast path satisfying 
 objectives \req{1a}, \req{1f}, \req{2a}, and \req{3a}.
 \seccells introduces fast, userspace instructions for common 
-compartmentalization operations (see \autoref{tab:seccell_ops}): 
+compartmentalization operations (see \autoref{tab:seccells:seccell_ops}): 
 switching compartments, transferring permissions and validating
 exclusive access for data regions (\autoref{sec:seccells:design:instructions}).
 These instructions satisfy requirements \req{1b}, \req{1e},
@@ -761,7 +762,7 @@ and flexibility (\req{3a}, \req{3b}) objectives.
   \includegraphics[width=0.85\linewidth]{media/seccells/seccell_arch.pdf}
   \caption[\seccells: Architecture.]
           {\seccells' architecture, highlighting modified hw/sw in gray.}
-  \label{fig:seccell_arch}
+  \label{fig:seccells:seccell_arch}
   %\Description[<short description>]{<long description>}
 \end{figure}
 
@@ -795,7 +796,7 @@ allowing hundred-times smaller core-side lookaside buffers.
 parts of a program, by controlling their access to memory regions.
 Each compartment is allocated a Security Division (\secdiv)
 with individual permissions to each VMA-granularity data region (\cell{}).
-The Browser (\autoref{fig:browser_eg}), for example, has 
+The Browser (\autoref{fig:seccells:browser_eg}), for example, has 
 three compartments (Engine, WebApp and CryptoLib) allocated 
 \secdivx{1}-\secdivx{3}, and four \cell{}s.
 \seccells augments each core with a read-only register (\sid) tracking 
@@ -805,7 +806,7 @@ MMU for enforcing the permissions, \seccells implements single-cycle
 access control.
 The WebApp \secdiv has executable permissions
 to one code \cell and read-write permission to one data \cell.
-Userspace instructions (see \autoref{tab:seccell_ops}) enable 
+Userspace instructions (see \autoref{tab:seccells:seccell_ops}) enable 
 secure compartment switching and permission surrender/transfer.
 % For implementation reasons regarding how risc-v wants to use ecalls to enter
 % the kernel, we must make urid writable by the kernel in our prototype.
@@ -825,9 +826,9 @@ During permissions transfer, a granted permissions table (\gtable) tracks
 outstanding permissions.
 Further, the design implements context isolation and secure call stacks
 in software leveraging the above hardware primitives.
-\autoref{fig:seccell_arch} summarizes \seccells's architecture.
+\autoref{fig:seccells:seccell_arch} summarizes \seccells's architecture.
 The detailed layout of cell descriptors, the \ptable, and the \gtable 
-are shown in Appendix~\ref{app:ptable}.
+are shown in Appendix~\ref{app:seccells:ptable}.
 
 
 %-------------------------------
@@ -848,7 +849,7 @@ by the compiler \secdiv, while being executable by the sandboxed code's
 \secdiv.
 The \ptable is stored in privileged supervisor memory, restricting
 accesses (including stores) from userspace.
-\autoref{fig:browser_eg} shows the permissions for the three browser 
+\autoref{fig:seccells:browser_eg} shows the permissions for the three browser 
 compartments, assigned to separate \secdiv{}s, to the four 
 data regions, similarly assigned to \cell{}s.
 \seccells' current \ptable design supports a large number of 
@@ -929,15 +930,15 @@ last-level cache.
     \scexcl     & Check for exclusive access to a \cell             \\
     \bottomrule
   \end{tabular}
-  \label{tab:seccell_ops}
+  \label{tab:seccells:seccell_ops}
 \end{table}
 
 \input{seccell_formal.tex}
 
 \seccells introduces 8 new serializing userspace instructions for
 accelerating common compartmentalization operations 
-(\autoref{tab:seccell_ops}).
-These instructions, formally defined in \autoref{fig:seccell_ops_formal}, 
+(\autoref{tab:seccells:seccell_ops}).
+These instructions, formally defined in \autoref{fig:seccells:seccell_ops_formal}, 
 implement speculation-free compartment switching with 
 checked entry points, permission surrender and transfer for zero-copy dataflow.
 
@@ -970,9 +971,9 @@ We show how software can implement cheap, secure call
 stacks in \autoref{sec:seccells:design:softmech}.
 Programs are also allowed more flexibility, and can implement
 both remote procedure call (RPC)-like call-and-return (as in
-\autoref{fig:browser_eg})
+\autoref{fig:seccells:browser_eg})
 and circular function call graphs with one-way switches 
-(as in \autoref{fig:dataflow_app}).
+(as in \autoref{fig:seccells:dataflow_app}).
 
 \sdswitch instructions impose an additional
 restriction over function calls in order to enforce call gates --- 
@@ -1032,7 +1033,7 @@ All data transfer instructions (\scprot, \scgrant, \sctfer, \screcv)
 also flush the relevant entry from the MMU's lookaside buffer.
 The network function is dependent on these instructions to
 progressively transfer permissions to a packet between stages,
-as illustrated in \autoref{fig:dataflow_app}.
+as illustrated in \autoref{fig:seccells:dataflow_app}.
 However, a \secdiv can only have a single outstanding grant for
 a particular cell. 
 If a \secdiv grants a second set of permissions to a \cell before
@@ -1111,12 +1112,12 @@ as these operations can be skipped for lower overheads when safe to do so.
   \centering
   \includegraphics[width=0.7\linewidth]{media/seccells/sc_rpc.pdf}
   \caption{Cross-compartment procedure call in \seccells.}
-  \label{fig:sc_rpc}
+  \label{fig:seccells:sc_rpc}
   %\Description[<short description>]{<long description>}
 \end{figure}
 
 Both forward and return edges on RPC-like cross-compartment 
-calls use \sdswitch instructions, as illustrated in \autoref{fig:sc_rpc} 
+calls use \sdswitch instructions, as illustrated in \autoref{fig:seccells:sc_rpc} 
 where function \Code{foo} makes a cross-compartment call to \Code{bar}.
 Arguments are passed in registers.
 In this example, the caller uses a trampoline to hide its return address
@@ -1166,7 +1167,7 @@ per-compartment private stacks.
 Our implementation of \seccells augments and modifies the 
 RocketChip~\cite{RocketChip} core and firmware.
 An overview of the implementation is shown in 
-\autoref{fig:seccell_arch}, with additions to the existing
+\autoref{fig:seccells:seccell_arch}, with additions to the existing
 processor highlighted in grey.
 RISC-V provides the ideal, open platform for implementing fully-functional
 prototypes of experimental architectures. 
@@ -1175,7 +1176,7 @@ processors containing in-order and/or out-of-order cores depending on the
 application's requirements: from firmware implementations on 
 low-power embedded processors through hardware or 
 microcode implementations on mobile, desktop, and server processors.
-We discuss the trade-offs in detail in Appendix~\ref{app:impl_options}.
+We discuss the trade-offs in detail in Appendix~\ref{app:seccells:impl_options}.
 To match the RocketChip's simple, in-order pipeline, we implement 
 access control and compartment switching in hardware within the pipeline 
 and emulate the remaining instructions in firmware.
@@ -1196,7 +1197,7 @@ The unified \ptable-\gtable in memory starts with a sorted
 list of \cell descriptions, followed by the permissions held in the 
 \ptable, and then the mappings for the \gtable.
 % We don't have this layout any more
-Appendix~\ref{app:ptable} shows the layout in detail.
+Appendix~\ref{app:seccells:ptable} shows the layout in detail.
 Each \cell is described by the base and bound virtual addresses, 
 the corresponding physical address base, and a single bit denoting
 validity.
@@ -1240,13 +1241,13 @@ to future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Evaluation}
-\label{sec:evaluation}
+\label{sec:seccells:evaluation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this section, we evaluate key metrics for \seccells' security and 
 performance.
 First, we show how \seccells provides security for the Browser described
-in \autoref{sec:reqs}.
+in \autoref{sec:seccells:reqs}.
 Second, we measure the latency of the \seccells' userspace instructions 
 in microbenchmarks, particularly comparing compartment switching latency 
 to related work.
@@ -1271,7 +1272,7 @@ transfer.
     Main memory           & \multicolumn{2}{c}{DDR3, 800MHz, 1GB       }                   \\
     \bottomrule
   \end{tabular}
-  \label{tab:testbench_cfg}
+  \label{tab:seccells:testbench_cfg}
 \end{table}
 
 
@@ -1294,7 +1295,7 @@ transfer.
     MMU Total    & 9528   & 7362  & 18KiB            & 6627 & 6200  & 0               \\
     \bottomrule
   \end{tabular}
-  \label{tab:fpga_resource}
+  \label{tab:seccells:fpga_resource}
 \end{table}
 
 \paragraph{Testbench}
@@ -1303,11 +1304,11 @@ which faithfully models its functional behavior, and the performance
 experiments on our hardware implementation of \seccells,
 which uses cycle-accurate Register-Transfer Level (RTL) simulation to
 accurately measure its timing behavior.
-The core configuration, described in \autoref{tab:testbench_cfg}, 
+The core configuration, described in \autoref{tab:seccells:testbench_cfg}, 
 resembles ARM's Cortex-A75. %~\cite{CortexA75}.
 Our baseline is an identical core using a traditional page-based MMU
 and TLBs instead of \seccells.
-\autoref{tab:fpga_resource} shows the FPGA resource utilization for both the
+\autoref{tab:seccells:fpga_resource} shows the FPGA resource utilization for both the
 baseline and \seccells MMUs.
 \seccells' \ptable walker contains simpler logic than the baseline, 
 as evidenced by the fewer LUTs required in the design.
@@ -1320,6 +1321,7 @@ system calls.
 
 %-------------------------------
 \subsection{Security Evaluation}
+\label{sec:seccells:evaluation:sec}
 %-------------------------------
 
 To evaluate \seccells' security claims, we test that a properly 
@@ -1330,7 +1332,7 @@ afterwards.
 
 \paragraph{Access Control}
 We evaluate \seccells' access control on a mock Browser,
-modeling the example described in \autoref{sec:reqs}.
+modeling the example described in \autoref{sec:seccells:reqs}.
 The Browser contains a simple compiler Engine that generates code for
 sandboxed WebApp applications.
 The WebApp can allocate arrays, and read/write elements in the array through
@@ -1340,7 +1342,7 @@ checks on array accesses, allowing the WebApp arbitrary reads and writes.
 With the monolithic Browser, an attacker WebApp could leak/modify the
 Engine's data as well as that of a second sandboxed WebApp.
 When compartmentalized with \seccells with the permissions shown in 
-\autoref{fig:browser_eg}, illegal accesses by the attacker WebApp outside its
+\autoref{fig:seccells:browser_eg}, illegal accesses by the attacker WebApp outside its
 data \cell instead raise load/store access faults.
 \seccells' access control also prevents arbitrary code injection by the WebApp
 by preventing the WebApp from writing to either its or the Engine's code regions.
@@ -1356,10 +1358,9 @@ stack switching.
 
 \subsubsection{Formal Description and Analysis of \seccells' 
 Userspace Instructions}
-% \label{sub:instructions}
 
 We define the semantics of \seccells' unprivileged instructions
-in \autoref{fig:seccell_ops_formal} and discuss their corresponding
+in \autoref{fig:seccells:seccell_ops_formal} and discuss their corresponding
 security checks below.
 
 \paragraph{\sdswitch}
@@ -1437,6 +1438,7 @@ it already has access to.
 
 %-------------------------------
 \subsection{Performance Microbenchmarks}
+\label{sec:seccells:evaluation:perf}
 %-------------------------------
 
 % Comments on CHERI accounting:
@@ -1491,7 +1493,7 @@ it already has access to.
       \item[5] Optional, software-implemented context switch
     \end{tablenotes}
   \end{threeparttable}
-  \label{tab:ipc}
+  \label{tab:seccells:ipc}
 \end{table}
 
 \begin{table}[]
@@ -1511,7 +1513,7 @@ it already has access to.
     \scexcl     & 79        &   57      &   67      & 203 \\
     \bottomrule
   \end{tabular}
-  \label{tab:emulation}
+  \label{tab:seccells:emulation}
 \end{table}
 
 First, we create microbenchmarks to measure the latency of each
@@ -1519,7 +1521,7 @@ userspace instruction introduced by \seccells, of which \sdswitch
 is directly implemented in hardware, and the other instructions
 are emulated in firmware.
 
-In \autoref{tab:ipc}, we compare \seccells' compartment switching
+In \autoref{tab:seccells:ipc}, we compare \seccells' compartment switching
 cost with that of related mechanisms, particularly for a
 round-trip cross-compartment call.
 \seccells' userspace \sdswitch enables 8-cycle compartment switches,
@@ -1539,7 +1541,7 @@ All instructions other than \sdswitch and \sdentry are emulated by
 the firmware, and therefore incur the costs of context saving, 
 firmware entry and exit handlers, and dispatch to the correct
 emulation function.
-\autoref{tab:emulation} shows the latency of each instruction,
+\autoref{tab:seccells:emulation} shows the latency of each instruction,
 breaking down the cycles spent on each of the above overheads.
 A microcode implementation of \seccells would allow the core to use 
 internal registers for storage, eliminating the context switch, 
@@ -1579,7 +1581,7 @@ For simplicity, this benchmark utilizes the migrating thread model.
           \seccells, compared to the uncompartmentalized version on RocketChip
           (lower is better).
           }
-  \label{fig:mycached_cpi}
+  \label{fig:seccells:mycached_cpi}
   %\Description[<short description>]{<long description>}
 \end{figure}
 
@@ -1601,7 +1603,7 @@ CHERI paper~\cite{WatsonWNMACDDGL15}.
 We model each compartment switch as 191 instructions requiring 254 cycles,
 excluding the costs of context switching and
 ignoring other microarchitectural overheads.
-In \autoref{fig:mycached_cpi}, we plot the average per-request 
+In \autoref{fig:seccells:mycached_cpi}, we plot the average per-request 
 cycle count and the cycles-per-instruction (CPI) for the server.
 
 \seccells implements fast compartment switching, and 
@@ -1638,13 +1640,13 @@ serve requests 9.3\% faster for a 32MB dataset.
   \includegraphics[width=0.85\linewidth]{data/seccells/network_1ktlb_sim/nfv_full.pdf}
   \caption[\seccells performance comparison: Network function]
           {Packet processing cycles-per-byte comparison.}
-  \label{fig:nfv_cpb}
+  \label{fig:seccells:nfv_cpb}
   %\Description[<short description>]{<long description>}
 \end{figure}
 
 To illustrate \seccells' zero-copy permission transfer performance,
 we implement the virtual network function pipeline presented in
-\autoref{fig:dataflow_app}.
+\autoref{fig:seccells:dataflow_app}.
 The Driver stage generates a ``packet'' by writing a UDP/IP packet
 of varying length into a packet buffer, whereas 
 the Firewall and NAT read and modify the IP and UDP headers
@@ -1667,7 +1669,7 @@ to the firmware and dispatch.
 This model is conservative, ignoring possible optimizations from
 parallelizing checks in microcode.
 
-In \autoref{fig:nfv_cpb}, we plot the average number of cycles
+In \autoref{fig:seccells:nfv_cpb}, we plot the average number of cycles
 required by the benchmark to process a byte of a packet
 as the packet size grows.
 Fixed costs, such as a function call, compartment switch or 
@@ -1696,7 +1698,7 @@ transferring permissions which lowers the break-even threshold to
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work}
-\label{sec:related}
+\label{sec:seccells:related}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 A variety of compartmentalization techniques exist, both in software and
@@ -1859,7 +1861,7 @@ will still require rewriting (to refactor monolithic code into compartments).
 applications' operations, evidenced by strong parallels between
 \seccells' instructions and APIs in related mechanisms or 
 language-level operations in compartmentalization
-frameworks (\autoref{tab:api_mapping}).
+frameworks (\autoref{tab:seccells:api_mapping}).
 This mapping will simplify porting existing compartmentalized
 applications, such as Nginx-lwC~\cite{LittonVE0BD16}, to run on \seccells
 by replacing existing operations with the \seccells equivalent 
@@ -1901,7 +1903,7 @@ instructions whereas data movement (\Code{transfer}) maps to a
     \end{tablenotes}
   \end{multicols}
   \end{threeparttable}
-  \label{tab:api_mapping}
+  \label{tab:seccells:api_mapping}
 \end{table}
 
 % Possibly remove for resubmission
@@ -1970,6 +1972,7 @@ further restricting the availability of Spectre gadgets.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
+\label{sec:seccells:conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Compartmentalization requires labor-intensive code restructuring, 

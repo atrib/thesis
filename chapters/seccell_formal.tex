@@ -44,7 +44,7 @@
           \State $RID \gets SID$
           \State $SID \gets SD_{tgt}$
         \end{algorithmic}
-        \label{alg:sdswitch}
+        \label{alg:seccells:sdswitch}
     \end{algorithm}
     \vspace{-0.5\baselineskip}
 
@@ -62,7 +62,7 @@
 
         \State $PT(SD_{cur}, c_i) \gets perm$
       \end{algorithmic}
-      \label{alg:scprotect}
+      \label{alg:seccells:scprotect}
     \end{algorithm}
     \vspace{-0.5\baselineskip}
 
@@ -80,7 +80,7 @@
 
         \State $GT(SD_{cur}, c_i) \gets (SD_{tgt}, p_{tgt})$
       \end{algorithmic}
-      \label{alg:scgrant}
+      \label{alg:seccells:scgrant}
     \end{algorithm}
     \vspace{-0.5\baselineskip}
 
@@ -105,7 +105,7 @@
         \State $PT(SD_{cur}, c_i) \gets perm \cup p_{i, cur} $
 
       \end{algorithmic}
-      \label{alg:screcv}
+      \label{alg:seccells:screcv}
     \end{algorithm}
     \vspace{-\baselineskip}
 
@@ -117,7 +117,7 @@
         \State SCGrant($addr$, $SD_{tgt}$, $perm$)
         \State SCProtect ($addr$, $\phi$)
       \end{algorithmic}
-      \label{alg:tfer}
+      \label{alg:seccells:tfer}
     \end{algorithm}
     \vspace{-1.5\baselineskip}
 
@@ -134,7 +134,7 @@
         \State $PT(SD_{cur}, c_i) \gets perm$
 
       \end{algorithmic}
-      \label{alg:screval}
+      \label{alg:seccells:screval}
     \end{algorithm}
     \vspace{-1.5\baselineskip}
 
@@ -158,7 +158,7 @@
 
         \State Invalidate $c_i$
       \end{algorithmic}
-      \label{alg:scinval}
+      \label{alg:seccells:scinval}
     \end{algorithm}
     \vspace{-1.5\baselineskip}
 
@@ -189,12 +189,12 @@
         \EndFor
         \State \textbf{return} $excl$
       \end{algorithmic}
-      \label{alg:sccount}
+      \label{alg:seccells:sccount}
     \end{algorithm}
     \vspace{-\baselineskip}
   \end{multicols}
 
   \caption[\seccells: State and userspace instructions.]
           {\seccells' state and userspace instructions.}
-  \label{fig:seccell_ops_formal}
+  \label{fig:seccells:seccell_ops_formal}
 \end{figure}

@@ -1,8 +1,9 @@
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Memory layout of the unified \ptable-\gtable}
-\label{app:ptable}
+\label{app:seccells:ptable}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\autoref{fig:ptable_layout} shows the detailed implementation of the
+\autoref{fig:seccells:ptable_layout} shows the detailed implementation of the
 unified \ptable-\gtable in our prototype \seccells implementation.
 
 The table contains a sorted list of cell descriptors, including a
@@ -33,12 +34,14 @@ thereby limiting the maximum number of \secdiv{}s to $2^{29}$.
   \centering
   \includegraphics[height=0.95\textheight]{media/seccells/ptable_layout.pdf}
   \caption{Layout of \seccells{}' unified \ptable-\gtable.}
-  \label{fig:ptable_layout}
+  \label{fig:seccells:ptable_layout}
   %\Description[<short description>]{<long description>}
 \end{figure*}
 
-\section{Justification for \autoref{tab:req_comparison}}
-\label{app:justification_table1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Justification for \autoref{tab:seccells:req_comparison}}
+\label{app:seccells:justification_table1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \paragraph{Obj. \req{1a}}
 MPK, ERIM and Donky do not check permissions for instruction fetches, 
@@ -98,8 +101,10 @@ limiting the flexibility to share code/data regions between compartments.
 UNIX, MMP, lwC, XPC and CHERI cannot eliminate context switching when a
 permissive policy allows migrating threading between compartments.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Existing mechanisms with \seccells}
-\label{app:integrate_exist}
+\label{app:seccells:integrate_exist}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Many existing performance or security mechanisms can be integrated with
 \seccells, either unmodified or with modifications described in this section.
 
@@ -146,8 +151,10 @@ Guard pages and swapping can both be implemented by unmapping the requisite page
 in the backside translation.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\seccells Implementation Trade-Offs}
-\label{app:impl_options}
+\label{app:seccells:impl_options}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \seccells permits a range of implementations scaling from simple 
 microcontrollers with firmware emulation for added userspace
