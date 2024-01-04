@@ -48,13 +48,128 @@ properties.
 % This section will also describe the attacker model for compartmentalization and what attacks can be prevented.
 
 
-\subsection{Survey of use cases}
+%-------------------------------
+\section{Description of use cases and threats}
+\label{sec:compreview:usecases}
+%-------------------------------
+In this section, we introduce some characteristic use cases for 
+compartmentalization, and 
+describe some typical attacker models.
+These examples will allow us to compare the mechanisms described later.
 
-Who could use compartmentalization?
+\subsection{Hierarchical trust} 
+Let us consider a system with hierarchical notions of trust.
+In \autoref{sec:seccells:reqs}, we have already encountered the example of
+a browser running untrusted code from a web application.
+In this application, the JIT engine creates and orchestrates execution of
+the sandboxed code.
+The JIT engine has access to the WebApp's code and data region, implying
+a hierarchical trust relation ---
+the WebApp must trust the Engine to correctly generate code and modify
+its data.
+Despite this hierarchical trust relationship, 
+the Engine's permissions (\Code{rw}) to the WebApp's code is not a
+superset of the WebApp's (\Code{rx}).
+While the Engine's code is separate from the WebApps, the Engine might allow
+the WebApp to directly execute specific shared code from 
+libraries (say \Code{memcpy}).
+The Engine's OS resources must also be isolated and inaccessible by the
+WebApp.
+The Engine can ensure that the WebApp code contains no syscalls and interpose
+every request to OS resources by the WebApp, or install system call filters
+which properly restrict syscalls by the WebApp.
+Since the system call interface of modern OS kernels like Linux can be used to 
+bypass intra address-space compartmentalization~\cite{ConnorMSS20}, we must
+assume that every mechanism below is adapted to run with a kernel which
+properly isolates OS resources for each compartment (for example, as proposed 
+by Schrammel~et.~al.~\cite{schrammel2022jenny}).
+\atri{systems restricted to a single trusted/untrusted compartment won't work}
+\atri{systems without system call filtering will fail (does ERIM have filtering?)}
+\atri{systems where the kernel cannot identify the caller will fail 
+      (does donky prevent OS confused deputy, or allow OS to identify caller?)}
+\atri{Systems with hierarchical trust, where superset relation is needed will fail}
+\atri{CODOM's where APL grants full permission for a domain's regions will fail}
+\atri{Code = Domain, like CODOM, will bar cross-compartment code sharing}
 
-What would they benefit from this, security and performance wise?
+Adding to the example from \autoref{sec:seccells:reqs}, consider that the
+Engine is sandboxing more than one WebApp from different sources.
+The WebApps do not trust each other, and must be isolated from each other.
+Each WebApp's memory regions and OS resources.
+Further, the WebApps should not be able to directly call each other.
+Any interaction between WebApps should pass through the Engine.
+\atri{Cross-compartment calling restrictions (if callee can ident itself and caller)}
 
-\subsection{Security Properties from Compartmentalization}
+Common threat models for this browser setup would be to assume a buggy Engine
+which either
+\begin{inparaenum}[\itshape i\upshape)]
+      \item generate an arbitrary read or write primitive in the code generated
+            for a WebApp, or 
+      \item generate arbitrary attacker controlled code for a WebApp.
+\end{inparaenum}
+Compartmentalization must, nonetheless, protect the Engine and other WebApp 
+from a malicious WebApp which exploits the buggy Engine's code generation.
+\atri{How many systems break with arbitrary code exec}
+
+\subsection{Mutual distrust} 
+A workload similar to \Code{memcached} described in 
+\autoref{sec:seccells:evaluation:memcached} can have mutual distrust
+between directly communicating compartments.
+For this section, we assume that the server's data store (Store) compartment
+compartment distrusts the server's networking (Network) compartment and
+vice versa.
+We assume that a malicious attacker who compromises the Network compartment
+can try to attack the Store by calling the Store with a malicious register
+context.
+For example, the attacker Network can use a malicious stack pointer register 
+in order to trick the Store to use a wrong region of memory as its stack.
+The Network attacker might try to write one of its data regions with a malicious
+stack state and point the Store's stack pointer to this region.
+In this attack, the Network wants to use the fake stack state to influence the
+Store to compromise its own state or the in-memory database.
+Further, the Network attacker would need to share the region hosting the fake
+stack with the Store, either beforehand or by dynamically passing its 
+permissions before calling into the Store.
+In a generalized attack, the malicious register may be any register, not
+only the stack pointer.
+\atri{CHERI can fail the malicious rsp attack/malicious pointer register attack}.
+\atri{Systems requiring hierarchical trust will fail.}
+\atri{CODOM's where APL grants full permission for a domain's regions will fail}
+
+In the case of mutual distrust, compartments must use static threading 
+and maintain their own context state.
+Particularly, the callee on a cross-compartment call must be able to 
+restore a clean, trusted register state before processing the incoming request.
+Likewise, the caller must be able to restore its own state when the callee
+returns control.
+\atri{Systems mandating migrating threading will fail}
+
+\subsection{Trusting but wary}
+A workload such as the network function (NFV) pipeline described in 
+\autoref{sec:seccells:reqs} might be developed within a more trusted
+ecosystem, and have stronger trust relations between compartments.
+Let us again consider a pipeline with multiple stages, each of which
+is isolated within a separate compartment.
+Data packets get moved between pipeline stages as each stage of the
+pipeline executes.
+The main goals for the pipeline would be to 
+\begin{inparaenum}[\itshape i\upshape)]
+      \item prevent bugs in one stage from corrupting a separate stage, 
+      \item maintain high packet processing rates in order to satisfy
+            the network's line rate, and
+      \item maintain high availability, where crashes in parts of the
+            pipeline are handled gracefully and with minimal downtime.  
+\end{inparaenum}
+\atri{Fast compartment switching}
+\atri{Fast zero copy data movement}
+\atri{kernel needs to be able to identify faulting compartment}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Compartmentalization Properties}
+\label{sec:compreview:properties}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Security Properties}
 This subsection will describe the security benefits of compartmentalization. This subsection should explain exactly what attack scenarios are protected and which ones are not. At the end of this section, the reader should be clear about what the security guarantees of compartmentalization are. Particularly, we should be clear that compartmentalization does not protect against buggy modules that allow compromise via their external interface.
 
 We will also discuss how specific protections can be provided by mechanisms, and
@@ -64,7 +179,7 @@ For example, why does lack of code-checks in MPK matter?
 
 Why does the lack of exclusive access matter?
 
-\subsection{Performance Properties from Compartmentalization}
+\subsection{Performance Properties}
 
 What sort of actions do we expect from compartmentalization?
 
@@ -72,10 +187,11 @@ What is their frequency?
 
 How do these affect the performance of the complete program?
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Introducing the surveyed mechanisms
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{TODO: Introducing our contenders \\ Mechanisms List}
+\section{Compartmentalization Mechanisms}
+\label{sec:comp}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To understand and compare mechanisms, we first need to understand each 
 mechanism, and understand their model for compartmentalization.
