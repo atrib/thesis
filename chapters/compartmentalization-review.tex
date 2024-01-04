@@ -10,84 +10,38 @@ properties and guarantees of different proposals.
 
 Deep dive into different features.
 
+%%%%% Parts of this background are already discussed in the SecureCells paper.
+%%%%% However, we need not repeat this stuff in this section.
+% \section{Background on Compartmentalization}
 
-\section{Background on Compartmentalization}
+% \begin{itemize}
+%       \item Modern software is monolithic, or compartmentalized at a coarse granularity.
+%       \item Monolithic software runs all parts of an application in a single address space
+%       \item Issues with monolithic software includes:
+%             Memory safety bugs can compromise data throughout the address space
+%             Control flow hijack/bending allows any code to call any other code
+%             Can lead to system calls being called from unexpected code
+% \end{itemize}
 
-\begin{itemize}
-      \item Modern software is monolithic, or compartmentalized at a coarse granularity.
-      \item Monolithic software runs all parts of an application in a single address space
-      \item Issues with monolithic software includes:
-            Memory safety bugs can compromise data throughout the address space
-            Control flow hijack/bending allows any code to call any other code
-            Can lead to system calls being called from unexpected code
-\end{itemize}
+% In contrast, a compartmentalized program separates logical components of the application
+% and isolates them in individual compartments, which implies some degree of separation.
+% Isolation restricts which resources each compartment has access to, in order to prevent
+% one or more of the above attack vectors.
 
-In contrast, a compartmentalized program separates logical components of the application
-and isolates them in individual compartments, which implies some degree of separation.
-Isolation restricts which resources each compartment has access to, in order to prevent
-one or more of the above attack vectors.
+% Compartments are logical, and not necessarily linked to code. 
+% For example, compartments for a browser can include the JIT compiler, the runtime and the
+% untrusted sandbox code. 
+% While these are isolated, they may have access to the same code, including libraries like
+% libc.
+% Additionally, there might be one or more sandboxes which are instances of the same module,
+% for example, and thereby share exactly the same code regions. 
+% However, they would need to have separate data regions or some isolated contexts.
+% All of this is to say that we should not make a 1:1 link between code and compartment.
 
-COmpartments are logical, and not necesesarily linked to code. 
-For example, compartments for a browser can include the JIT compiler, the runtime and the
-untrusted sandbox code. 
-While these are isolated, they may have access to the same code, including libraries like
-libc.
-Additionally, there might be one or more sandboxes which are instances of the same module,
-for example, and thereby share exactly the same code regions. 
-However, they would need to have separate data regions or some isolated contexts.
-All of this is to say that we should not make a 1:1 link between code and compartment.
+% The aim of this section is to provide background of compartmentalization as a software design principle to provide enhanced security. 
+% This section will explain the terminology of "monolithic" and "compartmentalized" programs. 
+% This section will also describe the attacker model for compartmentalization and what attacks can be prevented.
 
-The aim of this section is to provide background of compartmentalization as a software design principle to provide enhanced security. This section will explain the terminology of "monolithic" and "compartmentalized" programs. This section will also describe the attacker model for compartmentalization and what attacks can be prevented.
-
-\subsection{Modularity and Principle of Least Privilege}
-Explaining modularity.
-\begin{itemize}
-  \item Modularity is a key principle in modern software design
-  \item Modularity helps handle exploding code complexity, simplifies design
-  \item Modules are clustered around separate functionality
-  \item Modularity lends itself to extensibility - code sharing relies on modularity
-  \item Modules force developers to think of, and implement interfaces
-  \item Modularity lends itself to PoLP: modules don't need access to everything
-\end{itemize}
-
-Explaining PoLP.
-\begin{itemize}
-  \item Principle of Least Privilege recommends that principals only have
-        the minimal access (do data or other resources) required to perform
-        their functionality
-  \item Implies complicated programs should be further decomposed
-  \item Modularity simplifies decomposition, we already have logical parts
-  \item PoLP extends to compartments within a program.
-  \item PoLP should be temporal too (privileges last only as long as required)
-  \item PoLP helps mitigate bugs. A bug is not able to access as much data or stuff.
-  \item PoLP forces interfaces, and enables checks at these interfaces
-\end{itemize}
-
-\subsection{Isolation and Communication}
-
-A program cannot execute entirely with isolated compartments.
-Compartments need to coordinate to get the job done, i.e., compartments need
-to request work from other compartments.
-
-Compartments have interfaces, from which other compartments can request work.
-This means there will be control flow between compartments.
-
-For improved security, compartmentalization requires isolation of resources.
-Typically, this requires - 
-\begin{itemize}
-  \item Isolation in memory. Memory access needs to be restricted according to
-        the policy. This allows compartments to have private data, or to
-        share data between a specific set of compartments.
-  \item Isolation in control flow. Restrictions on which compartment can call
-        which other compartment. 
-        For example, sandboxed code should only be able to call into the
-        runtime compartment, not directly other sandboxes or to supervisor.
-  \item Isolation in system resources, such as file descriptors, semaphores
-        and threads. 
-        Particularly useful in Linux, where all resources are described as
-        files, and file descriptors are used ubiquitously for system resources.
-
-\end{itemize}
 
 \subsection{Survey of use cases}
 

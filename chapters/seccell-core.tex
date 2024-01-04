@@ -135,11 +135,11 @@ and permission transfer instructions to prevent privilege escalation.
 \seccells' final pillar leverages the flexibility of software for 
 operations where possible without compromising security or 
 performance (context isolation, call gates and call stack maintenance).
-This paper shows the first software mechanism for restoring register context
+\seccells{} shows the first software mechanism for restoring register context
 following a compartment switch, necessary for isolating compartment contexts,
 without trusting any general-purpose registers.
 
-In this paper, we:
+In this chapter, we:
 \begin{itemize}
   \item define \seccells' key security and performance objectives
         and survey how related mechanisms meet these goals,
@@ -158,8 +158,57 @@ In this paper, we:
 \label{sec:background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\atri{Put stuff from thesis outline GDoc here}
+\subsection{Principles supporting Compartmentalization}
 
+\paragraph{Modularity and Principle of Least Privilege}
+Explaining modularity.
+\begin{itemize}
+  \item Modularity is a key principle in modern software design
+  \item Modularity helps handle exploding code complexity, simplifies design
+  \item Modules are clustered around separate functionality
+  \item Modularity lends itself to extensibility - code sharing relies on modularity
+  \item Modules force developers to think of, and implement interfaces
+  \item Modularity lends itself to PoLP: modules don't need access to everything
+\end{itemize}
+
+Explaining PoLP.
+\begin{itemize}
+  \item Principle of Least Privilege recommends that principals only have
+        the minimal access (do data or other resources) required to perform
+        their functionality
+  \item Implies complicated programs should be further decomposed
+  \item Modularity simplifies decomposition, we already have logical parts
+  \item PoLP extends to compartments within a program.
+  \item PoLP should be temporal too (privileges last only as long as required)
+  \item PoLP helps mitigate bugs. A bug is not able to access as much data or stuff.
+  \item PoLP forces interfaces, and enables checks at these interfaces
+\end{itemize}
+
+\subsection{Isolation and Communication}
+
+A program cannot execute entirely with isolated compartments.
+Compartments need to coordinate to get the job done, i.e., compartments need
+to request work from other compartments.
+
+Compartments have interfaces, from which other compartments can request work.
+This means there will be control flow between compartments.
+
+For improved security, compartmentalization requires isolation of resources.
+Typically, this requires - 
+\begin{itemize}
+  \item Isolation in memory. Memory access needs to be restricted according to
+        the policy. This allows compartments to have private data, or to
+        share data between a specific set of compartments.
+  \item Isolation in control flow. Restrictions on which compartment can call
+        which other compartment. 
+        For example, sandboxed code should only be able to call into the
+        runtime compartment, not directly other sandboxes or to supervisor.
+  \item Isolation in system resources, such as file descriptors, semaphores
+        and threads. 
+        Particularly useful in Linux, where all resources are described as
+        files, and file descriptors are used ubiquitously for system resources.
+
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Objectives For Architectural Isolation}
@@ -580,7 +629,7 @@ For example, supervisors might include a syscall for
 microsecond-scale compartment creation~\cite{LittonVE0BD16}.
 Safe calling conventions can provide formal guarantees against
 inadvertent information leakage from the stack~\cite{SkorstengaardDB20}.
-These investigations are outside the scope of this paper.
+These investigations are outside the scope of this thesis.
 
 \paragraph{\seccells overview}
 \seccells is a compartmentalization mechanism designed
@@ -1452,7 +1501,8 @@ instructions retired and cycles used to process each request.
 To compare against another emerging compartmentalization architecture,
 we also conservatively model CHERI's performance on this benchmark,
 adding the costs of supervisor-mediated compartment
-switches with hardware support, as reported in the paper~\cite{WatsonWNMACDDGL15}.
+switches with hardware support, as reported in the 
+CHERI paper~\cite{WatsonWNMACDDGL15}.
 We model each compartment switch as 191 instructions requiring 254 cycles,
 excluding the costs of context switching and
 ignoring other microarchitectural overheads.
@@ -1830,7 +1880,7 @@ further restricting the availability of Spectre gadgets.
 Compartmentalization requires labor-intensive code restructuring, 
 deterring developers from adopting piecemeal solutions which provide
 partial protection or which cripple performance.
-This paper introduces \seccells, a secure, flexible and 
+This chapter introduces \seccells, a secure, flexible and 
 performance-focused compartmentalization architecture to
 underpin future software compartmentalization efforts.
 Further work is required, for 
