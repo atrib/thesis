@@ -195,6 +195,10 @@ models assume that a compromised compartment either gives an attacker arbitrary
 memory pointer dereference or arbitrary code execution as that compartment.
 In this section, we describe possible security properties and how mechanisms
 might provide these properties.
+These security properties roughly fall into two categories, those that
+perform access control to restrict access to resources and reduce
+compartment privileges, and those that secure compartment interfaces
+which remain the primary attack vector for inter-compartment fault propagation.
 We must assume compartments which harden their interface against attacks
 which can be triggered through maliciously crafted arguments, as no
 mechanism can fully protect an improperly compartmentalized program.
@@ -235,31 +239,102 @@ using some system calls or use syscalls with malicious arguments.
 For using system call filtering, the mechanism must enable the kernel to
 definitively identify the calling compartment.
 
-\atri{call other compartments, limit who can call whom}
-Either make allow-matrix, or make caller-callee identifiable
+When compartments communicate, the inter-compartment calling interface 
+represents the primary attack vector for a compartment. 
+A minimal requirement is that control flow for cross-compartment calls
+must enter a compartment at legal entry points.
+Failing this, attackers might be able to mount 
+return-oriented programming (ROP)-like attacks which leverage unintended
+code sequences to bypass compartmentalization guarantees.
+Fixed entry points are also vital to implement call gates, which enable
+compartments to implement vital checks at inter-compartment interfaces.
+We describe a couple of these checks next.
 
-\atri{call gates and fixed entry points}
+Compartmentalization should limit which compartments are allowed which other
+compartments, as an application of least privilege. 
+A sandboxing engine could require, for example, that calls between sandboxes
+are interposed by the engine.
+To implement this check, mechanisms might track allowed caller-callee 
+compartment pairs, and validate each cross-compartment call.
+Alternatively, mechanisms can allow compartments to validate their own
+callers as part of the call gate.
+For the latter, a callee must be able to irrevocably identify itself and its 
+caller.
 
-\atri{secure context storage and switching}
+When compartments do not trust each other, a compartmentalization mechanism
+must enable compartments to maintain their own contexts (static threading).
+Without static threading (migrating threading), the register context following
+an inter-compartment call may be malicious.
+For example, the stack pointer register could point to a attacker-crafted
+malicious stack.
+Mechanisms might themselves implement secure context switching at compartment
+boundaries, or enable compartments to perform the context switch as part of
+call gates.
+In the latter case, compartments should be able to fetch their register context
+securely without trust on any registers passed after the compartment switch.
+Compartments must be able to locate a private state store and
+restore context from it.
+To locate its private state store, a compartment might need a way to uniquely
+and securely identify itself. 
 
-\atri{communicate through permission passing}
-copying through shared memory always as a backup
-\atri{permission passing handshake}
-\atri{permission passing revocation} SecureCells lacks revocation in general
-\atri{permission passing with shrinking}
-\atri{permission passing to select regions, not all}
+Compartments pass arguments for inter-compartment calls by value, through 
+registers, or by reference, through memory.
+Data passed through memory might use shared memory buffers, be copied between
+private buffers by a privileged entity like the OS kernel, or be passed without
+copying if the caller can grant permission to the existing location of the data
+in memory to the callee.
+The third option, called zero-copy, is particularly necessary for high-performance
+applications.
+Passing permissions raises security challenges, which mechanisms can try to 
+mitigate with the following properties. 
+First, no compartment should be able to unilaterally grant or seize permission to 
+data to or from another compartment respectively.
+If a compartment can unilaterally seize permissions for another compartment's data,
+this would trivially break isolation.
+A compartment could gain access to, and corrupt, another compartment's private
+data.
+If a compartment could unilaterally grant permission to another compartment, 
+compartments could mount confused deputy attacks where the target compartment may
+be tricked into using attacker-crafted data whose permissions were injected into
+the target by the attacker.
+Particularly, this vector could make inter-compartment code injection trivial.
+A secure permission transfer should employ a handshake between the source and
+target compartments, who agree to mutually transfer permissions.
 
-\atri{exclusive access}
+\begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{media/compreview/permission_shrink_grant.pdf}
+      \caption{TODO Stuff}
+      \label{fig:compreview:permshrink}
+\end{figure}
+Additional properties are desirable when passing
+permissions between compartments - revocation and shrinking permissions.
+A compartment should be able to selectively transfer permissions for a 
+some, not all, of its memory regions.
+\atri{CODOMs fails this, however obvious this may be}
+A common usage pattern is synchronous permission passing, where a caller
+compartment intends to transfer permission to arguments to the callee for the
+duration of the callee's execution as a form of temporal least privilege.
+A corollary is that the callee should no longer have access to the granted
+permissions once the callee returns.
+Since the caller may not trust the callee to surrender permissions correctly, 
+mechanisms can support revocation to allow the caller to revoke the previously
+granted permissions when the callee returns.
+\atri{SecureCells lacks revocation in general}
+During nested compartment calls, the callee for the first call might want to pass
+permission to a subset of its arguments to the callee for the second call.
+We illustrate this situation in \autoref{fig:compreview:permshrink}.
+A mechanism which supports this paradigm securely should allow a compartment to
+shrink permissions for a region to create permissions for a smaller region
+which can be transferred during the second call. 
 
-
-% This subsection will describe the security benefits of compartmentalization. This subsection should explain exactly what attack scenarios are protected and which ones are not. At the end of this section, the reader should be clear about what the security guarantees of compartmentalization are. Particularly, we should be clear that compartmentalization does not protect against buggy modules that allow compromise via their external interface.
-
-% We will also discuss how specific protections can be provided by mechanisms, and
-% why they each matter.
-
-% For example, why does lack of code-checks in MPK matter?
-
-% Why does the lack of exclusive access matter?
+When an application has concurrent access to writable data regions shared 
+between concurrently executing compartments, data races can emerge due to
+improperly synchronized access to shared data.
+Attackers can exploit such bugs to compromise interfaces, as described for
+example in \autoref{ch:midas}.
+To mitigate bugs from shared access to data, a mechanism may temporarily provide
+compartments exclusive access to otherwise shared data.
 
 %-------------------------------
 \subsection{Performance Properties}
