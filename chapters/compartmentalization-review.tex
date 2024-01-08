@@ -172,9 +172,21 @@ The main goals for the pipeline would be to
 \atri{Fast zero copy data movement}
 \atri{kernel needs to be able to identify faulting compartment}
 
+Another popular use case is library compartmentalization, where shared
+libraries within an application can be isolated within compartments.
+Shared libraries, which are often community developed, feature prominently
+in applications but can have bugs which compromise the rest of the
+application.
+Shared libraries can generally be trusted to not be malicious, but can
+have bugs. 
+Therefore, the compartmentalization policy can require lighter isolation
+rules for shared libraries.
+Function calls between libraries can also happen at a high frequency in
+applications, so low overhead for switching is required.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Compartmentalization Properties}
+\section{Properties}
 \label{sec:compreview:properties}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -339,14 +351,73 @@ compartments exclusive access to otherwise shared data.
 %-------------------------------
 \subsection{Performance Properties}
 %-------------------------------
+The performance of a compartmentalized program depends on the cost of
+a mechanism's checks and protections, and on the frequency at which these
+overheads are encountered.
+In this section, we will generally describe the operations required to
+support compartmentalization, explain why they are required and their
+frequency of occurence. 
+This information will allow us to compare the performance characteristics
+of compartmentalized applications across different mechanisms.
 
-What sort of actions do we expect from compartmentalization?
+First, compartmentalization requires access control to resources, particularly
+to memory and to OS resources.
+Memory is accessed during instruction fetch and for load and store instructions
+at nanosecond scale.
+Access control to memory is required for all instruction fetches, and for
+loads and stores which account for roughly $35\%$ of retired instructions
+for SPEC-int benchmarks on average~\cite{LimayeA18}.
+A modern desktop or server processor core runs at 2-4GHz clock speed, and
+retires more than 1 instruction per cycle on average, which requires
+multiple access control operations per cycle.
+A mechanism must also be able to scale with application dataset sizes, as
+modern applications use gigabytes to terabytes of memory.
+Large datasets stress near-core translation or protection caches, such as
+the translation lookaside buffer (TLB) on commercial cores.
+Mechanisms which rely on TLBs or similar structures might inherit the
+scaling limitations of these structures.
+Programs access OS resources, generally requiring a system call, at
+relatively relaxed time frames.
+While more traditional desktop workloads require system calls at 
+millisecond-scale, more high-performance server workloads including the
+virtualized network function described in 
+\autoref{sec:compreview:usecases:wary} may require system calls to access
+the network at microsecond scale.
 
-What is their frequency?
-
-How do these affect the performance of the complete program?
-
-\atri{cheap forwarding of permissions/data}
+Second, compartments need to communicate with cross-compartment calls.
+Typically, mechanisms implement cross-compartment calls as one hardware
+core switching from executing the caller compartment to the callee.
+Compartment switching is less frequent compared to access control, happening
+at sub-microsecond to millisecond timescales.
+For example, unmodified Firefox compartmentalizes at a 
+coarse granularity, putting individual tabs in separate processes.
+Unmodified Firefox is limited to coarse grained compartments due to the high
+micro-second scale cost incurred for inter-compartment calls between
+processes.
+However, we measured that a finely-compartmentalized Firefox switches between
+compartments every 750 instructions on average, 
+when compartmentalized with every library occupying a separate compartment.
+On a modern processor, 750 instructions executes in less than a microsecond.
+Cross-compartment calls must also move data as arguments for the call.
+Mechanisms might enable data movement through copying, use of shared memory
+between the caller and callee, or by transferring permission for the
+data regions holding arguments.
+Practically, the cost of compartment switching and data movement informs the 
+security-performance tradeoff, 
+with lower overhead mechanisms allowing applications to implement
+finer-grained compartmentalization while maintaining the same performance.
+High-performance software requiring 
+compartmentalization~\cite{HwangRW14,MartinsAROHBH14,RamCCR13,HondaHLR15}
+relies on unoptimal designs like pinning compartments to cores to skip the
+cost of switching compartments on a core and reliance on memory shared between
+all compartments to prevent data movement between compartments.
+Core pinning wastes core time, as each core typically does not need the same
+amount of execution. 
+When virtualized network functions are pinned to cores, cores executing stages
+with lesser computation must wait for cores executing longer stages.
+Memory shared between all stages removes some of the benefit of 
+compartmentalization, as a corrupted stage can also corrupt data being 
+processed by other stages.
 
 %-------------------------------
 \subsection{Usability Properties}
