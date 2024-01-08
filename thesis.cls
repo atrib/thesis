@@ -275,7 +275,7 @@
   \cleardoublepage%
   \chapter*{Abstract}%
   \markboth{}{Abstract}%
-  \addcontentsline{toc}{chapter}{Abstract (English/Français)}%
+  \addcontentsline{toc}{chapter}{Abstract}%
   \@abstract%
 
   \begin{otherlanguage}{french}%
@@ -290,8 +290,12 @@
   \cleardoublepage%
   \pdfbookmark{\contentsname}{toc}%
   \tableofcontents%
+
   \listoffigures
+  \addcontentsline{toc}{chapter}{List of Figures}
+
   \listoftables
+  \addcontentsline{toc}{chapter}{List of Tables}
   \setlength{\parskip}{1em}%
 }
 
