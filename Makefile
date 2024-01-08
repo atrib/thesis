@@ -1,11 +1,11 @@
 DOC := thesis
 
-TEX = $(wildcard *.sty *.cls)
-# INC = $(wildcard papers/*.tex)
+TEMPLATE = $(wildcard *.sty *.cls)
 # FIG = $(call rglob,media,*)
 MEDIA = data/seccells/32ksim/mycached_full.pdf data/seccells/network_1ktlb_sim/nfv_full.pdf
-DEP = $(TEX) $(FIG) $(INC) $(CHAPTERS) $(MEDIA)
-CHAPTERS = $(wildcard chapters/*.tex) 
+MAINTEX = $(wildcard ./*.tex)
+CHAPTERS = $(wildcard chapters/*.tex)
+DEP = $(TEMPLATE) $(FIG) $(MEDIA) $(MAINTEX) $(CHAPTERS) 
 
 # override define rglob
 # $(foreach d,$(wildcard $(1:=/*)),\
