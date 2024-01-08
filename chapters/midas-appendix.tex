@@ -19,14 +19,14 @@ and how to run it, and what the expected results are.
 % select appropriate reviewers. It will also help readers understand what was
 % evaluated and how.}
 
-The primary artifact for this paper is the code implementing \midas{} on the
+The primary artifact for this project is the code implementing \midas{} on the
 Linux kernel (v5.11), available on GitHub.
 We also provide a disk image suitable for recreating experiments from this
-paper, containing the kernel as both source code and as compiled binaries.
+project, containing the kernel as both source code and as compiled binaries.
 The disk image contains the CVE exploit used to test correctness in the 
-paper, all benchmarks evaluated in the paper, and scripts to run these.
+project, all benchmarks evaluated in this project, and scripts to run these.
 This image allows recreation of all emperical evidence presented in the 
-paper's evaluation.
+project's evaluation.
 Finally, we provide further information on the project website including
 a detailed description of the artifact, its contents, how to run it 
 and expected outputs.
@@ -45,7 +45,7 @@ The host machine requies around 100GiB free disk space and at least
 You should run the disk image on a real machine for performance
 tests.
 Our \midas{} prototype supports machines with 64-bit x86 processors, 
-and the results in the paper were obtained on a machine with an 
+and the results in the project were obtained on a machine with an 
 Intel i7-9700 CPU.
 Further, the real machine requires an empty 1TiB disk, and a 
 EUFI-enabled motherboard.
@@ -109,12 +109,12 @@ Detailed steps are available on the website at
 \url{https://hexhive.epfl.ch/midas/docs/ae.html}.
 You can validate the artifact by executing the following steps:
 \begin{itemize}
-  \item Check that the code modifications described in the paper correspond 
+  \item Check that the code modifications described in the project correspond 
   to the code.
   \item Compile the code to re-create the kernel binary.
   \item Run a script to check that a CVE exploit is mitigated, as claimed 
-  in the paper.
-  \item Run scripts to execute the benchmarks presented in the paper, 
+  in the project.
+  \item Run scripts to execute the benchmarks presented in the project, 
   to verify their reported performance.
 \end{itemize}
 
@@ -170,9 +170,9 @@ evaluation, and exact performance values can vary significantly.
 However, we expect the trends of performance across benchmarks to
 roughly follow the following limits.
 \begin{itemize}
-  \item Microbenchmarks see results in line with paper.
+  \item Microbenchmarks see results in line with \autoref{ch:midas}.
   \item NPB benchmarks experience 0-5\% overhead, and should follow the 
-        numbers from the paper.
+        numbers from \autoref{ch:midas}.
   \item PTS benchmarks - openssl, git, pybench, redis see an overhead <1\%.
   \item PTS benchmarks - apache sees a overhead < 10-15\%.
   \item PTS benchmarks - IPC benchmark sees overhead < 5\%.
