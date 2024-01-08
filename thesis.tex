@@ -365,16 +365,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Thesis front matter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Change epigraph length to fix Adams' quote
+\setlength\epigraphwidth{.45\textwidth}
+
 \begin{dedication}
-  \epigraph{TODO: Stuff here}{\textit{TODO: Anakin, I am your father}}
+  \epigraph{
+    \raggedleft
+    Let us think the unthinkable, \\
+    Let us do the undoable, \\
+    Let us prepare to grapple with the ineffable itself, \\
+    And see if we may not eff it after all.
+  }{\textit{Douglas Adams}}
   \begin{absolute}
     \makebox[0pt]{\parbox{\textwidth}{
       \centering
-      Let us think the unthinkable, \\
-      Let us do the undoable, \\
-      Let us prepare to grapple with the ineffable itself, \\
-      And see if we may not eff it after all. \\
-      - Douglas Adams
+      TODO: To the lack of humanity
     }}
   \end{absolute}
 \end{dedication}
@@ -401,6 +407,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
+\chapter{Introduction}
+% \epigraph{Testing can only prove the presence of idiots, not their absence. Software is written---for the most part---by idiots.}%
+%          {\textit{Aristotle}}
+% TODO Epigraph?
+
 \include{chapters/intro}
 
 
@@ -412,6 +423,7 @@
 % \epigraph{Thanks, Uros, really.}%
 %         {\textit{Me}}
 
+% Copying Midas' paper abstract
 Double-fetch bugs are a plague across all major operating system kernels. 
 These bugs occur when data is fetched twice across the user/kernel trust 
 boundary while allowing concurrent modification, violating an implicit
@@ -446,10 +458,36 @@ benchmark suites.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{SecureCells: A Secure Compartmentalized Architecture}
 \label{ch:seccells}
-\epigraph{The real cool stuff was already done.}%
-        {\textit{Me}}
+% \epigraph{The real cool stuff was already done.}%
+%         {\textit{Me}}
 
-Does anything change if I put some text here?
+% Copying securecells' paper abstract here
+Modern programs are monolithic, combining code of varied provenance without 
+isolation, all the while running on network-connected devices. 
+A vulnerability in any component may compromise code and data of all other 
+components. 
+Compartmentalization separates programs into fault domains with limited 
+policy-defined permissions, following the principle of least privilege, 
+preventing arbitrary interactions between components. 
+Unfortunately, existing compartmentalization mechanisms target weak attacker 
+models, incur high overheads, or overfit to specific use cases, precluding 
+their general adoption. 
+The need of the hour is a secure, performant, and flexible mechanism on which 
+developers can reliably implement an arsenal of compartmentalized software. 
+
+We present SecureCells, a novel architecture for intra-address space 
+compartmentalization. 
+SecureCells enforces per-Virtual Memory Area (VMA) permissions for secure and
+scalable access control, and introduces new userspace instructions for 
+secure and fast compartment switching with hardware-enforced call gates and 
+zero-copy permission transfers. 
+SecureCells enables novel software mechanisms for call stack maintenance and 
+register context isolation. 
+In microbenchmarks, SecureCells switches compartments in only 8 cycles on a 
+5-stage in-order processor, reducing the switching cost by an order of magnitude
+compared to the state-of-the-art. 
+Consequently, SecureCells helps secure high-performance software such as an 
+in-memory key-value store with negligible overhead of less than $3\%$.
 \input{chapters/seccell-core}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
