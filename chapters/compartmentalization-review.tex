@@ -4,7 +4,8 @@ compartmentalization \emph{policy}.
 A compartmentalization \emph{mechanism} is responsible for upholding the
 isolation and communication rules as described by the \emph{policy}.
 A developer has a choice between a plethora of academic and industrial 
-mechanisms proposed to support compartmentalization.
+mechanisms\footnotemark
+proposed to support compartmentalization.
 However, mechanisms differ in the threat models they are designed to protect
 against, their performance characteristics, the use cases they support, and
 their compatibility with existing or upcoming system architectures.
@@ -14,6 +15,8 @@ suitability for compartmentalization use cases.
 In this chapter, we will take a deeper dive into a wide range of 
 compartmentalization mechanisms and compare them on security and performance
 properties.
+\footnotetext{In this chapter, the term ``mechanism'' refers to a 
+compartmentalization mechanism.}
 
 %%%%% Parts of this background are already discussed in the SecureCells paper.
 %%%%% However, we need not repeat this stuff in this section.
@@ -422,12 +425,57 @@ processed by other stages.
 %-------------------------------
 \subsection{Usability Properties}
 %-------------------------------
+Compartmentalization mechanisms optimize for different objectives, and vary
+widely in design.
+Consequently, mechanisms offer different degrees of usability to application
+developers.
+Ideally, mechanisms aim to be generic and widely applicable, able to support
+a wide array of different use cases allowing varied developers to 
+benefit from compartmentalization for their applications.
+Mechanisms would also ideally allow compartmentalization with minimal developer
+effort, through compiler-based automation.
 
-\atri{Flexibility}
+Mechanisms need to be flexible, supporting different policies.
+We have discussed use cases with different trust relationships in 
+\autoref{sec:compreview:usecases}.
+Mechanisms which optimize for sandboxing, for example, might assume
+a hierarchy of trust with the sandboxing runtime being most trusted
+and sandboxes being untrusted.
+A mechanism which only allows heirarchical compartments, however,
+will not be able to support relations with mutual distrust between
+compartments.
+Flexibility also applies to inter-compartment calls, and to the requisite
+control or data flows.
+Applications might require standard call-and-return control flow,
+nested compartment calls, or asymmetric control flow without returns.
+When transferring data between compartments, mechanisms should allow
+fine-grained spatial definition of data transferred.
+Mechanisms which transfer data at fixed granularities, for example a
+4 kilobyte page, would be unoptimal.
 
-\atri{Compatibility}
+A mechanism should also integrate with existing and future software and
+hardware systems, i.e., maximize compatibility.
+Backward compatibility, for example, allows the plethora of existing systems
+to use the mechanism with less effort compared to a 
+mechanism with a clean-slate design.
+As a trade-off, a backward compatible mechanism might inherit shortcomings
+of existing mechanisms and may not be usable on newer systems.
+In contrast, a forward compatible mechanism would be designed for working
+with upcoming or future systems rather than existing ones.
 
-\atri{Automation}
+Mechanisms which can automatically compartmentalize existing applications
+benefit developers immensely.
+Compartmentalization requires principled design of the isolation policy,
+and generally requires invasive changes to port over existing monolithic
+applications.
+As complex applications scale to millions of lines of code,
+principled compartmentalization often becomes too expensive.
+Automated compartmentalization techniques generally implement weaker
+security guarantees compared to manual, principled compartmentalization,
+but greatly reduces the cost of adding compartmentalization.
+In many cases, automated compartmentalization may be the only 
+cost-feasible solution, and the weaker isolation provided is still
+safer than monolithic applications.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Introducing the surveyed mechanisms
@@ -437,9 +485,14 @@ processed by other stages.
 
 To understand and compare mechanisms, we first need to understand each 
 mechanism, and understand their model for compartmentalization.
-We want to understand what a program looks like under this model.
-What are the relevant abstractions and what their semantics are.
-
+In this section, we will describe relevant compartmentalization mechanisms
+and summarize their key features.
+We will also try to explore their abstractions and isolation model,
+and illustrate what compartmentalized programs look like under that model.
+Finally, we will try to illustrate how a browser 
+(described in \autoref{sec:compreview:usecases:hierarchical}) is 
+compartmentalized with each mechanism to protect the JIT engine from
+untrusted web application code.
 
 %-------------------------------
 \subsection{Process-based compartmentalization}
