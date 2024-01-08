@@ -328,38 +328,38 @@
 
 %-------------------------------------------------------------------------------
 
-\AtBeginEnvironment{appendices}{
-  % Shift bookmarks of all appendices under the "Appendices" bookmark
-  % FIXME not the cleanest ever, and would probably break if placed elsewhere
-  \bookmarksetupnext{rellevel=-1,keeplevel}%
-}
-\AfterEndEnvironment{appendices}{
-  \bookmarksetup{startatroot}%
-}
-% We use xapptocmd instead of AtBeginEnvironment;
-% See https://tex.stackexchange.com/a/540667
-\xapptocmd{\appendices}{%
-  \makeatletter%
-  \addtocontents{toc}{%
-    \bgroup
-    % Shift appendices in ToC one level inward
-    % \let\protect\l@chapter\protect\l@section
-    % \let\protect\l@section\protect\l@subsection
-    % \let\protect\l@subsection\protect\l@subsubsection
+% \AtBeginEnvironment{appendices}{
+%   % Shift bookmarks of all appendices under the "Appendices" bookmark
+%   % FIXME not the cleanest ever, and would probably break if placed elsewhere
+%   \bookmarksetupnext{rellevel=-1,keeplevel}%
+% }
+% \AfterEndEnvironment{appendices}{
+%   \bookmarksetup{startatroot}%
+% }
+% % We use xapptocmd instead of AtBeginEnvironment;
+% % See https://tex.stackexchange.com/a/540667
+% \xapptocmd{\appendices}{%
+%   \makeatletter%
+%   \addtocontents{toc}{%
+%     \bgroup
+%     % Shift appendices in ToC one level inward
+%     % \let\protect\l@chapter\protect\l@section
+%     % \let\protect\l@section\protect\l@subsection
+%     % \let\protect\l@subsection\protect\l@subsubsection
 
-    % Only show "Appendices" in the ToC; exclude listing the chapters, etc...
-    \protect\newcounter{oldtocdepth}
-    \protect\setcounter{oldtocdepth}{\protect\value{tocdepth}}
-    \protect\setcounter{tocdepth}{-1}
-  }%
-  \makeatother%
-}{}{}
-\xpretocmd{\endappendices}{%
-  \addtocontents{toc}{%
-    \protect\setcounter{tocdepth}{\protect\value{oldtocdepth}}
-    \egroup
-  }%
-}{}{}
+%     % Only show "Appendices" in the ToC; exclude listing the chapters, etc...
+%     \protect\newcounter{oldtocdepth}
+%     \protect\setcounter{oldtocdepth}{\protect\value{tocdepth}}
+%     \protect\setcounter{tocdepth}{-1}
+%   }%
+%   \makeatother%
+% }{}{}
+% \xpretocmd{\endappendices}{%
+%   \addtocontents{toc}{%
+%     \protect\setcounter{tocdepth}{\protect\value{oldtocdepth}}
+%     \egroup
+%   }%
+% }{}{}
 
 %-------------------------------------------------------------------------------
 
