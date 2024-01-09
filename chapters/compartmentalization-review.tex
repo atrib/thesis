@@ -994,7 +994,7 @@ required for compartmentalization as discussed in
 % - Return addresses/link stacks
 
 \begin{table}
-      \begin{tabular}{l|l|l | l | l | l}
+      \begin{tabular}{l | l | l | l | l | l}
             Mechanism & Threat Model &  Access Control     & Syscall Filtering & Entry Point & Threading \\ \midrule
             Process   & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
             XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked  & S/M@      \\
@@ -1026,7 +1026,7 @@ required for compartmentalization as discussed in
 
 \begin{table}
       \ContinuedFloat
-      \begin{tabular}{l|c|ccccc}
+      \begin{tabular}{l | l | l | lll}
             Mechanism & Call control & Permission Tx.            \\\hline
             Process   & Filtering    & Bilateral                \\
             XPC       & Hardware     & Relay segment            \\
@@ -1036,7 +1036,7 @@ required for compartmentalization as discussed in
             MPK       & None         & None                     \\
             ERIM      & None         & None                     \\
             Donky     & Filtering    & None                     \\
-            CHERI     & Hardware     & Capability, Revocation                     \\
+            CHERI     & Hardware     & Capability, Revocation   \\
             \seccells & SW-checked   & Bilateral                \\
       \end{tabular}
       \caption[A comparison of comparmentalization mechanisms (summarized)]
@@ -1409,70 +1409,71 @@ compartments without copying.
 Donky also lacks calls for dynamically moving permissions to regions
 between compartments.
 
+%-------------------------------
+\subsection{Access Control Performance}
+%-------------------------------
 
 
 
 
 
+% \subsection{Flexibility/Generic support}
+% \atri{A lot of stuff here seems wishy-washy. Not convincing.}
 
+% Flexibility in a mechanism will allow it to be used with a variety of
+% use cases/applications.
 
-\subsection{Flexibility/Generic support}
-\atri{A lot of stuff here seems wishy-washy. Not convincing.}
+% For example, can a mechanism support the large degree of code sharing
+% within modern programs?
+% Can a mechanism support a non-hierarchical trust relation between
+% compartments?
 
-Flexibility in a mechanism will allow it to be used with a variety of
-use cases/applications.
+% Mechanisms which specialize for sandboxing will not be able to
+% support mutually distrusting compartments without intervention via a
+% trusted runtime compartment.
+% \atri{give examples} (IMIX, ERIM, MemSentry)
 
-For example, can a mechanism support the large degree of code sharing
-within modern programs?
-Can a mechanism support a non-hierarchical trust relation between
-compartments?
+% CODOMs identifies a compartment by its program counter, i.e. code has a
+% 1:1 link with compartment.
+% For example, multiple JavaScript sandboxes will not be able to share
+% a library for, say, cryptographic operations.
+% In such a case, a common design might be to isolate different
+% cryptographic contexts corresponding to different compartments, but
+% share the library code which operates on those contexts.
 
-Mechanisms which specialize for sandboxing will not be able to
-support mutually distrusting compartments without intervention via a
-trusted runtime compartment.
-\atri{give examples} (IMIX, ERIM, MemSentry)
+% Mechanisms which can configure which protections are used can offer a
+% security-performance trade off where justified.
+% Using Mach's migrating thread model might be good.
 
-CODOMs identifies a compartment by its program counter, i.e. code has a
-1:1 link with compartment.
-For example, multiple JavaScript sandboxes will not be able to share
-a library for, say, cryptographic operations.
-In such a case, a common design might be to isolate different
-cryptographic contexts corresponding to different compartments, but
-share the library code which operates on those contexts.
+% While Linux' process model semantics are nigh impossible to change, due to
+% a large focus on not breaking userspace, many operations are implemented
+% in software and allow change.
+% Cloud providers, or other users, can modify Linux, and make changes which
+% improve performance. 
+% Light-weight contexts follows this principle (based on FreeBSD, not Linux).
+% Other uses include fast IPC models. 
+% Only the system call entry and return, and use of privileged instructions
+% for changing address spaces, rely on hardware and cannot be elided.
 
-Mechanisms which can configure which protections are used can offer a
-security-performance trade off where justified.
-Using Mach's migrating thread model might be good.
+% CHERI implements its own supervisor, relying on a few key privileged
+% operations to seal and unseal encapsulated capabilities.
+% Remaining stuff may be customizable?
 
-While Linux' process model semantics are nigh impossible to change, due to
-a large focus on not breaking userspace, many operations are implemented
-in software and allow change.
-Cloud providers, or other users, can modify Linux, and make changes which
-improve performance. 
-Light-weight contexts follows this principle (based on FreeBSD, not Linux).
-Other uses include fast IPC models. 
-Only the system call entry and return, and use of privileged instructions
-for changing address spaces, rely on hardware and cannot be elided.
+% XPC would support existing applications using RPC. 
+% However, nothing can be added or removed, since the entire abstraction
+% is implemented in hardware and centred around today's (g)RPC interface.
+% XPC limits the sharing segment to a single instance.
 
-CHERI implements its own supervisor, relying on a few key privileged
-operations to seal and unseal encapsulated capabilities.
-Remaining stuff may be customizable?
+% LOTRx86 and HODOR rely on specific implementations of Intel's
+% extensions to x86. 
+% These mechanisms cannot be later run on other architectures, like
+% ARM or RISC-V.
 
-XPC would support existing applications using RPC. 
-However, nothing can be added or removed, since the entire abstraction
-is implemented in hardware and centred around today's (g)RPC interface.
-XPC limits the sharing segment to a single instance.
+% SecureCells offers a little bit of flexibility with context switching.
+% However, the PTable is quite open.
+% SecureCells does not depend on architecture-specific features.
+% However, SecureCells mixes protection and translation near the core,
+% and requires segment-like allocation of physical memory for virtual
+% memory ranges.
 
-LOTRx86 and HODOR rely on specific implementations of Intel's
-extensions to x86. 
-These mechanisms cannot be later run on other architectures, like
-ARM or RISC-V.
-
-SecureCells offers a little bit of flexibility with context switching.
-However, the PTable is quite open.
-SecureCells does not depend on architecture-specific features.
-However, SecureCells mixes protection and translation near the core,
-and requires segment-like allocation of physical memory for virtual
-memory ranges.
-
-% \subsection{Backward compatibility}
+% % \subsection{Backward compatibility}
