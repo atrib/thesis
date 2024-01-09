@@ -480,7 +480,7 @@ safer than monolithic applications.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Introducing the surveyed mechanisms
 \section{Compartmentalization Mechanisms}
-\label{sec:comp}
+\label{sec:compreview:mechanisms}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To understand and compare mechanisms, we first need to understand each 
@@ -501,11 +501,11 @@ untrusted web application code.
 The traditional abstraction of isolation is based on processes.
 We will describe process-based compartmentalization in UNIX-like OSs
 (particularly Linux), 
-but the concepts generalize to other OS kernels.
+though the concepts generalize to other OS kernels.
 
 % Context about how processes emerged
-Initially, processes were introduced to isolate programs running on multi-user
-processes.
+The process abstraction was introduced to isolate programs running on 
+multi-user machines.
 Each process has an isolated memory space (architecturally-defined virtual memory)
 and individual OS resources, such as file descriptors, I/O handles or capabilities.
 The OS kernel time-multiplexes processes onto one or more processing cores.
@@ -532,7 +532,8 @@ Shared memory must be set up with explicit system calls, and are subject to
 syscall filtering.
 The generated code region can be shared between the JIT and sandboxes, along
 with code sections for shared libraries.
-Processes can also communicate using IPC system calls (like sendmsg/recvmsg).
+Processes can also communicate using inter-process communication (IPC) system 
+calls (like sendmsg/recvmsg).
 A remote (cross-process) procedure call typically consists of serialization of
 arguments into a buffer, sending the buffer across using a system call,
 and then deserialization of the arguments on the receiving side followed by
@@ -541,26 +542,34 @@ As we will show later, the cost of inter-process switching contributes a great
 deal to the expensive nature of compartmentalization with processes.
 
 % Explain how processes compartmentalize a browser
-A browser isolated with processes has been implemented in Project Chakra.
-Per-sandbox shared memory between the JIT and each sandbox holds generated
-code. 
-This region is mapped rw for the JIT and rx for the sandbox.
-Further communication happens through kernel-based message passing.
-
+A browser can be compartmentalized using processes by isolating sensitive
+components in separate compartments each of which runs in a separate process.
+For example, the browser JIT Engine can occupy one process and each sandbox
+can be assigned a separate process.
+Microsoft's ChakraCore JavaScript engine~\cite{ChakraCore}, for example, 
+used such an architecture to isolate itself from untrusted sandboxes.
+A shared memory region between the Engine and each sandbox holds the sandbox's
+code.
+This region is mapped as executable in the sandbox, and writable in the Engine.
+The Engine and sandboxes can communicate using the kernel's inter-process 
+message passing system calls.
+The Chromium web browser further isolated parts of the Engine interacting with
+the local system from the other parts interacting with untrusted 
+code~\cite{barth2008security}.
 
 %-------------------------------
-\subsection{XPC}
+\subsection{XPC: Architectural support for secure and efficient cross process call}
 %-------------------------------
 
 % Context and introduction of XPC
-XPC shares much of the abstractions from the process-based isolation, but
-attempts to accelerate RPC in particular while maintaining much of the same
-interface.
+XPC~\cite{DuHXZC19XPC} shares much of the abstractions from the process-based
+isolation, but attempts to accelerate inter-process calls, in particular, 
+while maintaining the same interface.
 Backward compatibility is a major design directive.
-Particularly, XPC manages much of the IPC functionality implemented by the
-operating system through hardware state machines aiming to reduce the cost
-compared to software, and eliminating software dispatch and scheduling 
-overheads in the common case.
+Particularly, XPC replaces the system calls used for IPC with hardware 
+instructions supported by state machines implementing the same functionality.
+XPC aims to reduce the cost of IPC compared to kernel software, 
+also eliminating software dispatch and scheduling overheads in the common case.
 XPC also focusses on cheap zero-copy data movement between processes,
 dedicating a single relay segment for the purpose.
 
@@ -573,7 +582,7 @@ resources and capabilities.
 The XPC hardware engine tracks the page-table pointer and capability pointer
 for each process of a compartmentalized program in an \emph{x-entry} held in
 an in-memory \emph{X-Entry Table}.
-The OS sets up this table during setup.
+The OS sets up the X-Entry Table during a program launch.
 While a process is running, the XPC engine ensures that the hardware uses the
 correct page table pointer and capabilities.
 % Communication part
@@ -588,7 +597,7 @@ corresponding system registers (including the return address).
 XPC eliminates the OS kernel from inter-compartment calls, relying on the 
 hardware to implement traditional kernel functionality.
 Additionally, data passed between processes can use the relay segment, which
-is one dedicated segment mapping memory separately from the page tables.
+is a single dedicated segment mapping memory separately from the page tables.
 
 % Explain how XPC compartmentalize a browser
 A browser compartmentalized using XPC looks essentially the same as
@@ -598,25 +607,25 @@ The major change is that IPC system calls are replaced by
 \Code{xcall}/\Code{xret} pairs.
 
 %-------------------------------
-\subsection{Light-weight Contexts (lwC)}
+\subsection{Light-weight contexts: An OS abstraction for safety and performance}
 %-------------------------------
-
 % Context and introduction of lwc
-This paper introduces a new eponymous OS abstraction,
-Light-weight contexts (lwCs),
+This paper~\cite{LittonVE0BD16} introduces a new eponymous OS abstraction,
+Light-weight contexts ($lwC$s),
 which are independent units of isolated execution.
 Contexts, like processes, have separate memory address spaces, OS resources,
 and capabilities.
-However, contexts remain part of a single process, resembling kernel threads.
+However, contexts remain part of a single process and share metadata in the 
+kernel, resembling kernel threads.
 Contexts offer the primary advantage that switching contexts within a process is 
 faster than switching processes, or even kernel threads within the same process.
-lwC achieves faster switching between contexts by eliminating unnecessary kernel
+$lwC$ achieves faster switching between contexts by eliminating unnecessary kernel
 processing due to the kernel scheduler and resource accounting.
 
 % Explain how lwc allow compartmentalization
 % Isolation part
-Contexts diverge from the point of calling \Code{lwCreate} which acts similarly
-to the \Code{clone} system call, where each resulting context has an 
+Contexts diverge from the point of calling \Code{lwCreate} which acts like
+the \Code{clone} system call, where each resulting context has an 
 independent memory address space and OS resource handles.
 Like processes, OS resource handles can persist across a \Code{lwCreate}, or be
 invalidated in the child.
@@ -633,18 +642,18 @@ calls with the faster inter-lwC switches.
 A browser compartmentalized using lwC looks essentially the same as
 using UNIX processes. 
 The JIT and each sandbox occupy separate contexts, instead of processes.
-The major change is that IPC system calls are replaced by \Code{lwSwitch}
-system calls.
+With $lwC$, message passing system calls will be replaced by
+\Code{lwSwitch} system calls.
 
 %-------------------------------
 \subsection{Mondrian Memory Protection (MMP)}
 %-------------------------------
 % Context and introduction of MMP
-MMP tackles the challenge of flexible, fine-grained intra-address space 
-isolation.
+MMP~\cite{WitchelCA02MMP} tackles the challenge of flexible, 
+fine-grained intra-address space isolation.
 Intra-address space compartmentalization differs from previous mechanisms,
 all of which have separate memory address spaces for each compartment.
-In contrast, compartments in MMP and the following mechanisms all share the
+In contrast, compartments in MMP (and the following mechanisms) all share the
 same address space.
 Isolation between compartments relies on different 
 memory views, i.e., different permissions to the same address for 
@@ -689,8 +698,8 @@ are discussed.
 In MMP, the browser fits in a single address space with separate protection 
 domains assigned to the JIT compiler, and for each of the sandboxes.
 For each sandbox, the generated code can be assigned a separate segment
-which has separate permissions for the JIT domain (rw), and for the sandbox
-domain (rx).
+which has different permissions for the JIT Engine domain (writable), 
+and for the sandbox domain (executable).
 Further, transitions between the sandboxes and the JIT engine use protected
 calls with call gates which ensure proper checks on these transitions.
 
@@ -698,7 +707,8 @@ calls with call gates which ensure proper checks on these transitions.
 \subsection{Code-centric Memory Domains (CODOMs)}
 %-------------------------------
 % Context and introduction of CODOM
-CODOMs enabled fine-grained intra-address space compartmentalization
+CODOMs~\cite{VilanovaBNEV14} enabled fine-grained intra-address space 
+compartmentalization
 with a novel architecture where domains are identified by the executing
 instruction pointer (hence the "code-centric" name), and with permissions
 to data regions determined by the executing domain. 
@@ -729,7 +739,7 @@ JIT engine and for each sandbox.
 Each domain's pages must be correctly tagged in the page table to allow
 the domain to be identified by the hardware.
 Each sandbox must own the pages holding their code regions, and have
-'rx' permissions in the page tables. 
+executable permissions in the page tables. 
 The JIT engine can generate new code using additional permissions specified
 in the APLs, where the engine should be granted write permission to
 each sandbox's domain pages.
@@ -750,8 +760,8 @@ and uses permission bits in the per-core PKRU register to control permissions
 to each page color.
 PKRU permissions can be arbitrarily changed by userspace, using a special
 instruction (\Code{wrpkru}).
-A software library (libmpk), can be used to virtualize page colors, allowing
-the use of more than 16 page colors.
+A software library (libmpk~\cite{ParkLXMK19}), can be used to virtualize 
+page colors, allowing for more than 16 page colors.
 
 % Explain how MPK allow compartmentalization
 % Isolation part
@@ -767,25 +777,26 @@ function calls to implement cross-compartment procedure calls.
 Data can be transferred between compartments using shared page colors.
 Changing page colors requires page table entry modifications, implying a
 system call, and cannot be done as fast as PKRU writes.
-MPK lacks call gates, and software must take care to manage control flow
-integrity.
+MPK lacks call gates, and software must ensure control flow integrity
+between compartments.
 
 % Explain how MPK compartmentalize a browser
 A browser can be compartmentalized with MPK, with one page color for the JIT
 engine and different colors for each of the sandbox regions.
-The PTEs for all generated code regions must have 'rwx' permissions, 
-since PTE permissions are also enforced.
-During JIT execution, the PKRU register holds 'rw' permissions for the
+The PTEs for all generated code regions must have writable and executable
+permissions, since PTE permissions are also enforced.
+During JIT execution, the PKRU register holds writable permissions for the
 sandbox code regions.
-During sandbox execution, the PKRU register holds 'rx' permissions for that
-sandbox's code region, and no permissions for any non-sandbox regions.
+During sandbox execution, the PKRU register holds executable permissions for 
+that sandbox's code region, and no permissions for any non-sandbox regions.
 
 %-------------------------------
-\subsection{ERIM}
+\subsection{ERIM: Secure, efficient in-process isolation with protection keys}
 %-------------------------------
 % Context and introduction of ERIM
-ERIM builds on top of Intel MPK to implement strict call gates for
-compartment switching, mitigating MPK's main shortcoming.
+ERIM~\cite{ERIMOberwagner19} builds on top of Intel MPK to implement 
+strict call gates for compartment switching, mitigating a major
+shortcoming with Intel's MPK technology.
 Essentially, ERIM limits the existence of instructions which can
 modify the PKRU value (\Code{wrpkru} and \Code{xrstor}) to within
 software call gates.
@@ -815,11 +826,12 @@ Data can be passed through pointers directly, just as with MPK, though
 compartment transitions use ERIM's aforementioned call gates.
 
 %-------------------------------
-\subsection{Donky}
+\subsection{Donky: Domain keys - Efficient in-process isolation for RISC-V and x86}
 %-------------------------------
 % Context and introduction of Donky
-Donky aims to retain MPK's primary performance advantage, by allowing
-changing memory views in userspace, while mitigating its main weakness, 
+Donky~\cite{SchrammelWSS0MG20Donky} aims to retain MPK's primary 
+performance advantage, by allowing changing memory views in userspace, 
+while mitigating its main weakness, 
 where an attacker with arbitrary code execution can immediately bypass
 MPK's protections.
 Donky replaces Intel's PKRU register register with a new DKRU register
@@ -848,22 +860,27 @@ sanitizes register values before dropping into the callee.
 
 % Explain how Donky compartmentalize a browser
 A browser compartmentalized with Donky uses separate Donky domains for the 
-JIT engine and for each sandbox, created by calls to the Donky monitor.
+JIT Engine and for each sandbox, created by calls to the Donky monitor.
 The browser can also install \Code{dcall}s between the engine and each
 sandbox, but prohibit \Code{dcall}s between sandboxed domains directly.
 Each transition between domains using a \Code{dcall} is interposed by the
 monitor.
+Inter-compartment \Code{dcall}s ensure that compartments are entered at
+valid entry points.
 Arguments must be passed through either registers, or through shared memory
 between domains.
 
 %-------------------------------
-\subsection{CHERI}
+\subsection{CHERI: A hybrid capability-system architecture for scalable 
+            software compartmentalization}
 %-------------------------------
 % Context and introduction of CHERI
-CHERI introduces architectural support for memory capabilities.
-Architecturally, pointers are replaced capabilities, which track 
+CHERI~\cite{WoodruffWCMADLNNR14} introduces architectural support for 
+memory capabilities.
+Architecturally, pointers are replaced by capabilities, which track 
 spatial bounds of memory accessible using that capability. 
-CHERI compartmentalization repurposes CHERI capabilities, with a customized
+CHERI compartmentalization~\cite{WatsonWNMACDDGL15} repurposes 
+CHERI capabilities, with a customized CheriBSD
 kernel to provide intra address-space compartmentalization.
 CHERI provides compartmentalization based on the object-capability model, 
 where each compartment is represented as an object encapsulating capabilities
@@ -899,26 +916,30 @@ use any capabilities stored in this argument memory region to further access oth
 regions of memory.
 CHERI compartmentalization, though, lacks a mechanism for revocation,
 instead suggesting the use of garbage collectors for eventual revocation.
-A key concern for developers will be regarding "leaked capabilities" passed during
-inter-compartment calls.
+A key concern for developers using CHERI is the possibility of capabilities
+being leaked during inter-compartment calls.
 
 % Explain how CHERI compartmentalize a browser
-With CHERI, each of the browser's compartments must be allocated a separate
+With CHERI, each of a browser's compartments must be allocated a separate
 object encapsulating that compartment's code and data.
+The JIT Engine would be an object, and each sandbox will be implemented as
+a separate object.
 Both the JIT engine and sandboxes must each hold capabilities to the
-sandbox's code region. 
+sandbox's code region.
 The JIT engine can use its own capability to a sandbox's code region,
-permitting 'rw' operations, to generate new code for the sandbox.
-The sandbox's own capability for this region must only allow 'rx' operations.
+permitting write operations to generate new code for the sandbox.
+The sandbox's own capability for this region must only allow executable 
+operations.
 Finally, the JIT engine can pass temporary capabilities to sandboxes
 when they are required to process certain data, including new data packets,
 with zero-copy.
 
 %-------------------------------
-\subsection{SecureCells}
+\subsection{SecureCells: A Secure Compartmentalized Architecture}
 %-------------------------------
 % Context and introduction of SecureCells
-SecureCells introduces a compartmentalization mechanism based on hardware
+SecureCells~\cite{BhattacharyyaHLGSFP23} introduces a compartmentalization 
+mechanism based on hardware
 access control to variable-sized regions of memory, hardware tracked
 compartment identifiers, a unified permissions table for all compartments,
 and unprivileged instructions for securely accelerating common operations.
@@ -950,14 +971,21 @@ A browser compartmentalized with SecureCells will require separate
 \secdiv{}s for each sandbox and for the JIT engine.
 The permissions table is set up with per-sandbox private regions, to which
 only each sandbox and the JIT engine have permission.
-The permissions can allow the JIT engine 'rw' permissions and a sandbox
-'rx' permissions to that sandbox's code region.
+The permissions can allow the JIT engine write access and a sandbox
+execute access to that sandbox's code region.
 The JIT engine can use \Code{SDSwitch} to enter and exit sandboxes.
+Compartments must use the \Code{SDEntry} instruction to mark valid entry points
+leading to call gates to switch context and check inter-compartment call
+arguments.
+If arguments are isolated within a memory region, compartments with 
+\seccells can also move these arguments between compartments without copying
+by transferring permissions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Introducing the classification metrics
+\section{Comparing Compartmentalization Mechanisms}
+\label{sec:compreview:comparison}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Points of Classification/metrics}
 
 \subsection{Threat Model}
 Hierarchy?
