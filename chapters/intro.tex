@@ -237,9 +237,9 @@ scheduling slots to finer grained module or library-level isolation, which
 demands sub-microsecond operations (for example, compartment switching).
 An userspace process needs to be further divided into isolated compartments
 which can communicate along well-defined APIs.
-Software OS mechanisms are expensive --- even IPC-optimized supervisors
-on commodity hardware achieve millisecond-scale compartment switches at
-best.
+Software OS mechanisms are expensive --- even supervisors optimized for
+inter-process communication (IPC) on commodity hardware achieve 
+millisecond-scale compartment switches at best.
 We notice that the traditional trusted-computing base includes the hardware
 alongside the supervisor.
 Hence, we can securely delegate some operations (access control, inter-compartment

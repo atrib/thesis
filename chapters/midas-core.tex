@@ -1548,7 +1548,8 @@ A sole benchmark, OpenSSL, is included to represent single-threaded,
 compute-bound workloads for which kernel performance is less relevant.
 The benchmarks are also varied, ranging from single-threaded (Pybench) to
 multi-threaded, multi-process workloads (Apache).
-At the extreme, we have an IPC benchmark transferring tiny, 128-byte
+At the extreme, we have an inter-process communication (IPC) benchmark 
+transferring tiny, 128-byte
 buffers between processes which spends all of its time in syscalls
 and whose performance is entirely dependent on kernel IPC performance.
 
