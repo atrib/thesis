@@ -94,8 +94,8 @@ by Schrammel~et.~al.~\cite{schrammel2022jenny}).
 \atri{systems where the kernel cannot identify the caller will fail 
       (does donky prevent OS confused deputy, or allow OS to identify caller?)}
 \atri{Systems with hierarchical trust, where superset relation is needed will fail}
-\atri{CODOM's where APL grants full permission for a domain's regions will fail}
-\atri{Code = Domain, like CODOM, will bar cross-compartment code sharing}
+\atri{CODOMs' where APL grants full permission for a domain's regions will fail}
+\atri{Code = Domain, like CODOMs, will bar cross-compartment code sharing}
 
 Adding to the example from \autoref{sec:seccells:reqs}, consider that the
 Engine is sandboxing more than one WebApp from different sources.
@@ -142,7 +142,7 @@ In a generalized attack, the malicious register may be any register, not
 only the stack pointer.
 \atri{CHERI can fail the malicious rsp attack/malicious pointer register attack}.
 \atri{Systems requiring hierarchical trust will fail.}
-\atri{CODOM's where APL grants full permission for a domain's regions will fail}
+\atri{CODOMs' where APL grants full permission for a domain's regions will fail}
 
 In the case of mutual distrust, compartments must use static threading 
 and maintain their own context state.
@@ -326,7 +326,6 @@ Additional properties are desirable when passing
 permissions between compartments - revocation and shrinking permissions.
 A compartment should be able to selectively transfer permissions for a 
 some, not all, of its memory regions.
-\atri{CODOMs fails this, however obvious this may be}
 A common usage pattern is synchronous permission passing, where a caller
 compartment intends to transfer permission to arguments to the callee for the
 duration of the callee's execution as a form of temporal least privilege.
@@ -335,7 +334,6 @@ permissions once the callee returns.
 Since the caller may not trust the callee to surrender permissions correctly, 
 mechanisms can support revocation to allow the caller to revoke the previously
 granted permissions when the callee returns.
-\atri{SecureCells lacks revocation in general}
 During nested compartment calls, the callee for the first call might want to pass
 permission to a subset of its arguments to the callee for the second call.
 We illustrate this situation in \autoref{fig:compreview:permshrink}.
@@ -706,7 +704,7 @@ calls with call gates which ensure proper checks on these transitions.
 %-------------------------------
 \subsection{Code-centric Memory Domains (CODOMs)}
 %-------------------------------
-% Context and introduction of CODOM
+% Context and introduction of CODOMs
 CODOMs~\cite{VilanovaBNEV14} enabled fine-grained intra-address space 
 compartmentalization
 with a novel architecture where domains are identified by the executing
@@ -717,9 +715,9 @@ page.
 Executing an instruction from a page tagged with a domain ID equates to
 executing as that domain.
 
-% Explain how CODOM allow compartmentalization
+% Explain how CODOMs allow compartmentalization
 % Isolation part
-Domains in CODOM each have permission to specific pages of memory: 
+Domains in CODOMs each have permission to specific pages of memory: 
 those tagged with that domain's tag in the corresponding page-table entry.
 A domain cannot access data belonging to other domains, except if
 explicitly allowed during access protection lists (APLs).
@@ -733,8 +731,8 @@ While APLs allow domains to permanently share data with other domains,
 CODOMs also proposes the use of capabilities to temporarily share
 permissions to data during cross-compartment calls.
 
-% Explain how CODOM compartmentalize a browser
-Under CODOM, a browser must have separate pages corresponding to the
+% Explain how CODOMs compartmentalize a browser
+Under CODOMs, a browser must have separate pages corresponding to the
 JIT engine and for each sandbox. 
 Each domain's pages must be correctly tagged in the page table to allow
 the domain to be identified by the hardware.
@@ -986,201 +984,437 @@ by transferring permissions.
 \section{Comparing Compartmentalization Mechanisms}
 \label{sec:compreview:comparison}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this section, we will compare the mechanisms presented in 
+\autoref{sec:compreview:mechanisms} on how well they provide the properties
+required for compartmentalization as discussed in 
+\autoref{sec:compreview:properties}.
+\autoref{sec:compreview:summarytab} summarizes this comparison.
 
+% Other properties to be added
+% - Return addresses/link stacks
+
+\begin{table}
+      \begin{tabular}{l|l|l | l | l | l}
+            Mechanism & Threat Model &  Access Control     & Syscall Filtering & Entry Point & Threading \\ \midrule
+            Process   & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
+            XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked  & S/M@      \\
+            $lwC$     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
+            MMP       & ??           &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
+            CODOMs     & A            &  Data + Instruction & HW-tracked        & HW-tracked+ & S/M@      \\
+            MPK       & A            &  Data               & None              & None        & M         \\
+            ERIM      & A + B        &  Data               & None*             & SW-enforced & S/M@      \\
+            Donky     & A + B + C    &  Data               & Inbuilt           & Lib-tracked & S         \\
+            CHERI     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
+            \seccells & A + B + C    &  Data + Instruction & HW-tracked        & HW-checked  & S/M       \\ 
+            \bottomrule
+      \end{tabular}
+      \caption[A comparison of comparmentalization mechanisms (summarized)]
+            {
+            A comparison of comparmentalization mechanisms (summarized).
+            The threat model column uses threat definitions (A/B/C) from 
+            \autoref{sec:compreview:comparison:model}.
+            The threading model is defined by S = Static, and M = Migrating.
+
+            TODO: Move to three part table for qualifiers like stars.
+            *ERIM has some support for filtering
+            +CODOMs' entry point restrictions can be weak
+            @limited support for static threading.
+            }
+      \label{tab:compreview:summarytab}
+\end{table}
+
+
+\begin{table}
+      \ContinuedFloat
+      \begin{tabular}{l|c|ccccc}
+            Mechanism & Call control & Permission Tx.            \\\hline
+            Process   & Filtering    & Bilateral                \\
+            XPC       & Hardware     & Relay segment            \\
+            $lwC$     & Filtering    & Static, controlled       \\
+            MMP       & Filtering    & None                     \\
+            CODOMs    & Hardware     & Static, limited          \\
+            MPK       & None         & None                     \\
+            ERIM      & None         & None                     \\
+            Donky     & Filtering    & None                     \\
+            CHERI     & Hardware     & Capability, Revocation                     \\
+            \seccells & SW-checked   & Bilateral                \\
+      \end{tabular}
+      \caption[A comparison of comparmentalization mechanisms (summarized)]
+      {
+      (cont.) A comparison of comparmentalization mechanisms (summarized).
+      }
+      \label{tab:compreview:summarytab}
+\end{table}
+
+%-------------------------------
 \subsection{Threat Model}
-Hierarchy?
-Single trusted?
-OS trusted?
-Code injection allowed?
+\label{sec:compreview:comparison:model}
+%-------------------------------
+All of the mechanisms discussed in this section provide varying levels of 
+protection for a compartmentalized application when 
+one or more compartments is compromised.
+In each mechanism, the underlying OS kernel is part of the trusted computing
+base (TCB) and is considered to be correct.
+Essentially, the kernel must be designed to support userspace 
+compartmentalization, and must not contain system calls or bugs which can
+be used to circumvent the restrictions imposed by a mechanism.
 
+The mechanisms being compared are designed to protect against different
+threat models, with an attacker possibly being able to access three
+main attack vectors.
+\begin{itemize}
+      \item \textbf{Threat A}:
+            A compromised compartment may contain memory corruption bugs 
+            allowing an attacker to attempt to memory regions to which the 
+            compartment has no access.
+            In this threat model, we assume that the attacker can craft and
+            attempt to dereference arbitrary pointers.
+      \item \textbf{Threat B}:
+            An attacker might control a corrupted compartment with a 
+            control-flow hijack.
+            In this threat model, we assume that the attacker can use 
+            call/return instructions to try to hijack control flow. 
+            With return-oriented programming~\cite{Shacham07,vander17} attacks,
+            an attacker can leverage hijacked control flow to also dereference
+            arbitrary pointers.
+      \item \textbf{Threat C}:
+            Bugs in a compromised compartment might allow an attacker to modify
+            its code, leading to arbitrary code execution.
+            In this attack model, we assume that the attacker can inject and 
+            execute arbitrary code sequences within a compartment, including 
+            possibly privileged instructions.
+\end{itemize}
+
+In \autoref{tab:compreview:summarytab}, the ``Threat Model'' column summarizes
+the threat models mitigated by each mechanism.
+All of the mechanisms surveyed uses access control to protect against the 
+first threat model.
+CODOMs and MPK fail to protect against both of the latter threats.
+With CODOMs, an attacker with control-flow hijack can use indirect calls to
+directly jump between compartments, bypassing call gates.
+With MPK, an attacker can use ROP attacks to use \Code{wrpkru} instructions
+in unintended sequences, or use misuse unaligned code addresses decoding to
+\Code{wrpkru} or \Code{xrstor} instructions, to elevate its permissions to
+all page colors.
+Additionally, ERIM can be defeated by an attacker with arbitrary code 
+injection (Threat C). 
+ERIM relies on controlling the presence of \Code{wrpkru} or \Code{xrstor}
+instructions, which arbitrary code injection bypasses.
+
+%-------------------------------
 \subsection{Access Control Permissions}
+%-------------------------------
+As discussed in \autoref{sec:compreview:properties}, mechanisms need to 
+implement access control to memory to isolate compartments.
+Access control checks should apply to compartments for both code and data
+accesses.
 
-Compartments are under access control. 
+Mechanisms (processes, XPC, $lwC$) implementing per-compartment memory 
+virtual address spaces with separate page tables implements checks on both 
+data and code based on page-table entry permission bits.
+Protection-key based mechanisms, however, limit their checks to only
+data accesses.
+CODOMs links code addresses to compartments, preventing a compartment from
+executing another compartment's code, implicitly implementing code
+access control.
+CHERI's compartment objects encapsulate both data and code capabilities,
+with the former being used for loads and stores, and the latter being 
+necessary for instruction fetch.
+MMP's permission tables specify read-write, read-only and read-execute
+combinations of permissions, thereby controlling data and code accesses.
+\seccells' \ptable structure encodes independent read/write/execute
+permission bits.
+The access control permissions are summarized in the ``Access Control''
+column in \autoref{tab:compreview:summarytab}.
 
-First, data accesses need to be checked. 
-Otherwise, an attacker can compromise a compartment to directly access another
-compartment's data.
-Second, an attacker can "inject" fake data in their own compartment, and 
-manipulate the victim to access it (maybe confusing this data for their own).
-With data checks, the second step will fail even if the first succeeds.
+%-------------------------------
+\subsection{Access Control for OS resources}
+%-------------------------------
+Compartmentalization requires isolation and access control for OS resources.
+In this section, we will discuss whether, and to what extent, mechanisms 
+support this requirement.
+We will assume that the OS system call interface does not trivially allow
+access to other compartments' memory, focussing mainly on other OS resources
+like files and open handles.
+System call filtering support is summarized in the ``Syscall filtering''
+column in \autoref{tab:compreview:summarytab}.
 
-Instruction accesses need to be checked, without which three are a 
-couple (? maybe only one) of different attack vectors.
-First, code injection becomes simplified without instruction access checks.
-An attacker can inject malicious code in their own compartment, then needs
-to influence the victim to execute that code (leveraging some existing bug).
-With instruction checks, the second step will fault, even if the first step
-succeeds.
-Second, data can be held in executable sections, encoded in instructions for example.
-Imagine a JavaScript sandbox whose code is generated on the fly. 
-The existence/lack of particular code can indicate particular JavaScript which has
-been executed, and thereby linked back to specific secrets in JavaScript.
-Cross-sandbox code execution can, therefore, leak data through this side channel.
+Some mechanisms include explicit system call filtering.
+Unprivileged userspace in Donky is not allowed to execute system calls,
+which are restricted to Donky's privileged library (DonkyLib).
+System calls by compartments trap into DonkyLib which can implement
+compartment-specific checks in software for system call filtering.
+In \autoref{tab:compreview:summarytab}, Donky is labeled as having ``Inbuilt''
+support.
 
-Processes implement both data and code access checks. 
-Further, each process decides what data/files get mapped into their address space.
-However, this can also lead to problems where a process can map a file without
-consent (refer to a separate subsection).
+Mechanisms which rely on system calls to switch compartments allow
+the kernel to explicitly track the executing compartment, and therefore
+the caller for system calls.
+Existing system call filtering mechanisms can be extended to support
+per-compartment filtering with process-based isolation, $lwC$, MMP and
+CHERI.
+$lwC$ further supports parent contexts to intercept system calls for
+their children if the children were created with the \Code{LWC_SYSTRAP}
+flag. 
+In $lwC$, parent contexts can also perform system calls on behalf of 
+children using the \Code{lwSyscall} system call, which is useful for
+applications with hierarchical trust between compartments.
+These mechanisms are labelled as being ``OS-tracked'' in 
+\autoref{tab:compreview:summarytab}.
 
-XPC and lwc are based on process-like abstractions, and both have proper
-code and data access control.
+\seccells, XPC and CODOMs allow the OS to identify the userspace compartment 
+using a system call, and can enforce per-compartment system call filtering 
+rules using these identifiers.
+\seccells tracks the currently executing compartment with the  \sid register,
+which gets copied to the \rid register on system calls, allowing the kernel to
+determine its caller.
+Similarly, CODOMs tracks the executing userspace compartment in the 
+\Code{currdom} register, though its behavior during a system call is not
+clearly described in the paper.
+XPC tracks the executing compartment as the register \Code{x-entry-table-reg}
+indexing into the X-entry Table.
+These mechanisms are labelled as ``HW-tracked'' in 
+\autoref{tab:compreview:summarytab}.
 
-MPK implements data checks, but lacks code checks. 
-This is likely motivated by performance reasons/ease of implementation.
-ERIM and libmpk, which build on MPK also lacks code access checks.
-Donky, which is inspired by MPK, also lacks code checks.
+Finally, MPK and ERIM offer no explicit way to track the executing compartment
+and no support for inbuilt system call filtering.
+With both MPK and ERIM, the state of the PKRU register implicitly encodes the
+running compartment.
+However, ERIM can enable some form of system call support by marking code pages 
+containing system calls in untrusted compartments as non-executable, thereby
+trapping into the kernel which can forward a signal to a trusted compartment.
+However, this mechanism is not robust, and introduces false signals due
+to execution of any other code on a page alongside a system call.
+These mechanisms are labelled as being ``None'' in 
+\autoref{tab:compreview:summarytab}.
 
-CHERI compartmentalization requires capabilities for code execution and
-data access. Satisfactory security.
+%-------------------------------
+\subsection{Inter compartment call gates}
+%-------------------------------
+\paragraph{Fixed Entry Points}
+Compartmentalization requires call gates for calls between untrusted 
+compartments.
+Implementing call gates require compartments to be able to define
+fixed entry points, which are enforced by the mechanism.
+At call gates, compartments can execute further protections
+like context switching and argument validation.
+This protection is summarized in the ``Entry Point'' column.
 
-CODOMs link code to compartments, and has no code sharing.
-Implicitly has code access control.
-Also has data checks.
+Process-based isolation, $lwC$, MMP and CHERI use system calls
+and rely on the supervisor for switching compartments.
+Therefore, the supervisor can ensure fixed entry points for these
+mechanisms, and typically also implement a mandatory context switch
+to the callee's context.
+For processes, the entry points for each compartment are the 
+address following system calls for receiving data 
+(\Code{recv}-family syscalls for Linux).
+For $lwC$, the instruction following \Code{lwCreate} and \Code{lwSwitch}
+represent a compartment's entry points.
+Similar return points for compartment switching system calls for MMP
+and CHERI limit entry into compartments.
+These mechanisms are labelled ``OS-tracked'' in 
+\autoref{tab:compreview:summarytab}.
+Donky's privileged DonkyLib implements functionality similar to OS kernels, 
+interjecting inter-compartment calls and enforcing fixed entry points.
+Donky is therefore labeled as ``Lib-tracked''.
 
-MMP has both code and data access control.
+Compartmentalization can also rely on the mechanism to track entry points for
+compartments.
+XPC's X-entry table contains a single entry address for each compartment,
+allowing the compartment to implement checks following the entry.
+CODOMs tracks executable pages containing domain entry points, but only
+restricts entry points within a page to a configurable alignment.
+CODOMs' restrictions can be bypassed to access unused addresses in
+entry pages respecting the alignment constraint.
+We label XPC and CODOMs as ``HW-tracked'', though CODOMs' entry point
+restrictions can be weak depending on system configuration.
 
-\subsection{Intra compartment call gates}
+ERIM does not track entry points for compartments, instead securing 
+inter-compartment call gates (including the crucial \Code{wrpkru} instruction)
+with specific code sequences.
+ERIM's code sequences check permissions in the PKRU register in the call
+gates following PKRU writes, ensuring that a correct value is written.
+However, the paper is not clear how this check is implemented for mutually
+distrustful compartment or comparments with dynamically-changing permissions.
+ERIM's call gates are classified as ``SW-enforced''.
 
-Compartments typically implement separate functionality, and
-need to coordinate to achieve the program's desired functionality.
-Programs will have some compartment call another compartment to
-do some processing.
-When compartments interact, 
-\begin{itemize}
-      \item Compartments must implement checks to secure the interface:
-            Arguments must be checked, caller-callee pair must be
-            allowed.
-            Other restrictions might apply, based on application.
-      \item Checks can be in hardware or software, or a mix of both.
-            Common checks can be in hardware, software allows 
-            application-specific checks.
-      \item Should not be possible to elide checks.
-\end{itemize}
-To assure the above, inter-compartment control flow must follow call gates
-which implement the requisite checks.
-Call gates must be entered at the start, to prevent ROP-style attacks.
+\seccells relies on a special instruction \Code{SDEntry} to explicitly
+mark compartment entry points, with the hardware checking for valid
+entry markers following each compartment switch.
+Further, the memory region for each \Code{SDEntry} should only be executable
+for the specific compartment using that entry point.
+The hardware does not track a list of valid entry points, and
+malicious compartments are free to specify arbitrary entry points when
+using an \Code{SDSwitch}, raising a trap when used maliciously.
+Further call gate checks can, of course, follow the entry point.
+\seccells is classified as ``HW-checked''
 
-Suppose a compartment starts with argument validation and then proceeds to
-using the arguments, lack of call gates can allow an attacker to run the 
-compartment directly with invalid arguments by entering just after the
-checks.
+Finally, Intel's MPK is the least secure mechanism surveyed, since the
+mechanism contains no specific provision for securing inter-compartment
+switches.
 
-Migrating threads can similarly cause issues if an attacker calls a victim
-with malicious register state.
-An attacker might, for example, force a victim to execute with an illegal,
-attacker-crafted stack.
+\paragraph{Threading Model}
+Secure call gates also imply the use of the static threading model, with each
+compartment having its own context.
+However, migrating threading can accelerate inter-compartment calls when using
+a weaker threat model.
+This protection is summarized in the ``Threading'' column.
 
-Execution following a call-gate entry must stay secure, specially if using
-migrating thread model where the execution continues with the caller's 
-context.
-Migrating thread model is insecure in the general case. 
-Can be made secure through formal checks on code (possible for small code)
-or through adaptation into static threading through the addition of context
-switching.
+Supervisor mediated switches, in process-based isolation, $lwC$, MMP
+and CHERI switch contexts in the supervisor during the inter-compartment
+switch, and mandate static threading.
+Donky's library, similarly, protects non-argument registers across
+a \Code{dcall}.
 
-Requirements are:
-- checked entry point(s)
-- secure execution/secure context switch.
+Meanwhile, mechanisms with hardware-tracked compartment switches
+(XPC, CODOMs, MPK, ERIM, \seccells) do not automatically switch register
+context, and support migrating threads by default.
+Additionally, some of these mechanisms can also support static threading
+if the callee compartment can locate and restore its register context 
+after a compartment switch without trusting any of its registers, which could
+be maliciously controlled by the caller.
+In that case, software in the call gate could save the caller's state in the
+caller and restore the callee's state after the switch.
+However, MPK do support secure call gates, and cannot satisfy this requirement.
+Compartments in XPC and CODOMs cannot explicitly identify themselves, but can
+rely on context storage in memory regions at fixed, pre-determined offsets 
+from entry points.
+Code following entry points could use these hard-coded offsets to restore
+the callee's state.
+However, this design would prevent compartments in XPC from sharing code for
+entry points.
+ERIM can also use similar context store regions at fixed offsets from 
+call gate entry points to implement static threading, though the generic 
+case for multiple compartments is not clear from the paper.
+Finally, \seccells allows compartments to explicitly read the \sid register
+to identify themselves, allowing them to index into a state store and
+restore their state, as described in \autoref{sec:seccells:design:softmech}.
 
-Processes have secure entry points, and use static threading.
-Kernel system call return points following IPC wait calls are implicit
-entry points. 
-Callers cannot enter at arbitrary address.
-Kernel also maintains thread context during system call, so context is
-restored before system call returns.
+\paragraph{Calling restrictions}
+Finally, compartmentalization should limit the ability of compartments to 
+call other compartments.
+Inter-compartment calling restrictions should only allow calls for specific
+caller-callee pairs.
 
-XPC maintains the same model as processes, but maintains entry points/call
-stacks in hardware.
-Also maintains state, maybe.
+System-call filtering rules, for example, can be used to restrict calls
+with supervisor-mediated mechanisms like processes, $lwC$, and MMP.
+The supervisor can validate whether a caller-callee transition is allowed
+based on rules installed at program startup.
+While the paper does not describe call filtering, Donky's privileged
+library can also validate compartment switches against a pre-specified
+allowlist using softare, similar to system-call filtering.
 
-MPK lacks call gates. 
-PKRU value can be changed any time, but no intra-address space control-flow
-guards are provided.
-MPK also lacks explicit tracking of executing compartment.
-Therefore, no way to distinguish whether context is correct/switch to correct
-context.
-libmpk adds nothing more.
+Hardware-checked mechanisms can also be used to validate calls.
+XPC maintains a two-dimensional XCALL capability bitmap, which defines
+the allowed caller-callee pairs for the call.
+CODOMs' access protection list explicitly contains permissions for each
+compartment to call other compartments, which is checked by the hardware
+on each switch.
+Finally, compartments in CHERI hold capabilities to call other compartments,
+which are validated when a compartment runs the \Code{CCall} instruction.
+We label each of these mechanisms as ``Hardware'' in 
+\autoref{tab:compreview:summarytab}. 
 
-ERIM adds call gates to MPK.
-Call gates cannot be bypassed, therefore control flow attacks become impossible.
-However, big performance penalty.
+\seccells lacks hardware validation of compartment switches, as switches
+to legitimate compartment entry points always succeed.
+However, \seccells supports call gates, and allows software to securely
+identify the caller-callee pair by reading the \rid and \sid registers
+respectively.
+A compartment can maintain its own list of permitted callers, and can
+refuse to process calls from compartments not on this list.
+Therefore, software in call gates can effectively limit permitted
+compartment switches in \seccells.
 
-Donky adds the pseudo-privileged library to protection keys.
-Similar to processes, this maintains control flow integrity and entry points.
-(Gotto check) Donky reverts to static threading.
+Finally, MPK and ERIM does not support limiting inter-compartment calls.
 
-CHERI also relies on the supervisor, and provides both checked entry points
-and contexts.
+%-------------------------------
+\subsection{Permission transfer}
+%-------------------------------
+Process-like mechanisms typically communicate via supervisor-based
+message passing based on copying data between their own private virtual 
+address spaces via kernel buffers.
+Processes can traditionally share data regions by mapping shared 
+memory files.
+However, newer system calls like \Code{vmsplice} allow processes to directly
+remap pages from one process into another, when both processes use this
+syscall.
+Therefore, zero-copy data movement is possible, with bilateral agreement
+between the sending and receiving processes.
 
-SecureCells has lightweight inter-compartment entry checks.
-Static threading can be implemented on this base.
+$lwC$ offers the \Code{lwOverlay} system call which maps resources from
+one context into another, overwriting any existing resources at the target
+address.
+While the compartment receiving access to new data requires a capability
+to map the requested data (as an access capability), ensuring that a 
+context cannot unilaterally grant itself access to another context's
+memory, these capabilities are determined at context creation and are
+not dynamically granted.
 
-CODOMs does not have call gates. 
-Any jump will implicitly switch compartments based on the source and target
-instruction pointers.
+CHERI controls access to memory based on capabilities, and offers a
+convenient system for transferring permissions to arguments during a
+cross-compartment call.
+A CHERI compartment can pass one or more capabilities to memory holding
+arguments to the target compartment during a call, allowing the target to
+use the capabilites to access the arguments.
+Further, CHERI capabilities can be shrunk, allowing a compartment to
+pass on permission for subregions during nested compartment calls.
+Finally, compartments can use memory capabilities to further load
+capabilities from the memory region permitted by the initial capability.
+Therefore, compartments can transfer access capabilities to complex 
+data structures by simply transferring the capability for the entry
+to the data structure.
+For example, the capability to a linked-list's head allows access to
+all of the link list through capabilities to the next node stored in 
+each node.
+However, CHERI's capability-based access control raises the spectre of
+unintended capability leakage through complex data structures holding 
+further capabilities.
+CHERI also supports revocation of capabilities, though systems requiring
+frequent capability revocation may suffer from high overheads.
 
-\subsection{Zero Copy data movement}
+\seccells allows compartments to transfer permissions for memory 
+regions (\cell{}s) through a pair of \scgrant-\screcv instructions.
+The former instruction is used by the sending compartment to stage a 
+permission grant whereas the latter instruction is used by the receiving
+compartment to accept staged permissions.
+Therefore, permission transfers in \seccells requires bilateral involvement,
+making this mechanism secure.
+However, compartments cannot easily shrink the region of permissions
+for transmitting to another compartment during a nested compartment call,
+limiting its flexibility.
+\seccells' memory regions also lack the concept of ownership, and
+permissions once granted cannot be revoked.
 
-When compartments communicate, they also send data across the interface.
-A common framework for data transfer between processes uses protobufs
-to serialize data (aggregate data from different data structures into
-a serial form), copy data via a system call (likely sendmsg for Linux),
-and deserialize the information at the receiver.
+Some mechanisms offer limited or no support for zero-copy data
+movement between compartments.
+MMP describes zero-copy data movement from the kernel to userspace
+by dynamically mapping received network buffers into userspace
+during a \Code{read} system call, but does not describe a way to
+move data between compartments without copying.
+Similarly, MPK and ERIM does not have any checks on permission 
+transfers betweek compartments as each compartment can specify its 
+own permissions to data regions.
+XPC relies on a single relay segment to transfer data between
+compartments without copying.
+XPC's relay segment has the added benefit that compartments
+can shrink the segment before passing the segment forward during
+nested compartment calls.
+CODOMs allows compartments to share their data with other compartments
+by specifying capabilities in the access protection lists (APL).
+However, the APLs are static and grant access to all of a compartment's
+memory regions to the target compartment.
+CODOMs' APL-based permission granting, therefore, does not support 
+dynamically moving permissions for small argument buffers between
+compartments without copying.
+Donky also lacks calls for dynamically moving permissions to regions
+between compartments.
 
-The Communication interface also comes with a potential security
-issue.
-If a compartment can unilaterally inject permission to code or data
-into another compartment, that can lead to confused deputy attacks where
-the target uses the transferred information under the confusion that the
-data is its own. 
 
-While the RPC framework is flexible, it suffers from limited performance.
-In specific cases, systems can benefit from moving permissions to memory
-instead of copying the data over.
-This advantage becomes more pronounced for larger data movements.
-In particular cases, zero-copy data transfer offer the sole practical
-opportunity to satisfy strong performance requirements. 
-Key example is networking functions.
-However, the RPC interface is also secure. 
-The receiver of the RPC must explicitly use a syscall to accept an 
-incoming RPC.
-Further, incoming RPCs necessarily appear as data, not code.
 
-A trade-off for zero-copy data movement is that the involved data needs
-to be serialized, and programs that naturally deal with serialized buffers
-profit with ease.
 
-CHERI's capability model offers a natural fit to zero-copy permissions 
-transfers, as access to a buffer passes along with the pointer when passed
-as cross-compartment capability arguments along with all contained 
-capabilities.
-A single capability argument can grant access to a complex data structure
-across multiple regions, alleviating the need for serialization.
-This power, however, must be used with care.
-If any unwanted capability is leaked, anywhere within the nested structures,
-CHERI can be compromised.
-CHERI's capabilities also resemble unilateral information transfers.
 
-XPC offers hardware support for zero-copy transfer for one segment, which can
-be subsequently monotonically shrunk in nested RPC calls.
-Great for performance, but limited use cases: only those programs which can
-be shoehorned into this shell.
-XPC's information injection is also restricted to data, but is unilateral.
 
-Protection key-based methods (MPK/libmpk/ERIM) can offer zero-copy permission
-transfer to all pages with the same color, simply by writing the correct
-permissions to the target compartment's key.
-However, this is all or nothing.
-Protection keys give very little protection against injection of code/data.
 
-SecureCells allows zero-copy permission movement. 
-Crucially, 
-\begin{itemize}
-      \item transfers require a handshake
-      \item it allows unlimited segments to be moved
-\end{itemize}
-However, all or nothing: entire cell gets transferred.
-SecureCells does not support efficient shrinking of data regions.
 
 \subsection{Flexibility/Generic support}
 \atri{A lot of stuff here seems wishy-washy. Not convincing.}
@@ -1198,7 +1432,7 @@ support mutually distrusting compartments without intervention via a
 trusted runtime compartment.
 \atri{give examples} (IMIX, ERIM, MemSentry)
 
-CODOM identifies a compartment by its program counter, i.e. code has a
+CODOMs identifies a compartment by its program counter, i.e. code has a
 1:1 link with compartment.
 For example, multiple JavaScript sandboxes will not be able to share
 a library for, say, cryptographic operations.
