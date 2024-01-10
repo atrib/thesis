@@ -3,45 +3,52 @@ growth of complexity across hardware and software.
 Due to practical considerations of compatibility between components of
 these complex systems across generations, developers have favoured stable 
 interfaces at crucial boundaries such as between hardware and software, 
-and between kernel and user space.
-While these interfaces have persisted across decades, the modern computing
+or between the kernel and userspace.
+While these interfaces have persisted across more than 20 years, the modern 
+computing
 environment has evolved significantly in terms of security and performance.
 Systems are increasingly connected and share components of widely varying
 provenance, and legacy interfaces are unable to counter modern threats
 while maintaining strict performance objectives.
 Computing requires new interfaces with stronger security guarantees which
 can also support high performance applications.
-In this thesis, we rethink two key interfaces to improve their security
-and performance limits:
-\begin{inparaenum}[\itshape i\upshape)]
-  \item the kernel-user space system call interface, and
-  \item the userspace virtual memory interfaces.
-\end{inparaenum}
+The kernel-user interface remains one of the primary vectors for 
+inter-applicaton attacks
+as compromising the kernel gives an attacker control to the system's resources
+and to other applications on the same system.
+As applications increasingly execute third-party code, for example JavaScript
+scripts downloaded from the internet, the virtual memory interface
+has newly emerged as another crucial interface enabling remote attackers
+an entry into systems.
+In this thesis, therefore, we investigate these two key interfaces to 
+improve their security and performance limits.
 
-The kernel-user space system call interface suffers from double-fetch
+The kernel-user system call interface suffers from double-fetch
 bugs for passed-by-reference arguments stored in user memory.
 Double-fetches allow a malicious user to compromise the isolation guaranteed 
 at the kernel-user interface to illegally access memory,
-cause kernel crashes, or to escalate its privileges.
+cause kernel crashes, or to escalate their privileges.
 The modern multi-user, multiprocessing environment allows the user to
 change the arguments read by the kernel at different times by modifying
 the contents of memory from a concurrent thread.
-The complexity of the kernel makes the quest to find and fix each such bug
-infeasible.
+The complexity of the kernel prohibits developers from finding and fixing all
+of its bugs.
 The extensibility of the kernel further exacerbates the challenge as 
-third-party modules loaded by the kernel can also introduce double-fetches.
+third-party modules loaded by the kernel may also introduce double-fetches.
 We present \midas, a systematic mitigation for kernel double-fetches which
 leverages the kernel's interface to access user memory to guarantee that 
 every kernel read of a user object during a system call will return the 
 same value.
-\midas's guarantee makes an erstwhile implicit assumption by kernel developers
+\midas's guarantee makes an implicit assumption by kernel developers
 explicit, protecting the kernel against a class of bugs while incurring
-a $3.4\%$ overhead on diverse workloads across the NPB and PTS benchmark suites.
+merely $3.4\%$ overhead on diverse workloads across the NPB and PTS 
+benchmark suites.
 
 Whereas modern systems software runs code from a plethora of sources with
 varying degrees of trust, the traditional virtual memory abstraction lacks
 support for isolating untrusted parts of an application sharing the same 
 virtual address space.
+All code running within a process execute at the same trust level.
 Consequently, buggy or malicious third-party code in a process can compromise
 the process by directly leaking or modifying memory used by other components 
 of the application.
@@ -57,14 +64,14 @@ accelerated userspace instructions for inter-compartment calls.
 In microbenchmarks, \seccells enables a 5-stage in-order core to switch 
 compartments in only 8 cycles reducing the cost of transitions by an order
 of magnitude compared to the state of the art.
-We also build a full-system prototype of \seccells, based on a RISC-V 
-RocketChip core running the seL4 kernel able to run userspace benchmarks.
+We also build a full-system prototype of \seccells, based on the RISC-V 
+RocketChip core running the seL4 kernel to evaluate userspace benchmarks.
 
 Further, this thesis presents the first exhaustive comparison between 
 compartmentalization mechanisms, evaluating both qualitative and quantitative
 properties.
 We describe relevant security and performance properties for practical
-compartmentalization, and show how well each mechanism is able to provide each
+compartmentalization, and show how well each mechanism provides each
 property.
 A comprehensive review of compartmentalization techniques aims to enable
 computer systems developers to define a secure, performant and usable interface
