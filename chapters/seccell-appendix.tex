@@ -226,6 +226,10 @@ RISC-V prototype.
 \paragraph{Instruction encodings}
 \seccells uses existing spaces left for custom extensions to RISC-V to 
 implement the added unprivileged instructions.
+Our added instructions occupy the \emph{custom-0} and \emph{custom-1}
+spots in RISC-V's instruction encoding map.
+\autoref{tab:seccells:instencodings} shows the encoding formats for all
+added instructions.
 
 \begin{table}
   \centering
@@ -242,7 +246,7 @@ implement the added unprivileged instructions.
     SCInval                           & addr                   &               & \Code{INVAL}                      & addr = \Code{rs1}                                             \\
     SCExcl                            & addr, perm             & True/False    & \Code{EXCL}                       & addr = \Code{rs1}, perm = \Code{rs2}                          \\ \bottomrule
   \end{tabular}
-  \label{app:seccells:instmapping}
+  \label{tab:seccells:instmapping}
   \caption[Mapping \seccells instructions to the RISC-V prototype instructions]
           {Mapping \seccells instructions and arguments to the RISC-V prototype instructions. 
           Instructions returning values write to the rd register}
@@ -268,10 +272,149 @@ implement the added unprivileged instructions.
     \Code{imm[11:5]}     & \Code{rs2    }     & \Code{rs1    }   & \Code{110}      & \Code{imm[4:0]} & \Code{0001011}  & \Code{RECV(rs1, rs2, imm) }  \\ \hline   
     \Code{0000000  }     & \Code{rs2    }     & \Code{rs1    }   & \Code{111}      & \Code{rd      } & \Code{0001011}  & \Code{EXCL(rs1, rs2) = rd }  \\ \bottomrule
   \end{tabular}
-  \label{app:seccells:instencodings}
-  \caption[Instruction encodings for \seccells' prototype.]
+  \label{tab:seccells:instencodings}
+  \caption[Instruction encodings for \seccells' prototype]
           {Instruction encodings for \seccells' prototype. 
           The first part shows the four instruction encoding types supported by RISC-V.}
 \end{table}
 
 \paragraph{Exception details}
+\seccells also adds new exceptions, corresponding to failed security checks
+while executing the added unprivileged instructions.
+\autoref{tab:seccells:exceptions} lists the added exceptions, and the 
+corresponding values for the \Code{scause} and \Code{stval} registers
+storing exception details.
+
+\begin{table}[t]
+  \begin{tabular}{| l | l | l | l |}
+    Instruction & Exception Cause             & \Code{scause}                     & \Code{stval}                                                                            \\ \midrule
+    EXCL        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    EXCL        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{
+                                                                                      (type $\ll$ 8) | perm                                                                 \\
+                                                                                      type = 
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{if perm not in RWX}                                               \\
+                                                                                          \text{1} &\text{if perm is zero}                                                  \\
+                                                                                          \text{2} &\text{\makecell[l]{if SD$_{cur}$ has insufficient \\perms}}             \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+    EXCL        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
+    GRANT       & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    GRANT       & Target too high             & \Code{\_INV\_SDID} (0x1a)         & SD$_{tgt}$                                                                              \\ \hline
+    GRANT       & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+                                                                                      (type $\ll$ 8) | perm                                                                 \\
+                                                                                      type = 
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{if perm not in RWX}                                               \\
+                                                                                          \text{1} &\text{if perm is zero}                                                  \\
+                                                                                          \text{2} &\text{\makecell[l]{if SD$_{cur}$ has insufficient \\perms}}             \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+    GRANT       & Illegal grant               & \Code{\_ILL\_GRANT}               & 0, identifying GRANT                                                                    \\ \hline
+    GRANT       & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
+    RECV        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    RECV        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
+    RECV        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+                                                                                      (type $\ll$ 8) | perm                                                                 \\
+                                                                                      type = 
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{if perm not in RWX}                                               \\
+                                                                                          \text{1} &\text{if perm is zero}                                                  \\
+                                                                                          \text{3} &\text{\makecell[l]{if requested perms not \\subset of granted perms}}   \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+    RECV        & Illegal grant               & \Code{\_ILL\_GRANT}               & 1, identifying RECV                                                                     \\ \hline
+    RECV        & Invalid SD                  & \Code{\_INV\_SDID} (0x1a)         & \makecell[l]{
+                                                                                      (type $\ll$ 32) | SD                                                                  \\
+                                                                                      type =
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{\makecell[l]{if SD source too high\\ or SD=SD$_{src}$}}                           \\
+                                                                                          \text{1} &\text{\makecell[l]{if grant SD != SD$_{cur}$\\ or SD=SD$_{cur}$}}                       \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+    PROT        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    PROT        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+                                                                                      (type $\ll$ 8) | perm                                                                 \\
+                                                                                      type = 
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{if perm not in RWX}                                               \\
+                                                                                          \text{2} &\text{\makecell[l]{if SD$_{cur}$ has insufficient \\perms}}             \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+    PROT        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
+    TFER        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    TFER        & Target too high             & \Code{\_INV\_SDID} (0x1a)         & SD$_{tgt}$                                                                              \\ \hline
+    TFER        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+                                                                                      (type $\ll$ 8) | perm                                                                 \\
+                                                                                      type = 
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{if perm not in RWX}                                               \\
+                                                                                          \text{1} &\text{if perm is zero}                                                  \\
+                                                                                          \text{2} &\text{\makecell[l]{if SD$_{cur}$ has insufficient \\perms}}             \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+  \end{tabular}
+  \caption[\seccells exception codes]
+          {Exception causes, \Code{scause} and \Code{stval} register values for \seccells exceptions}
+  \label{tab:seccells:exceptions}
+\end{table}
+
+\begin{table}[t]
+  \ContinuedFloat
+  \begin{tabular}{| l | l | l | l |}
+    Instruction & Exception Cause             & \Code{scause}                     & \Code{stval}                                                                            \\ \midrule
+    TFER        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
+    TFER        & Illegal grant               & \Code{\_ILL\_GRANT}               & 2, identifying TFER                                                                     \\ \hline
+    INVAL       & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    INVAL       & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & \makecell[l]{
+                                                                                      type                                                                                  \\
+                                                                                      type = 
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{if cell is already invalid}                                       \\
+                                                                                          \text{2} &\text{if other SD has non-zero perms}                                   \\
+                                                                                          \text{3} &\text{outstanding grants for cell}                                      \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+    REVAL       & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    REVAL       & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 1 if cell is already valid                                                              \\ \hline
+    REVAL       & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+                                                                                      (type $\ll$ 8) | perm                                                                 \\
+                                                                                      type = 
+                                                                                      $
+                                                                                        \begin{cases}
+                                                                                          \text{0} &\text{if perm not in RWX}                                               \\
+                                                                                          \text{1} &\text{if perm is zero}                                                  \\
+                                                                                        \end{cases}
+                                                                                      $
+                                                                                    }                                                                                       \\ \hline
+    JAL(R)S     & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
+    JAL(R)S     & Target too high             & \Code{\_INV\_SDID} (0x1a)         & SD$_{tgt}$                                                                              \\ \hline
+    JAL(R)S     & Illegal target instruction  & \Code{\_ILL\_TGT} (0x1c)          & Target addr                                                                              \\ \hline
+    
+  \end{tabular}
+  \caption[]
+          {(cont.) Exception causes, \Code{scause} and \Code{stval} register values for \seccells exceptions}
+  \label{tab:seccells:exceptions}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Trap-and-emulate acceleration}
+\label{app:seccells:trapacceleration}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+TODO: show how we accelerated trap handling
+How did 
