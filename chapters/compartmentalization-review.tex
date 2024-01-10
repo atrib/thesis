@@ -439,7 +439,7 @@ We have discussed use cases with different trust relationships in
 Mechanisms which optimize for sandboxing, for example, might assume
 a hierarchy of trust with the sandboxing runtime being most trusted
 and sandboxes being untrusted.
-A mechanism which only allows heirarchical compartments, however,
+A mechanism which only allows hierarchical compartments, however,
 will not be able to support relations with mutual distrust between
 compartments.
 Flexibility also applies to inter-compartment calls, and to the requisite
@@ -990,6 +990,12 @@ required for compartmentalization as discussed in
 \autoref{sec:compreview:properties}.
 \autoref{sec:compreview:summarytab} summarizes this comparison.
 
+Mechanisms differ in the performance characteristics, based on the 
+common latency of their operations.
+While the performance comparison in this section focusses on the 
+average latency of operations, high-performance datacenter software 
+may also be affected by the tail latency~\cite{LiSPG14} of these operations.
+
 % Other properties to be added
 % - Return addresses/link stacks
 
@@ -1000,7 +1006,7 @@ required for compartmentalization as discussed in
             XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked  & S/M@      \\
             $lwC$     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
             MMP       & ??           &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
-            CODOMs     & A            &  Data + Instruction & HW-tracked        & HW-tracked+ & S/M@      \\
+            CODOMs    & A            &  Data + Instruction & HW-tracked        & HW-tracked+ & S/M@      \\
             MPK       & A            &  Data               & None              & None        & M         \\
             ERIM      & A + B        &  Data               & None*             & SW-enforced & S/M@      \\
             Donky     & A + B + C    &  Data               & Inbuilt           & Lib-tracked & S         \\
@@ -1026,22 +1032,24 @@ required for compartmentalization as discussed in
 
 \begin{table}
       \ContinuedFloat
-      \begin{tabular}{l | l | l | lll}
-            Mechanism & Call control & Permission Tx.            \\\hline
-            Process   & Filtering    & Bilateral                \\
-            XPC       & Hardware     & Relay segment            \\
-            $lwC$     & Filtering    & Static, controlled       \\
-            MMP       & Filtering    & None                     \\
-            CODOMs    & Hardware     & Static, limited          \\
-            MPK       & None         & None                     \\
-            ERIM      & None         & None                     \\
-            Donky     & Filtering    & None                     \\
-            CHERI     & Hardware     & Capability, Revocation   \\
-            \seccells & SW-checked   & Bilateral                \\
-      \end{tabular}
+      \begin{tabular}{l | l | l | l | l |l}
+            Mechanism & Call control & Permission Tx.         & AC Scalability &  Switch (cycles) \\\hline
+            Process   & Filtering    & Bilateral              & TLB-stressed   &  $\sim 10^{3}$        \\
+            XPC       & Hardware     & Relay segment          & TLB-stressed   &  $\sim 10^{1}$        \\
+            $lwC$     & Filtering    & Static, controlled     & TLB-stressed   &  $\sim 10^{3}$        \\
+            MMP       & Filtering    & None                   & Scalable       &  $\sim 10^{3}$        \\
+            CODOMs    & Hardware     & Static, limited        & TLB-dependent  &  $\sim 10^{1}$        \\
+            MPK       & None         & None                   & TLB-dependent  &  $\sim 10^{1}$        \\
+            ERIM      & None         & None                   & TLB-dependent  &  $\sim 10^{1}$        \\
+            Donky     & Filtering    & None                   & TLB-dependent  &  $\sim 10^{2}$        \\
+            CHERI     & Hardware     & Capability, Revocation & Scalable       &  $\sim 10^{2}$        \\
+            \seccells & SW-checked   & Bilateral              & Scalable       &  $\sim 10^{1}$        \\
+      \end{tabular}                    
       \caption[A comparison of comparmentalization mechanisms (summarized)]
       {
       (cont.) A comparison of comparmentalization mechanisms (summarized).
+      ``AC'' = Access Control.
+      We report compartment switching latencies as order of magnitude of cycles.
       }
       \label{tab:compreview:summarytab}
 \end{table}
@@ -1412,34 +1420,214 @@ between compartments.
 %-------------------------------
 \subsection{Access Control Performance}
 %-------------------------------
+Mechanisms perform permission checks for memory access every cycle,
+on average.
+The performance of modern processors relies on single-cycle permission
+checks and address translation for memory access, as these operations
+are on the critical path to loading data from the tightly-coupled L1 caches.
+As application data working sets have also grown over decades, near-core
+caches for storing permissions have been stretched beyond their limit.
+Translation Lookaside Buffers (TLBs) on modern architectures can effectively
+cache a few thousand translation and protection entries, corresponding to
+a TLB reach of a few megabytes of data.
+Meanwhile, many modern applications have larger data working sets, causing
+thrashing in the TLBs, significantly hurting application 
+performance~\cite{0003BOBFP21midgard}.
+Compartmentalization can potentially exacerbate this issue, since each
+memory region will have different permissions for different compartments,
+requiring TLB-like on-chip caches to store even more permission entries
+corresponding to different compartments.
+In this section, we will compare the potential average access control
+performance of different mechanisms, based on whether they require 
+permission storage caches near the core which can scale with application
+datasets and provide single-cycle permission checks.
 
+Process-based compartmentalization, XPC and $lwC$ all rely on 
+page-granularity permissions stored in page table entries in 
+per-compartment page tables. 
+Each page requires individual page table entries from each compartment's 
+page tables in order to express the differing permissions for that page.
+The application's permissions will be cached in each core's TLB alongside
+translation entries for each page.
+Consequently, compartments will divide the TLB capacity between themselves,
+leaving each compartment with an effectively smaller TLB capacity.
+These mechanisms are most likely to hit TLB reach limits, causing TLB
+thrashing.
+These mechanisms are labelled as ``TLB-stressed'' in 
+\autoref{tab:compreview:summarytab}, as these mechanisms increase the
+stress on the TLB.
 
+CODOMs, MPK, ERIM and Donky continue to rely on page table entries (PTEs) 
+to store permission metadata.
+CODOMs stores each page's owning compartment in the corresponding PTE.
+MPK, ERIM and Donky rely on page colors (keys) also stored in PTEs.
+While each of these mechanisms rely on page-granular PTEs cached in
+TLBs, these mechanisms do not require duplicated PTEs for the same page.
+These mechanisms will face TLB reach limits as modern applications do,
+but will not worsen the situation.
+CODOMs also requires caching for its access protection lists, including
+an APL cache for each core.
+However, a APL cache can be much smaller than the TLB, as applications
+typically deal with more (thousands or millions) data pages than
+compartments (10s), and is less likely to encounter scaling limits.
+These mechanisms are labelled as ``TLB-dependent'' as these mechanisms
+scale with TLBs.
 
+MMP separates protection from translation, relying on two separate permission
+storage formats.
+MMP's multi-level permissions table (MLPT) resembles the radix trees used for
+page tables, with each leaf entry holding the permission for a 4-byte word.
+Consequently, MMP's core-side permissions lookaside buffer (PLB) caching
+permissions from the MLPT will require 1000x more entries compared to modern
+TLBs.
+PLBs are build from conventional content addressable memory structures, just
+like TLBs, and will hit scaling limits before TLBs.
 
+Two mechanisms store permissions to ranges of memory rather than fixed-size
+regions.
+MMP proposes a second protection storage format, the Sorted Segment 
+Table (SST).
+\seccells proposes a protection table (\ptable) structure for permissions.
+Both the SST and \ptable store permissions for variable-size ranges of memory.
+Consequently, these structures can represent permissions for multi-page regions
+with a single entry, reducing the duplication in these tables.
+Further, MMP's PLB and \seccells' TLB-like translation cache both require fewer
+entries to cache an application's working set's permissions.
+Further, range-based memory allows permission caches to scale to large dataset
+sizes, since applications typically increase the size of their memory regions
+with larger datasets instead of using more regions.
+Labelled as ``Scalable''.
 
-% \subsection{Flexibility/Generic support}
-% \atri{A lot of stuff here seems wishy-washy. Not convincing.}
+CHERI removes the dependence on permission caches, as permissions are encoded
+alongside pointers within capabilities.
+CHERI's capabilities increase a program's data working set as each pointer
+increases from occupying one word (64-bit on 64-bit machines) to two words.
+However, capabilities can benefit from the large (64kB or larger) data 
+L1 caches on modern machines.
+Labelled as ``Scalable''.
 
-% Flexibility in a mechanism will allow it to be used with a variety of
-% use cases/applications.
+Process-based isolation, XPC,  $lwC$, CODOMs, MPK, ERIM and Donky are closely
+integrated with modern page-based virtual memory, and will not easily
+integrate with future range-based virtual memory architectures.
+These systems will suffer from the TLB's scaling limitations for translation,
+apart from for protection.
+CHERI is agnostic to the translation mechanism, and can move from modern
+page-based systems to future range-based systems without any modification.
+Finally, MMP and \seccells already dependent on range-based translations,
+being better compatible with future systems than modern ones.
 
-% For example, can a mechanism support the large degree of code sharing
-% within modern programs?
-% Can a mechanism support a non-hierarchical trust relation between
-% compartments?
+%-------------------------------
+\subsection{Compartment Switching Performance}
+%-------------------------------
+Applications demand a widely-varying frequency of compartment switching,
+though applications typically tailor their software organization to
+fit the compartmentalization mechanism they depend on in order to meet
+performance requirements.
+Essentially, mechanisms with faster compartment switches can allow
+applications to be compartmentalized into smaller compartments, potentially
+improving security.
 
-% Mechanisms which specialize for sandboxing will not be able to
-% support mutually distrusting compartments without intervention via a
-% trusted runtime compartment.
-% \atri{give examples} (IMIX, ERIM, MemSentry)
+Process-based isolation, $lwC$, MMP depend on traditional supervisor-mediated
+compartment switches, costing up to tens of microseconds on each call.
+Supervisor-mediated switching potentially incurs the cost of context switches
+to and from the supervisor, scheduling, resource accounting and dispatching
+to system call handlers.
+$lwC$ offers faster switching compared to processes, still requiring around
+$2\mu{}s$ for switches.
+Consequently, applications currently compartmentalized with processes 
+only isolated large untrusted components.
+Chromium, for example, isolates a local system-facing compartment from 
+per-tab network-facing rendering compartments~\cite{barth2008security}.
 
-% CODOMs identifies a compartment by its program counter, i.e. code has a
-% 1:1 link with compartment.
-% For example, multiple JavaScript sandboxes will not be able to share
-% a library for, say, cryptographic operations.
-% In such a case, a common design might be to isolate different
-% cryptographic contexts corresponding to different compartments, but
-% share the library code which operates on those contexts.
+Transitions between compartments in Donky, similarly, pass via the trusted
+Donky monitor.
+Consequently, compartment switching is relatively expensive, requiring
+around 450 cycles (roughly 200ns assuming a 2GHz clock) on a Intel Xeon CPU.
+CHERI relies on a highly optimized system call in CheriBSD, also incurring
+400+ cycles to switch compartments.
+Both CHERI and Donky's switches are an order of magnitude faster than
+with traditional supervisors, and will enable finer-grained compartmentalized
+applications.
+However, applications requiring library isolation with sub-microsecond
+compartment execution time on average will be greatly bottlenecked by the
+compartmentalization mechanism if based on Donky or CHERI.
+
+Finally, MPK, ERIM, XPC, CODOMs, and \seccells offer fast compartment,
+requiring up to a few tens of cycles.
+MPK-based mechanisms offer switching in as low as 80 cycles on a modern
+Intel CPU.
+RISC-V based prototypes using in-order cores allow XPC to switch 
+compartment in around 80 cycles, and \seccells in around 8 cycles.
+On desktop/server-grade out-of-order cores, \seccells will incur longer
+switching latencies, roughly comparable to switching compartments with
+MPK.
+These mechanisms support compartmentalization for high-performance
+software like virtualized network functions and library isolation.
+
+%-------------------------------
+\subsection{Flexibility and Generality}
+%-------------------------------
+Compartmentalization mechanisms propose their own programming model, and
+often require specific hardware support.
+Further some mechanisms can better support specific use cases.
+In this section, we will discuss some advantages and challenges for
+the mechanisms surveyed, in order to highlight their usability.
+
+Mechanisms should support various existing compartmentalization
+use cases and software idioms.
+CODOMs, for example, conflates the instruction pointer and compartment
+identity, preventing code sharing which is a cornerstone of modern
+software development.
+Multiple sandboxes, in the browser example from 
+\autoref{sec:compreview:usecases:hierarchical} would not be allowed to
+share code for system libraries (for example, for cryptographic operations).
+ERIM is based around one trusted and untrusted compartment.
+Though the paper claims that ERIM can be generalized to support an arbitrary
+number of compartments, the paper does not explain how different scenarios
+may be implemented, or whether ERIM depends on a trusted compartment.
+MPK and ERIM are also limited by the number of colors/keys available for 
+user pages, effectively limiting the number of compartments supported.
+XPC is designed for an RPC-like call-and-return control flow between
+compartments, and cannot support a circular control flow between compartments
+without returns.
+\seccells can transfer permissions for entire regions of memory between
+compartments (\cell{}s), but might struggle for use with generic
+remote-procedure calls between compartments where data from complex
+data structures is serialized into a buffer.
+Mechanisms with fixed (often page) granularity permissions, including
+process-based isolation, $lwC$, CODOMs, MPK, ERIM and Donky also share
+this limitation, though a page might often be smaller than a 
+\cell{} in \seccells.
+As summarized in \autoref{tab:compreview:summarytab}, only some mechanisms
+offer the flexibility between choosing threading models (static or migrating).
+
+Hardware and software compatibility varies between mechanisms. 
+On one hand, some mechanisms like MPK are limited to processors by a 
+particular manufacturer, practically implying vendor lock in for 
+software vendors.
+CHERI compartmentalization relies on processors supporting CHERI's
+memory capabilities, which are currently limited to experimental boards only.
+Mechanisms designed from the ground up, like MMP and \seccells, on the other
+hand are not locked in to a specific instruction-set architecture (ISA).
+However, their designs imply extensive software and hardware changes,
+and lack actual hardware to run them.
+\seccells, specifically, aims for compatibility with future range-based
+virtual memory architectures~\cite{0003BOBFP21midgard}.
+XPC adopts a middle ground, requiring complicated hardware state machines to
+manage metadata for compartments, but presenting an unmodified IPC
+interface for userspace software.
+
+Not all mechanisms allow incremental adoption.
+CHERI's compartmentalization stands out, as the authors clearly lay out
+how systems using CHERI can gradually introduce capability-based security
+to various layers of the software stack.
+\seccells requires significant redesign of modern operating systems to
+remove the underlying assumption of page-based virtual memory,
+but can support existing unmodified userspace programs.
+Unmodified programs can run in a single compartment, without using any
+compartmentalization features.
+However, compartmentalized programs in \seccells require a fully modified
+software stack, including libraries.
 
 % Mechanisms which can configure which protections are used can offer a
 % security-performance trade off where justified.
