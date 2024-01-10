@@ -212,5 +212,66 @@ we envision microcode to be ideal for implementing \seccells'
 permission transfer instructions for high-performance processors.
 
 
-\atri{TODO}
-TODO: Put details of SecureCells implementation (bits of instructions, etc.)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\seccells ISA definitions}
+\label{app:seccells:isa_def}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Below, we describe the definitions of \seccells' instructions used in our 
+RISC-V prototype.
+
+\paragraph{Virtual memory mode} 
+\seccells describes an custom virtual memory mode for RISC-V, using the 
+\Code{0xf} value for the \Code{Mode} field.
+
+\paragraph{Instruction encodings}
+\seccells uses existing spaces left for custom extensions to RISC-V to 
+implement the added unprivileged instructions.
+
+\begin{table}
+  \centering
+  \begin{tabular}{l | l | l | l | l | l |}
+    \makecell{\seccells\\instruction} & Arguments              & Output        & \makecell{Prototype\\instruction} & Arguments Mapping                                             \\ \midrule
+    SDSwitch                          & addr, SD$_{tgt}$       & return addr   & \Code{JALS}                       & addr = \Code{pc} + \Code{imm}, SD$_{tgt}$ = \Code{rs}         \\
+    SDSwitch                          & addr, SD$_{tgt}$       & return addr   & \Code{JALRS}                      & addr = \Code{rs1}, SD$_{tgt}$ = \Code{rs2}                    \\
+    SDEntry                           &                        &               & \Code{ENTRY}                      &                                                               \\
+    SCProt                            & addr, perm             &               & \Code{PROT}                       & addr = \Code{rs1}, perm = \Code{rs2}                          \\
+    SCGrant                           & addr, SD$_{tgt}$, perm &               & \Code{GRANT}                      & addr = \Code{rs1}, SD$_{tgt}$ = \Code{rs2}, perm = \Code{imm} \\
+    SCRecv                            & addr, SD$_{src}$, perm &               & \Code{RECV}                       & addr = \Code{rs1}, SD$_{src}$ = \Code{rs2}, perm = \Code{imm} \\
+    SCTfer                            & addr, SD$_{tgt}$, perm &               & \Code{TFER}                       & addr = \Code{rs1}, SD$_{tgt}$ = \Code{rs2}, perm = \Code{imm} \\
+    SCReval                           & addr, perm             &               & \Code{REVAL}                      & addr = \Code{rs1}, perm = \Code{rs2}                          \\
+    SCInval                           & addr                   &               & \Code{INVAL}                      & addr = \Code{rs1}                                             \\
+    SCExcl                            & addr, perm             & True/False    & \Code{EXCL}                       & addr = \Code{rs1}, perm = \Code{rs2}                          \\ \bottomrule
+  \end{tabular}
+  \label{app:seccells:instmapping}
+  \caption[Mapping \seccells instructions to the RISC-V prototype instructions]
+          {Mapping \seccells instructions and arguments to the RISC-V prototype instructions. 
+          Instructions returning values write to the rd register}
+\end{table}
+
+\begin{table}
+  \begin{tabular}{| c | c | c | c | c | c | l |}
+    \multicolumn{6}{|c|}{Instruction Fields}                                                                           & Type                         \\ \midrule
+    \Code{func7}         & \Code{rs2    }     & \Code{rs1}       & \Code{func3}    & \Code{rd}       & \Code{opcode}   & R-type                       \\ \hline    
+    \multicolumn{2}{|c|}{\Code{imm[11:0]}}    & \Code{rs1}       & \Code{func3}    & \Code{rd}       & \Code{opcode}   & I-type                       \\ \hline    
+    \Code{imm[11:5]}     & \Code{rs2    }     & \Code{rs1}       & \Code{func3}    & \Code{imm[4:0]} & \Code{opcode}   & S-type                       \\ \hline
+    \multicolumn{4}{|c|}{\Code{imm[20|10:1|11|19:12]}}                             & \Code{rd}       & \Code{opcode}   & J-type                       \\ \bottomrule    
+    \multicolumn{7}{c}{ }                                                                                                                             \\
+    \multicolumn{6}{|c|}{Encodings}                                                                                    & Instruction                  \\ \midrule
+    \multicolumn{4}{|c|}{\Code{imm[20:1]}}                                         & \Code{rs/rd   } & \Code{0101011}  & \Code{JALS(rs, imm) = rd  }  \\ \hline   
+    \Code{0000000  }     & \Code{rs2    }     & \Code{rs1    }   & \Code{000}      & \Code{rd      } & \Code{0001011}  & \Code{JALRS(rs1, rs2) = rd}  \\ \hline  
+    \multicolumn{2}{|c|}{\Code{000000000000}} & \Code{rs1 = 0}   & \Code{001}      & \Code{rd = 0  } & \Code{0001011}  & \Code{ENTRY               }  \\ \hline  
+    \Code{1000000  }     & \Code{rs2 = 0}     & \Code{rs1    }   & \Code{010}      & \Code{rd = 0  } & \Code{0001011}  & \Code{INVAL(rs1)          }  \\ \hline    
+    \Code{0000000  }     & \Code{rs2    }     & \Code{rs1    }   & \Code{010}      & \Code{rd = 0  } & \Code{0001011}  & \Code{REVAL(rs1, rs2)     }  \\ \hline  
+    \Code{0000000  }     & \Code{rs2    }     & \Code{rs1    }   & \Code{011}      & \Code{rd = 0  } & \Code{0001011}  & \Code{PROT(rs1, rs2)      }  \\ \hline     
+    \Code{imm[11:5]}     & \Code{rs2    }     & \Code{rs1    }   & \Code{100}      & \Code{imm[4:0]} & \Code{0001011}  & \Code{GRANT(rs1, rs2, imm)}  \\ \hline   
+    \Code{imm[11:5]}     & \Code{rs2    }     & \Code{rs1    }   & \Code{101}      & \Code{imm[4:0]} & \Code{0001011}  & \Code{TFER(rs1, rs2, imm) }  \\ \hline   
+    \Code{imm[11:5]}     & \Code{rs2    }     & \Code{rs1    }   & \Code{110}      & \Code{imm[4:0]} & \Code{0001011}  & \Code{RECV(rs1, rs2, imm) }  \\ \hline   
+    \Code{0000000  }     & \Code{rs2    }     & \Code{rs1    }   & \Code{111}      & \Code{rd      } & \Code{0001011}  & \Code{EXCL(rs1, rs2) = rd }  \\ \bottomrule
+  \end{tabular}
+  \label{app:seccells:instencodings}
+  \caption[Instruction encodings for \seccells' prototype.]
+          {Instruction encodings for \seccells' prototype. 
+          The first part shows the four instruction encoding types supported by RISC-V.}
+\end{table}
+
+\paragraph{Exception details}
