@@ -33,15 +33,15 @@ exhaustively test and verify their systems, leading to an abundance of bugs.
 Popular software runs hundreds of millions of lines of source code, with
 millions of lines worth of changes every year.
 Transistor counts for processors have roughly followed Moore's law for
-near 50 years, and a modern Apple M2 chip has more than a $10^{11}$
-transistors compared to the 68,000 transistors of the Motorola 68k processor
+the last 50 years, and a modern Apple M2 chip has more than a $10^{11}$
+transistors compared to the $10^{4}$ transistors of the Motorola 68k processor
 from 1979.
 Second, this scaling in complexity relies on, and also enables, pervasive code
 sharing.
 A web browser (e.g., Firefox) along with the underlying operating 
 system (e.g., Linux) accounts for hundreds of millions of lines of code
 including
-\begin{inparaenum}
+\begin{itemize}
       % this point is meant to demonstrate the somewhat lack of formal structure
       % in Linux development. 
       % Individual devs are allowed to contribute their own improvements, 
@@ -55,11 +55,11 @@ including
       % absolute fragmentation of library development. popular libs developed
       % independently, and were incrementally adopted based on popularity
       \item shared libraries and modules developed independently and 
-            written using a plethora of different languages,
+            written in a plethora of languages,
       % again, fragmentation of sources, but particularly on lack of trust
-      \item code from websites, often including other embedded pages,
-            written by respective developers.
-\end{inparaenum}
+      \item code from websites, often embedding other pages,
+            written by their respective web developers.
+\end{itemize}
 Modern systems need to include the threat of bugs in shared code
 compromising their security in the their threat model, and implement
 necessary mitigations.
@@ -91,10 +91,12 @@ currently or in the future.
 %         The relative infancy of the internet meant very limited code sharing, and only among developers when
 %         at all.
 % \end{itemize}
+\mat{why should they change if they work?}
+\atri{The following sentences address exactly that.}
 While computing systems have evolved significantly, interfaces between many 
-parts of this system remain entrenched in antiquity.
+parts of this system have remained relatively unchanged.
 The designs of these interfaces reflect the requirements and threat landscape
-of their respective design periods, but fail to adequately address modern
+from their respective design periods, but fail to adequately address modern
 needs.
 One consequence is that interfaces might not adequately mitigate threats
 that have arisen or worsened \emph{after} the design of the interface.
@@ -114,7 +116,7 @@ modern trust relations.
 For example, the dominant abstraction for isolation within userspace code
 is a process, and different applications typically execute in different 
 processes to isolate applications from bugs in other applications.
-Isolation using processes is well suited to the historical state of software
+Process isolation is well suited to the historical state of software
 development where software vendors wrote their own applications with limited
 code sharing between vendors.
 Processes isolated code for one application, from one software vendor,
@@ -125,7 +127,7 @@ has become crucial.
 Security-critical programs, like browsers, microservices and microkernel
 operating systems (OSs), refactored to enforce intra-application isolation 
 using processes are limited by the high overheads of this abstraction, and 
-only support coarse-grained isolation to provide acceptable performance.
+only support coarse-grained isolation to cap performance overheads.
 
 
 % Prior work around fixing abstractions or introducing new ones
@@ -151,21 +153,20 @@ improvements to improve the kernel-user boundary and add isolation within
 a process.
 The security of operating systems is an area of active research, and many
 methodologies have been proposed to fix the issue of data races at the system
-call interface, primarily focussing on finding and fixing instances of such
-bugs.
-One class of proposals leverage static analysis to search the 
-OS codebases for specific vulnerable patterns.
-DFTinker~\cite{dftinker} and Wang et. al.~\cite{wang2017double} use
-pattern matching derived from known double fetch bugs.
-DFTracker~\cite{wang2019dftracker} and Deadline~\cite{deadline} further
-generalize the search using symbolic execution.
+call interface, primarily focussing on finding and fixing instances of this 
+class of bugs.
+One group of proposals leverage 
+static analysis~\cite{dftinker, wang2017double, wang2019dftracker, deadline}
+to comb the 
+OS codebases for vulnerable double fetches.
+These static analysis techniques have progressively generalized,
+from matching code against known double-fetch bug patterns to
+symbolic execution-based analyzers.
 Alternative proposals
-leverage dynamic analysis to detect instances of data races at runtime
+leverage dynamic analysis to detect instances of data races at 
+runtime~\cite{jurczyk2013bochspwn, schwartzDECAF, wilhelm2016xenpwn}
 by tracking kernel memory accesses running various common 
 workloads (for e.g., booting up, running a browser, playing multimedia).
-Bochspwn~\cite{jurczyk2013bochspwn} runs the target OS in an emulator, 
-whereas DECAF~\cite{schwartzDECAF} and Xenpwn~\cite{wilhelm2016xenpwn}
-run on native hardware and rely on hardware tracing functionality.
 Eliminating the found data races through bug fixes in source code allows the
 kernel to present a more secure interface, though the invulnerability to 
 data races remains an informal assumption rather than a guarantee.
@@ -176,7 +177,7 @@ bugs.
 Bug finding techniques, however, are insufficient --- they can only fix
 bugs found, and both static and dynamic analysis are incomplete.
 The significant churn in code further complicates the challenge, as every
-change potentially introduces a new such bug.
+change potentially introduces a new double-fetch bug.
 DropIt's mitigation is also incomplete, since the protection depends on
 a vendor-specific feature, which has since also been deprecated on newer
 processors.
