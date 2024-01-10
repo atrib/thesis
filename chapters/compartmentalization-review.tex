@@ -988,7 +988,7 @@ In this section, we will compare the mechanisms presented in
 \autoref{sec:compreview:mechanisms} on how well they provide the properties
 required for compartmentalization as discussed in 
 \autoref{sec:compreview:properties}.
-\autoref{sec:compreview:summarytab} summarizes this comparison.
+\autoref{tab:compreview:summarytab} summarizes this comparison.
 
 Mechanisms differ in the performance characteristics, based on the 
 common latency of their operations.
@@ -1006,7 +1006,7 @@ may also be affected by the tail latency~\cite{LiSPG14} of these operations.
           Process   & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
           XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked          & S/M\tnote{3}  \\
           $lwC$     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
-          MMP       & ??           &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+          MMP       & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
           CODOMs    & A            &  Data + Instruction & HW-tracked        & HW-tracked\tnote{2} & S/M\tnote{3}  \\
           MPK       & A            &  Data               & None              & None                & M             \\
           ERIM      & A + B        &  Data               & None\tnote{1}     & SW-enforced         & S/M\tnote{3}  \\
@@ -1047,7 +1047,7 @@ may also be affected by the tail latency~\cite{LiSPG14} of these operations.
             CHERI     & Hardware     & Capability, Revocation & Scalable       &  $\sim 10^{2}$        \\
             \seccells & SW-checked   & Bilateral              & Scalable       &  $\sim 10^{1}$        \\
       \end{tabular}                    
-      \caption[A comparison of comparmentalization mechanisms (summarized)]
+      \caption[]
       {
       (cont.) A comparison of comparmentalization mechanisms (summarized).
       ``AC'' = Access Control.
