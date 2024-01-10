@@ -1000,33 +1000,35 @@ may also be affected by the tail latency~\cite{LiSPG14} of these operations.
 % - Return addresses/link stacks
 
 \begin{table}
-      \begin{tabular}{l | l | l | l | l | l}
-            Mechanism & Threat Model &  Access Control     & Syscall Filtering & Entry Point & Threading \\ \midrule
-            Process   & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
-            XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked  & S/M@      \\
-            $lwC$     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
-            MMP       & ??           &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
-            CODOMs    & A            &  Data + Instruction & HW-tracked        & HW-tracked+ & S/M@      \\
-            MPK       & A            &  Data               & None              & None        & M         \\
-            ERIM      & A + B        &  Data               & None*             & SW-enforced & S/M@      \\
-            Donky     & A + B + C    &  Data               & Inbuilt           & Lib-tracked & S         \\
-            CHERI     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked  & S         \\
-            \seccells & A + B + C    &  Data + Instruction & HW-tracked        & HW-checked  & S/M       \\ 
-            \bottomrule
-      \end{tabular}
-      \caption[A comparison of comparmentalization mechanisms (summarized)]
-            {
-            A comparison of comparmentalization mechanisms (summarized).
-            The threat model column uses threat definitions (A/B/C) from 
-            \autoref{sec:compreview:comparison:model}.
-            The threading model is defined by S = Static, and M = Migrating.
-
-            TODO: Move to three part table for qualifiers like stars.
-            *ERIM has some support for filtering
-            +CODOMs' entry point restrictions can be weak
-            @limited support for static threading.
-            }
-      \label{tab:compreview:summarytab}
+  \begin{threeparttable}
+    \begin{tabular}{l | l | l | l | l | l}
+          Mechanism & Threat Model &  Access Control     & Syscall Filtering & Entry Point         & Threading     \\ \midrule
+          Process   & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+          XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked          & S/M\tnote{3}  \\
+          $lwC$     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+          MMP       & ??           &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+          CODOMs    & A            &  Data + Instruction & HW-tracked        & HW-tracked\tnote{2} & S/M\tnote{3}  \\
+          MPK       & A            &  Data               & None              & None                & M             \\
+          ERIM      & A + B        &  Data               & None\tnote{1}     & SW-enforced         & S/M\tnote{3}  \\
+          Donky     & A + B + C    &  Data               & Inbuilt           & Lib-tracked         & S             \\
+          CHERI     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+          \seccells & A + B + C    &  Data + Instruction & HW-tracked        & HW-checked          & S/M           \\ 
+          \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+      \item[1] ERIM has limited support for filtering.
+      \item[2] CODOMs' entry point restrictions can be weak.
+      \item[3] Limited support for static threading.
+    \end{tablenotes}
+  \end{threeparttable}
+  \caption[A comparison of comparmentalization mechanisms (summarized)]
+        {
+        A comparison of comparmentalization mechanisms (summarized).
+        The threat model column uses threat definitions (A/B/C) from 
+        \autoref{sec:compreview:comparison:model}.
+        The threading model is defined by S = Static, and M = Migrating.
+        }
+  \label{tab:compreview:summarytab}
 \end{table}
 
 
