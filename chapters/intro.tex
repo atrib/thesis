@@ -756,31 +756,50 @@ interface to the requirements of modern programs.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Thesis Outline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Thesis Organization}
-This thesis is structured as follows.
+\section{Thesis Organization and Details}
 
+\paragraph{Thesis Organization}
+This thesis is distributed across three chapters. 
 \autoref{ch:midas} describes Midas, the systematic mitigation to
 kernel double-fetch bugs.
-
-\autoref{ch:seccells} describes SecureCells, our novel mechanism for
-intra-address space compartmentalization.
-
+\autoref{ch:seccells} describes SecureCells, a novel secure and performant 
+mechanism for intra-address space compartmentalization.
 Finally, \autoref{ch:compreview} contains a comprehensive survey comparing
 compartmentalization mechanisms in qualitative and quantitative terms.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Reference the included papers and contributors
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Bibliographic Notes}
+\paragraph{Bibliographic Notes}
 This thesis was supervised by my advisors, Prof. Mathias Payer and Prof. Babak Falsafi.
-Portions of the thesis describe projects conducted in collaboration with academic peers, 
+Sections of the thesis describe projects conducted in collaboration with academic peers, 
 namely Uros Tesic, Florian Hofhammer, Yuanlong Li, Siddharth Gupta, and Andres Sanchez.
-The investigation of \tocttou protection~\cite{BhattacharyyaTP22}, described in \autoref{ch:midas},
-was published in the
-\emph{Proceedings of the 31st USENIX Security Symposium} in 2022.
-The design, implementation and evaluation of SecureCells~\cite{BhattacharyyaHLGSFP23}, 
-described in \autoref{ch:seccells}, was published as a conference paper in the 
-\emph{Proceedings of the $44^{th}$ IEEE Symposium on Security and Privacy, SP 2023}.
+This thesis contains contributions from the following conference publications:
+\begin{itemize}
+      \item \emph{Midas: Systematic Kernel TOCTTOU Protection} published in
+            the 
+            \emph{Proceedings of the 31st USENIX Security Symposium} in 2022.
+      \item \emph{SecureCells: A Secure Compartmentalized Architecture} published in
+            the 
+            \emph{Proceedings of the $44^{th}$ IEEE Symposium on Security and Privacy} 
+            in 2023.
+\end{itemize}
 
-\mat{Other publications not part of this thesis.}
-\atri{Not sure what you want about other publications. Should I list them, or their co-authors?}
+During the course of this PhD studies, the author of this thesis also contributed to
+other projects resulting in the publications listed below.
+The results from these publications are not included in this thesis.
+\begin{itemize}
+      \item \emph{Shrink It or Shed It! Minimize the Use of LSQs in Dataflow Designs}
+            published in the
+            \emph{2019 International Conference on Field-Programmable Technology}.
+      \item \emph{SMoTherSpectre: Exploiting Speculative Execution through Port Contention}
+            published in the
+            \emph{Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security}.
+      \item \emph{SpecROP: Speculative Exploitation of ROP Chains}
+            published in the
+            \emph{23rd International Symposium on Research in Attacks, Intrusions and Defenses}
+            in 2020.
+      \item \emph{Rebooting Virtual Memory with Midgard}
+            published in the
+            \emph{2021 ACM/IEEE 48th Annual International Symposium on Computer Architecture}.
+\end{itemize}
