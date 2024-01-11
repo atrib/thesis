@@ -1,3 +1,4 @@
+\atri{Tackle general theme of repitition in this intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Customary 5-part intro explaining:
 %%%%%%% Context, problem, prior work, insight and solution
@@ -151,14 +152,15 @@ only support coarse-grained isolation to cap performance overheads.
 Continuing industrial and academic efforts have proposed various 
 improvements to improve the kernel-user boundary and add isolation within
 a process.
-The security of operating systems is an area of active research, and many
+The security of operating system kernels is an area of active research, and 
+many
 methodologies have been proposed to fix the issue of data races at the system
 call interface, primarily focussing on finding and fixing instances of this 
 class of bugs.
 One group of proposals leverage 
 static analysis~\cite{dftinker, wang2017double, wang2019dftracker, deadline}
 to comb the 
-OS codebases for vulnerable double fetches.
+kernel codebases for vulnerable double fetches.
 These static analysis techniques have progressively generalized,
 from matching code against known double-fetch bug patterns to
 symbolic execution-based analyzers.
@@ -171,15 +173,17 @@ Eliminating the found data races through bug fixes in source code allows the
 kernel to present a more secure interface, though the invulnerability to 
 data races remains an informal assumption rather than a guarantee.
 % schwartsDECAF has decaf - detection, dropit - mitigation.
-Finally, DropIt~\cite{schwartzDECAF} repurposes a CPU-specific feature
-intended for accelerating database transactions to instead mitigate such
-bugs.
+Finally, a proposed mitigation~\cite{schwartzDECAF} repurposes a CPU-specific
+feature
+designed for accelerating database transactions to instead dynamically
+detect user updates between kernel double fetches, rolling back the
+system call execution to prevent exploitation.
 Bug finding techniques, however, are insufficient --- they can only fix
 bugs found, and both static and dynamic analysis are incomplete.
 The significant churn in code further complicates the challenge, as every
 change potentially introduces a new double-fetch bug.
-DropIt's mitigation is also incomplete, since the protection depends on
-a vendor-specific feature, which has since also been deprecated on newer
+The proposed mitigation is also inadequate, since the protection depends on
+a vendor-specific feature which has since also been deprecated on newer
 processors.
 The system call interface requires a more principled and reliant
 mitigation against data race attacks.
@@ -196,7 +200,20 @@ Some mechanisms~\cite{ParkLXMK19, HedayatiGJCSSM19Hodor} trade off
 performance for security, either providing weaker security than processes
 to provide better performance or making restrictive assumptions on
 use case.
-
+A common approach among researchers is to retrofit protections to vulnerable
+interfaces abusing the side effects of unrelated mechanisms co-existing on
+the systems, bringing immediate protection to certain systems at the cost
+of fundamental shortcomings.
+Researchers have applied this approach to both mitigate double-fetch
+bugs~\cite{schwartzDECAF} using Intel TSX and to implement 
+compartmentalization~\cite{HedayatiGJCSSM19Hodor,LeeSK18} using Intel VT-x.
+This approach is limited by dependence on specific 
+systems (using Intel CPUs, for example) and potentially
+inhibits running applications requiring these features for their proper 
+functionality.
+Most importantly, such defence techniques lack principled design and 
+resemble targeted defences rather than 
+fundamental security guarantees baked into interface design.
 
 % Insights: Problems with abstractions can be fixed. 
 % Fixes might require principled changes to the interfaces, as either mitigations which preserve the
@@ -219,13 +236,14 @@ extending or redesigning interfaces.
 At the kernel-user interface, we see that data races require the kernel
 to access the same argument in user memory at least twice, which
 allows the user to modify the data in the meantime.
-In fact, such bugs which are generally called double-fetch bugs commonly 
+In fact, such bugs which are generally called double-fetch bugs 
+commonly (but not exclusively)
 manifest from the same usage pattern.
 The kernel first loads arguments once to check their validity, then
 loads them at a later time in order to use them.
-This pattern earns these bugs the often-used moniker of 
+This pattern earns these bugs the popular moniker of 
 Time-of-Check to Time-of-Use (\tocttou) bugs.
-A double-fetch bug manifests from an implicit assumption by the developer
+Double-fetch bugs contain an implicit assumption by the developer
 that the fetched data is the same, which may be violated by another thread
 through a concurrent modification.
 OS kernels generally use a softare interface to access user memory, to manage
@@ -244,7 +262,7 @@ millisecond-scale compartment switches at best.
 We notice that the traditional trusted-computing base includes the hardware
 alongside the supervisor.
 Hence, we can securely delegate some operations (access control, inter-compartment
-control and data flow) from the supervisor to the hardware, improving 
+control, and data flow) from the supervisor to the hardware, improving 
 performance while maintaining the same security guarantees.
 Improvements and trends in microarchitectural design, such as the trend towards
 VMA-based access control in the core's translation-lookaside buffer 
@@ -267,8 +285,10 @@ VMA-based access control in the core's translation-lookaside buffer
 %         two-dimensional table, and tracking per-core executing compartment, along with 
 %         userspace instructions for accelerating compartmentalization operations.
 % \end{itemize}
-In this thesis, we present secure designs for the kernel-user and user-user
-interfaces, both of which are security- and performance-critical.
+In this thesis, we present secure designs 
+for the user-kernel interface used by processes and 
+for interfaces between intra-process domains, 
+both of which are security- and performance-critical.
 Midas provides systematic protection to the user-kernel interfaces against
 double-fetch attacks by maintaining an invariant:
 \emph{through a system call's lifetime, every read to a userspace object
@@ -396,9 +416,11 @@ SecComp~\cite{seccomp}, could also introduce double-fetches if extended to
 include ``deep argument inspection'' (i.e., arguments passed by reference).
 
 % Insight and design/solution mixed together
-A systematic mitigation for double-fetch bugs must prohibit all concurrent
-changes to memory accessed during a system call, including from within
-threads in the same process, other processes, or from other system calls.
+A systematic mitigation for double-fetch bugs must prohibit all 
+concurrent changes to memory objects accessed by the kernel 
+during the execution of a system call, 
+including writes from threads in the same process, other processes, 
+or from concurrently executing system calls.
 The userspace memory access interface can be tasked with maintaining
 the core invariant: 
 \emph{through a syscall's lifetime, every read to an usespace object
@@ -436,11 +458,12 @@ will return the same value}.
 % churn.
 The complexity and rapid pace of change of modern software systems inevitably
 leads to a plethora of bugs across the stack.
+\atri{XYZ has shown that ZYX has bugs across time}.
 Additionally, a system's software is extremely varied, including interacting
 subsystems, numerous different applications each relying on a extensive list
 of shared libraries, plugins, interpreted code and on-demand downloaded
 code, interacting over untrusted I/O interfaces such as the network, disks, 
-various accelerators and peripherals.
+various accelerators, and peripherals.
 To manage this growth, software developers heavily rely on
 abstraction and isolation.
 Each software component hides much of its complexity behind an accessible
@@ -480,19 +503,20 @@ but limited by the coarse-grained abstraction of isolation (processes)
 available on traditional systems.
 Bugs in the sandbox within the rendering engine can still compromise all
 other components in the sandbox, including the just-in-time compiler.
-The key limitations of the process abstraction are:
-\begin{inparaenum}
-      \item all code within a process is equally privileged and can access all
-            of that process' resources including memory, and
-      \item interactions between processes incur microsecond-scale kernel
-            operations.
-\end{inparaenum}
-The first limitation prevents untrusting components within a process to
-isolate themselves, barring software sandboxing which can be buggy at scale.
+The first key limitations of the process abstraction is that
+all code within a process is equally privileged and 
+can equally access all of that process' resources including memory.
+The second limitation of this abstraction is that interactions between 
+processes require system calls incurring microsecond-scale overheads.
+The first limitation prevents applications from implementing and enforcing 
+barriers expressing the complex trust relations between code components.
+Applications rely on complex software isolation techniques like 
+sandboxing and softare fault isolation,
+which are buggy at scale.
 The second downside limits how finely applications can be decomposed into
-processes, due to considerations of performance overhead.
-However, the process abstraction is flexible and remains the mechanism 
-of choice for usable isolation.
+processes, due to performance overhead considerations.
+However, the process abstraction is flexible and widely supported, 
+and remains the mechanism of choice for usable isolation.
 
 % Insight and design/solution
 Modern software requires an intra-address space compartmentalization mechanism
@@ -564,11 +588,24 @@ of the interface to support varying softare use-cases to be vital for adoption.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Thesis contributions}
 
-\mat{What about using the attack as motivation?}
-\atri{Not sure, which attack?}
 % Summary of contributions
 This thesis presents two redesigned security- and performance-critical 
-interfaces, particularly at the user-kernel boundary and within a process.
+interfaces, specifically the user-kernel boundary and 
+intra-process trust domain boundaries.
+The kernel's system call interface is crucial for protecting the system, as
+the kernel is privileged and can access and control the system's resources.
+Compromising the kernel through system calls can allow attackers to bypass
+inter-process isolation, compromise applications and data for other users of
+the system, and arbitrarily control external interfaces such as network cards
+exposing the potential to attack other connected systems.
+Intra-process trust boundaries have emerged more recently as 
+security-critical interfaces as modern systems increasingly incorporate 
+untrusted components and get connected to the internet.
+Bugs in network connected applications with vulnerable code components
+represents the first step towards remotely compromising systems.
+Attacks can leverage bugs in a component to gain access to the entire
+process, and can then leverage that capability to attack the kernel
+to gain full control of a system.
 
 \subsection{Midas}
 Midas presents a multi-versioning concurrency control mechanism, inspired
