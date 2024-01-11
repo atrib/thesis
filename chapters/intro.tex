@@ -1,4 +1,3 @@
-\atri{Tackle general theme of repitition in this intro}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Customary 5-part intro explaining:
 %%%%%%% Context, problem, prior work, insight and solution
@@ -28,7 +27,7 @@ complexity.
 Modern computing systems inherit many of the abstractions and interfaces
 developed at the inception of personal computing and mainframe servers,
 but face a very different computing environment.
-First, the complexity and scale of computing systems have increased 
+The complexity and scale of computing systems have increased 
 exponentially over the decades, far outscaling the ability for developers to 
 exhaustively test and verify their systems, leading to an abundance of bugs.
 Popular software runs hundreds of millions of lines of source code, with
@@ -37,7 +36,7 @@ Transistor counts for processors have roughly followed Moore's law for
 the last 50 years, and a modern Apple M2 chip has more than a $10^{11}$
 transistors compared to the $10^{4}$ transistors of the Motorola 68k processor
 from 1979.
-Second, this scaling in complexity relies on, and also enables, pervasive code
+This scaling in complexity relies on, and also enables, pervasive code
 sharing.
 A web browser (e.g., Firefox) along with the underlying operating 
 system (e.g., Linux) accounts for hundreds of millions of lines of code
@@ -61,12 +60,13 @@ including
       \item code from websites, often embedding other pages,
             written by their respective web developers.
 \end{itemize}
-Modern systems need to include the threat of bugs in shared code
-compromising their security in the their threat model, and implement
-necessary mitigations.
-For example, a developer of web code must consider the threat that any of the
+Modern systems need to consider the threat of bugs in shared code
+compromising their security, and implement the necessary mitigations.
+For example, a web developer must account for the threat that any of the
 thousands of JavaScript packages their code depends on might be malicious,
 currently or in the future.
+The abstractions and interfaces at the core of computer systems need to
+enable systems to face up to today's security challenges.
 % See this example:
 % https://therecord.media/malware-found-in-npm-package-with-millions-of-weekly-downloads
 
@@ -92,17 +92,16 @@ currently or in the future.
 %         The relative infancy of the internet meant very limited code sharing, and only among developers when
 %         at all.
 % \end{itemize}
-\mat{why should they change if they work?}
-\atri{The following sentences address exactly that.}
 While computing systems have evolved significantly, interfaces between many 
 parts of this system have remained relatively unchanged.
 The designs of these interfaces reflect the requirements and threat landscape
 from their respective design periods, but fail to adequately address modern
 needs.
-One consequence is that interfaces might not adequately mitigate threats
+One consequence is that key interfaces might not adequately mitigate threats
 that have arisen or worsened \emph{after} the design of the interface.
-For example, the kernel system call has always considered the threat
-of attacks from untrusted userspace and system calls typically check the 
+For example, the kernel system call interface has always been cognizant of
+the threat
+of attacks from untrusted userspace, and system calls typically check the 
 validity of arguments passed from userspace.
 Meanwhile, computing has evolved to support increased concurrency and true 
 parallelism, with the rise in popularity of multicore CPUs and multi-threaded 
@@ -112,8 +111,8 @@ this evolution has enabled data races if the user program
 modifies the arguments from a second thread while the kernel executes
 a system call from one thread.
 A second consequence is that interfaces might not provide the correct
-abstractions to efficiently support program design that reflects
-modern trust relations.
+abstractions to efficiently support designs that reflect
+trust relations within parts of modern applications.
 For example, the dominant abstraction for isolation within userspace code
 is a process, and different applications typically execute in different 
 processes to isolate applications from bugs in other applications.
@@ -123,7 +122,7 @@ code sharing between vendors.
 Processes isolated code for one application, from one software vendor,
 from other applications, from other software vendors or for another user.
 With more code within applications originating from third-party developers
-and less trust of code run within a single process, intra-process isolation
+and less trust in code run within a single process, intra-process isolation
 has become crucial.
 Security-critical programs, like browsers, microservices and microkernel
 operating systems (OSs), refactored to enforce intra-application isolation 
@@ -150,8 +149,8 @@ only support coarse-grained isolation to cap performance overheads.
 %         protection domains or compartments, assuring security at high cost.
 % \end{itemize}
 Continuing industrial and academic efforts have proposed various 
-improvements to improve the kernel-user boundary and add isolation within
-a process.
+improvements to improve the kernel-user boundary and add support for 
+isolation within an application.
 The security of operating system kernels is an area of active research, and 
 many
 methodologies have been proposed to fix the issue of data races at the system
@@ -161,15 +160,15 @@ One group of proposals leverage
 static analysis~\cite{dftinker, wang2017double, wang2019dftracker, deadline}
 to comb the 
 kernel codebases for vulnerable double fetches.
-These static analysis techniques have progressively generalized,
+These static analysis techniques have progressively improved
 from matching code against known double-fetch bug patterns to
 symbolic execution-based analyzers.
 Alternative proposals
 leverage dynamic analysis to detect instances of data races at 
 runtime~\cite{jurczyk2013bochspwn, schwartzDECAF, wilhelm2016xenpwn}
-by tracking kernel memory accesses running various common 
+by tracking kernel memory accesses while executing various common 
 workloads (for e.g., booting up, running a browser, playing multimedia).
-Eliminating the found data races through bug fixes in source code allows the
+Eliminating the discovered data race bugs by fixing source code allows the
 kernel to present a more secure interface, though the invulnerability to 
 data races remains an informal assumption rather than a guarantee.
 % schwartsDECAF has decaf - detection, dropit - mitigation.
@@ -179,9 +178,9 @@ designed for accelerating database transactions to instead dynamically
 detect user updates between kernel double fetches, rolling back the
 system call execution to prevent exploitation.
 Bug finding techniques, however, are insufficient --- they can only fix
-bugs found, and both static and dynamic analysis are incomplete.
+bugs found --- and both static and dynamic analysis are incomplete.
 The significant churn in code further complicates the challenge, as every
-change potentially introduces a new double-fetch bug.
+change potentially introduces new double-fetch bugs.
 The proposed mitigation is also inadequate, since the protection depends on
 a vendor-specific feature which has since also been deprecated on newer
 processors.
@@ -190,7 +189,7 @@ mitigation against data race attacks.
 Similarly, while researchers and processor vendors continue to propose 
 mechanisms for finer-grained isolation within a process' address space, 
 these mechanisms vary in their design goals, and do not adequately
-support widespread adoption.
+support widespread adoption of compartmentalization.
 Mechanisms which prioritize backward compatibility with existing 
 systems~\cite{LittonVE0BD16, HsuHEP16, HedayatiGJCSSM19Hodor, LeeSK18, DuHXZC19XPC}
 introduce the security benefits of intra-address space isolation
@@ -199,11 +198,11 @@ such as expensive supervisor-mediated context switches.
 Some mechanisms~\cite{ParkLXMK19, HedayatiGJCSSM19Hodor} trade off 
 performance for security, either providing weaker security than processes
 to provide better performance or making restrictive assumptions on
-use case.
+application use cases.
 A common approach among researchers is to retrofit protections to vulnerable
 interfaces abusing the side effects of unrelated mechanisms co-existing on
 the systems, bringing immediate protection to certain systems at the cost
-of fundamental shortcomings.
+of a few fundamental shortcomings.
 Researchers have applied this approach to both mitigate double-fetch
 bugs~\cite{schwartzDECAF} using Intel TSX and to implement 
 compartmentalization~\cite{HedayatiGJCSSM19Hodor,LeeSK18} using Intel VT-x.
@@ -250,10 +249,10 @@ OS kernels generally use a softare interface to access user memory, to manage
 protections like Supervisor Memory Access Prevention (SMAP), and we can
 extend this interface with a secure invariant.
 % 
-Within userspace, however, the requirements for isolation have changed 
+Within userspace applications, the requirements for isolation have changed 
 drastically: from isolating per-user processes which occupy millisecond-scale
 scheduling slots to finer grained module or library-level isolation, which
-demands sub-microsecond operations (for example, compartment switching).
+demands sub-microsecond operations (for example, switching trust domains).
 An userspace process needs to be further divided into isolated compartments
 which can communicate along well-defined APIs.
 Software OS mechanisms are expensive --- even supervisors optimized for
@@ -408,6 +407,9 @@ kernel to access memory outside the buffer.
 A time-of-check to time-of-use (\tocttou) violation occurs when the
 first read is used to validate an argument (example, the length above)
 and the second read is to use the argument.
+More generally, a double-fetch bug manifests as system call code which reads
+the same argument (passed by a user application by reference) two or more
+times.
 Double-fetch bugs might be particularly difficult to identify, as the two
 reads might be in entirely different parts of the kernel, or even in external
 code loaded through the eBPF interface or as modules.
@@ -416,79 +418,60 @@ SecComp~\cite{seccomp}, could also introduce double-fetches if extended to
 include ``deep argument inspection'' (i.e., arguments passed by reference).
 
 % Insight and design/solution mixed together
-A systematic mitigation for double-fetch bugs must prohibit all 
+A systematic mitigation for double-fetch bugs must guarantee that a system call
+will always read the same argument values.
+Therefore, the mitigation must prohibit or hide all 
 concurrent changes to memory objects accessed by the kernel 
 during the execution of a system call, 
 including writes from threads in the same process, other processes, 
 or from concurrently executing system calls.
-The userspace memory access interface can be tasked with maintaining
-the core invariant: 
-\emph{through a syscall's lifetime, every read to an usespace object
-will return the same value}.
-
+The userspace memory access interface can be tasked with providing
+the required guarantee for argument accesses.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Deeper dive into userspace compartmentalization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Intra-address Space Compartmentalization Overview}
 
-% Context
-% SecureCells tackles the challenge of tailoring existing abstractions to keep up to date
-% with modern threat models.
-% Over the years, code sharing has become increasingly commonplace, essentially
-% removing duplication of programmer effort, and allowing consumers to access
-% vastly varying computing experiences.
-% These experiences are enabled by:
-% \begin{itemize}
-%   \item Libraries (open-source or binary-only) distributed and shared widely across
-%         programs, implementing widely-used operations like cryptography or
-%         parsing common file formats. Often such code is available through package 
-%         managers like apt or npm as source code or binary blobs. 
-%         The intricate web of dependencies between libraries often results in
-%         additional code being included.
-%   \item Extensible frameworks like the linux kernel allow functionality to be added
-%         on-demand, through the use of external code (such as kernel drivers or eBPF
-%         payloads),
-%   \item On-demand code being distributed to power interactive experiences on the web.
-%         Websites are powered by vast code-bases of JavaScript, PHP and Wasm which are
-%         dynamically loaded from servers and executed in sandboxes.
-% \end{itemize}
-% In all of these cases, an address space runs code written by a variety of different
-% sources, with different levels of trust and testing, and with a significant code 
-% churn.
 The complexity and rapid pace of change of modern software systems inevitably
 leads to a plethora of bugs across the stack.
 \atri{XYZ has shown that ZYX has bugs across time}.
-Additionally, a system's software is extremely varied, including interacting
-subsystems, numerous different applications each relying on a extensive list
-of shared libraries, plugins, interpreted code and on-demand downloaded
-code, interacting over untrusted I/O interfaces such as the network, disks, 
+System developers heavily rely on abstraction and isolation to tackle
+application complexity stemming from interacting subsystems, 
+an extensive list of shared libraries, 
+plugins, interpreted code and on-demand downloaded code, interacting over 
+untrusted I/O interfaces such as the network, disks, 
 various accelerators, and peripherals.
-To manage this growth, software developers heavily rely on
-abstraction and isolation.
 Each software component hides much of its complexity behind an accessible
 interface (commonly called Application Programming Interfaces or APIs).
-An operating system kernel is tasked with system management and with 
-isolating individual applications.
-The hardware provides the abstraction of separate privilege levels, aiding
-the kernel to isolate itself from untrusted userspace by inhabiting separate
-privilege levels.
-The kernel and hardware coordinate to provide the abstraction of processes,
-isolated and private virtual address spaces along with separate copies of
-kernel resources like file descriptors, used by userspace to isolate
-applications.
-These abstractions provide crucial security and robustness guarantees.
+Traditional threat models have resulted in isolation at a few 
+security-critical interfaces.
+The operating system (OS) kernel tasked with system management is already
+isolated from userspace processes running untrusted applications.
+Commercial hardware provides the abstraction of privilege levels, 
+allowing the kernel to reliably isolate itself within a separate level.
+The kernel also isolates separate applications and applications from
+separate users with a common abstraction, processes.
+Processes protect applications from other faulting or malicious applications,
+with isolated per-process virtual memory spaces and kernel resources.
+These abstractions provide systems crucial security and robustness 
+guarantees.
 Applications cannot access other applications' memory spaces, or the
 kernel's data.
 The kernel can gracefully handle an application faulting, killing the
 corresponding process without affecting itself or other applications.
 Essentially, these abstractions work to mirror the trust relations between
 components of the massive code base.
+However, existing interfaces fail to protect systems against more recent
+threat models.
 
 % Problem
 Rapid development in computing, supercharged by the explosion of the internet,
-have rendered traditional isolation abstractions insufficient to express modern
-trust relations.
+has resulted in applications which cannot trust all code executing within
+its process.
+A bug in the one logging module allowed attackers to leverage the Log4J
+vulnerability to compromise entire server applications, 
+and remotely take over the machines running these applications.
 A browser, for example, contains hundreds of shared libraries and executes
 code downloaded from untrusted websites.
 To prevent website code, controlled by a remote adversary, from directly 
@@ -520,11 +503,12 @@ and remains the mechanism of choice for usable isolation.
 
 % Insight and design/solution
 Modern software requires an intra-address space compartmentalization mechanism
-that provides strong isolation within a process' address space, with
+that provides strong isolation for application components
+running within the same address space, with
 low-overhead nanosecond-scale operations to support compartments with short
 nanosecond-scale execution timescales, all while maintaining the flexibility
 to support a variety of software trust relationships.
-In this work, we highlight that the limitations of the process abstraction
+In this thesis, we highlight that the limitations of the process abstraction
 stem from the software-hardware design of virtual memory.
 First, page-based virtual memory requires permission and translation tracking
 at page granularity, and near-core permission caching buffers (TLBs) whose
@@ -532,12 +516,15 @@ entry count cannot scale with the rate of growth of memory.
 Second, the privileged kernel is tasked with changing between memory 
 permissions (involving changing page tables) and incurs the unacceptable
 cost of kernel entry and exits.
-% TODO: here, the text starts getting wishy-washy
+
+% Describing solution methodology
+Systems can implement secure and performant compartmentalization by moving
+key checks and operations from the supervisor into the hardware.
 While the hardware is part of the trusted-computing base, its view of virtual
 memory remains rooted in the designs of the 80s.
 A compartmentalized abstraction of virtual memory, with the hardware capable
-of tracking compartments and enforcing the requisite permissions to memory
-can eliminate the kernel overheads, while preserving strong security checks.
+of tracking compartments and enforcing the requisite permissions to memory,
+can eliminate the kernel overheads while preserving strong security checks.
 Further, the hardware can accelerate specific common compartmentalization
 operations for data and control flow if it is aware of compartments.
 Finally, operations which do not benefit from hardware acceleration can
@@ -546,93 +533,54 @@ be retained in software, retaining the accompanying flexibility.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Zoom out, present the thesis statement
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Thesis goals}
+\section{Thesis Contributions}
 
-This thesis aims to redesign systems interfaces to satisfy the
-security and performance requirements of modern and future computing 
-systems, against contemporary threat models.
+This thesis aims to protect systems by redesigning interfaces to satisfy 
+the security and performance requirements of modern and future computing 
+systems, against emerging threat models.
 While the security of current systems is of paramount importance, the
 performance of these systems must also satisfy strict deployment 
 requirements.
 Foremost, we prioritize the security of our proposed interfaces, but also
 consider performance as a crucial secondary requirement.
-For the user-kernel interface, we also consider backward compatibility with
+For the user-kernel interface, we also consider compatibility with
 the existing system call semantics as an essential requirement.
 For intra-address space compartmentalization, we also deem the flexibility
 of the interface to support varying softare use-cases to be vital for adoption.
 
-\begin{center}
-      \textbf{Thesis statement}
-
-% \emph{
-% The design of interfaces decisively influences the characteristics of 
-% computing systems --- 
-% strong, well-defined guarantees at the interfaces allow developers to build 
-% well-protected high-performance systems.
-% Systems software requires reimagined interfaces to reflect the security
-% and performance requirements of modern software, particularly at the 
-% user-kernel and intra-process boundaries.
-% }
-
-\emph{
-      Critical software systems are limited by legacy interfaces, 
-      and require redesigned interfaces to protect against the modern 
-      threat landscape while satisfying strict performance requirements.
-      User-kernel and intra-user interfaces particularly benefit from 
-      better low-overhead isolation.
-}
-\end{center}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%% Thesis contributions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Thesis contributions}
-
 % Summary of contributions
-This thesis presents two redesigned security- and performance-critical 
+We present two redesigned security- and performance-critical 
 interfaces, specifically the user-kernel boundary and 
 intra-process trust domain boundaries.
-The kernel's system call interface is crucial for protecting the system, as
-the kernel is privileged and can access and control the system's resources.
-Compromising the kernel through system calls can allow attackers to bypass
-inter-process isolation, compromise applications and data for other users of
-the system, and arbitrarily control external interfaces such as network cards
-exposing the potential to attack other connected systems.
-Intra-process trust boundaries have emerged more recently as 
-security-critical interfaces as modern systems increasingly incorporate 
-untrusted components and get connected to the internet.
-Bugs in network connected applications with vulnerable code components
-represents the first step towards remotely compromising systems.
-Attacks can leverage bugs in a component to gain access to the entire
-process, and can then leverage that capability to attack the kernel
-to gain full control of a system.
+We add strongly-guaranteed protection against double-fetch bugs to
+the system call interface.
+Further, we introduce a intra-address space mechanism for
+isolating untrusted application parts.
+Finally, we present a comprehensive survey of existing and proposed
+compartmentalization mechanisms to enable a principled comparison
+of these mechanisms.
 
 \subsection{Midas}
 Midas presents a multi-versioning concurrency control mechanism, inspired
-from database systems, for maintaining its invariant during user data
-accesses.
+from database systems, for maintaining a key invariant during user data
+accesses from system calls:
+\emph{through a system call's lifetime, every read to a userspace object
+will return the same value}.
 A \emph{security property} derived from this invariant is enforced ---
 Midas uses kernel metadata to track userspace pages accessed, maintains
 page-table permissions to enforce immutability and leverages page faults
 to on-demand duplicate pages where necesssary to preserve an original
 copy for a system call.
-A \emph{correctness property} is described and proved in this thesis,
-showing how the system execution remains correct under execution with
+A \emph{correctness property} is also described in this thesis,
+showing how the system's execution remains correct under execution with
 Midas.
-The user-kernel interface is also performance-critical and affects the
-system's performance on syscall-intensive workloads.
+Since, the user-kernel interface is performance-critical and 
+affects the system's performance on syscall-intensive workloads,
+Midas' design optimizes for low overheads.
 As concurrent writes to system call arguments is practically non-existent
-for well-behaved programs, we have optimized Midas' design to minimize 
-expensive page duplications.
+for well-behaved programs, Midas strives to minimize expensive page 
+duplications and relies on snapshotting for protecting accesses.
 
-% Use cases
-% We eliminate TOCTTOU in a systematic solution which will:
-% \begin{itemize}
-%       \item Protect current (potentially unknown) TOCTTOU bugs in the kernel,
-%       \item Protect vulnerable kernel modules or ebpf code developed 
-%             by third parties,
-%       \item Protect older systems with minor updates.
-% \end{itemize}
 Midas can be used in various scenarios. 
 First, Midas protects systems against existing, even potentially unknown,
 double-fetch bugs on current and future production systems.
@@ -707,51 +655,28 @@ These improvements are a direct consequence of tailoring the software-hardware
 interface to the requirements of modern programs.
 
 
-% This thesis contributes the design and implementations of modern
-% security- and performance-critical interfaces to support 
-% current and future computing systems.
-% Midas redesigns the userspace memory access interface to provide
-% strong mitigations against data race attacks.
-% SecureCells introduces compartmentalization to the architectural
-% virtual memory interface.
+\begin{center}
+      \textbf{Thesis statement}
 
-% Midas' design is based on the following insights:
-% \begin{itemize}
-%   \item Modern OS kernels rely on softare interfaces to access
-%         user memory, disabling and re-enabling related
-%         protection measures like SMAP.
-%   \item Non-adversarial userspace software will not modify
-%         system call arguments passed by reference, as they
-%         rely on the system call completing successfully.
-%         Data races are, therefore, not the common case, and
-%         the protection mechanism should be designed for better
-%         performance when not under attack
-%   \item Duplication of userspace memory is expensive, requiring
-%         the corresponding memory allocation and expensive
-%         metadata tracking.
-%   \item The kernel does not need to duplicate userspace memory
-%         except in the case of concurrent updates. In the common
-%         case, duplication should be avoided.
-%   \item MMU-based permission checks are ubiquitious in modern
-%         architectures, allowing the hardware to efficiently
-%         enforce read-only access to memory regions, and
-%         notify the OS on violations.
-% \end{itemize}
-% This thesis contributes a design for system-call protection for Linux
-% based on these insights.
+% \emph{
+% The design of interfaces decisively influences the characteristics of 
+% computing systems --- 
+% strong, well-defined guarantees at the interfaces allow developers to build 
+% well-protected high-performance systems.
+% Systems software requires reimagined interfaces to reflect the security
+% and performance requirements of modern software, particularly at the 
+% user-kernel and intra-process boundaries.
+% }
 
-% In this thesis, we also describe the design and implementation of
-% SecureCells, our novel architecture for intra-address space
-% compartmentalization.
-% We
-% \begin{itemize}
-%   \item Explore the requirements for compartmentalization, and
-%         categorize these requirements under performance, security
-%         and flexibility umbrellas,
-%   \item Present the design of three pillars of SecureCells: 
-%         hardware access control, unprivileged userspace instructions
-%         and softare operations.
-% \end{itemize}
+\emph{
+      Critical software systems are limited by legacy interfaces, 
+      and require redesigned interfaces to protect against the modern 
+      threat landscape while satisfying strict performance requirements.
+      User-kernel and intra-user interfaces particularly benefit from 
+      better low-overhead isolation.
+}
+\end{center}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Thesis Outline
