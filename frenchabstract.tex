@@ -20,7 +20,7 @@ Tout le code s'exécutant au sein d'un processus a le même niveau de confiance.
 Par conséquent, un code tiers défectueux ou malveillant dans un processus peut compromettre le processus en divulguant ou modifiant directement la mémoire utilisée par d'autres composants de l'application. 
 L'interface de la mémoire virtuelle doit être repensée pour permettre aux applications d'être compartimentées, implémentant le principe du moindre privilège en isolant les parties non fiables de l'application dans des compartiments avec un accès limité à certaines ressources de l'application. 
 Nous présentons \seccells, une nouvelle interface architecturale pour la compartimentation intra-espace d'adressage. \seccells permet aux applications de définir des vues de mémoire garantie par le matériel pour les compartiments d'application avec des instructions d'espace utilisateur accélérant les appels inter-compartiments. 
-Dans des microbenchmarks, \seccells permet à un ordré cœur à 5 étages de passer d'un compartiment à un autre en seulement 8 cycles, réduisant le coût des transitions d'un ordre de grandeur par rapport aux meilleures alternatives. 
+Dans des microbenchmarks, \seccells permet à un cœur ordré à 5 étages de passer d'un compartiment à un autre en seulement 8 cycles, réduisant le coût des transitions d'un ordre de grandeur par rapport aux meilleures alternatives. 
 Nous construisons également un prototype complet de \seccells, basé sur le cœur RISC-V RocketChip exécutant le noyau seL4, pour évaluer des benchmarks d'espace utilisateur.
 
 De plus, cette thèse présente la première comparaison exhaustive entre les mécanismes de compartimentation, évaluant à la fois les propriétés qualitatives et quantitatives. 
