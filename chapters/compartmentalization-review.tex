@@ -89,13 +89,6 @@ bypass intra address-space compartmentalization~\cite{ConnorMSS20}, we must
 assume that every mechanism below is adapted to run with a kernel which
 properly isolates OS resources for each compartment (for example, as proposed 
 by Schrammel~et.~al.~\cite{schrammel2022jenny}).
-\atri{systems restricted to a single trusted/untrusted compartment won't work}
-\atri{systems without system call filtering will fail (does ERIM have filtering?)}
-\atri{systems where the kernel cannot identify the caller will fail 
-      (does donky prevent OS confused deputy, or allow OS to identify caller?)}
-\atri{Systems with hierarchical trust, where superset relation is needed will fail}
-\atri{CODOMs' where APL grants full permission for a domain's regions will fail}
-\atri{Code = Domain, like CODOMs, will bar cross-compartment code sharing}
 
 Adding to the example from \autoref{sec:seccells:reqs}, consider that the
 Engine is sandboxing more than one WebApp from different sources.
@@ -103,7 +96,6 @@ The WebApps do not trust each other, and must be isolated from each other.
 Each WebApp's memory regions and OS resources.
 Further, the WebApps should not be able to directly call each other.
 Any interaction between WebApps should pass through the Engine.
-\atri{Cross-compartment calling restrictions (if callee can ident itself and caller)}
 
 Common threat models for this browser setup would be to assume a buggy Engine
 which either
@@ -114,7 +106,6 @@ which either
 \end{inparaenum}
 Compartmentalization must, nonetheless, protect the Engine and other WebApp 
 from a malicious WebApp which exploits the buggy Engine's code generation.
-\atri{How many systems break with arbitrary code exec}
 
 %-------------------------------
 \subsection{Mutual distrust} 
@@ -140,9 +131,6 @@ stack with the Store, either beforehand or by dynamically passing its
 permissions before calling into the Store.
 In a generalized attack, the malicious register may be any register, not
 only the stack pointer.
-\atri{CHERI can fail the malicious rsp attack/malicious pointer register attack}.
-\atri{Systems requiring hierarchical trust will fail.}
-\atri{CODOMs' where APL grants full permission for a domain's regions will fail}
 
 In the case of mutual distrust, compartments must use static threading 
 and maintain their own context state.
@@ -150,7 +138,6 @@ Particularly, the callee on a cross-compartment call must be able to
 restore a clean, trusted register state before processing the incoming request.
 Likewise, the caller must be able to restore its own state when the callee
 returns control.
-\atri{Systems mandating migrating threading will fail}
 
 %-------------------------------
 \subsection{Trusting but wary}
@@ -171,9 +158,6 @@ The main goals for the pipeline would be to
       \item maintain high availability, where crashes in parts of the
             pipeline are handled gracefully and with minimal downtime.  
 \end{inparaenum}
-\atri{Fast compartment switching}
-\atri{Fast zero copy data movement}
-\atri{kernel needs to be able to identify faulting compartment}
 
 Another popular use case is library compartmentalization, where shared
 libraries within an application can be isolated within compartments.
@@ -745,7 +729,6 @@ executable permissions in the page tables.
 The JIT engine can generate new code using additional permissions specified
 in the APLs, where the engine should be granted write permission to
 each sandbox's domain pages.
-\atri{note: APLs enable access to all of a domain's stuff. sigh.}
 
 %-------------------------------
 \subsection{Intel Memory Protection Keys (MPK)}
