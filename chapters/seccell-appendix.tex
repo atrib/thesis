@@ -233,7 +233,9 @@ added instructions.
 
 \begin{table}
   \centering
-  \begin{tabular}{l | l | l | l | l | l |}
+  \begin{tabular}{!l | ?l | ?l | ?l | ?l  }
+    \toprule
+    \rowstyle\bfseries
     \makecell{\seccells\\instruction} & Arguments              & Output        & \makecell{Prototype\\instruction} & Arguments Mapping                                             \\ \midrule
     SDSwitch                          & addr, SD$_{tgt}$       & return addr   & \Code{JALS}                       & addr = \Code{pc} + \Code{imm}, SD$_{tgt}$ = \Code{rs}         \\
     SDSwitch                          & addr, SD$_{tgt}$       & return addr   & \Code{JALRS}                      & addr = \Code{rs1}, SD$_{tgt}$ = \Code{rs2}                    \\
@@ -253,14 +255,16 @@ added instructions.
 \end{table}
 
 \begin{table}
-  \begin{tabular}{| c | c | c | c | c | c | l |}
-    \multicolumn{6}{|c|}{Instruction Fields}                                                                           & Type                         \\ \midrule
+  \centering
+  \begin{tabular}{| !c | ?c | ?c | ?c | ?c | ?c | ?l |}
+    \toprule
+    \multicolumn{6}{|c|}{\textbf{Instruction Fields}}                                                                  & \textbf{Type}                \\ \midrule
     \Code{func7}         & \Code{rs2    }     & \Code{rs1}       & \Code{func3}    & \Code{rd}       & \Code{opcode}   & R-type                       \\ \hline    
     \multicolumn{2}{|c|}{\Code{imm[11:0]}}    & \Code{rs1}       & \Code{func3}    & \Code{rd}       & \Code{opcode}   & I-type                       \\ \hline    
     \Code{imm[11:5]}     & \Code{rs2    }     & \Code{rs1}       & \Code{func3}    & \Code{imm[4:0]} & \Code{opcode}   & S-type                       \\ \hline
     \multicolumn{4}{|c|}{\Code{imm[20|10:1|11|19:12]}}                             & \Code{rd}       & \Code{opcode}   & J-type                       \\ \bottomrule    
-    \multicolumn{7}{c}{ }                                                                                                                             \\
-    \multicolumn{6}{|c|}{Encodings}                                                                                    & Instruction                  \\ \midrule
+    \multicolumn{7}{c}{ }                                                                                                                             \\ \toprule
+    \multicolumn{6}{|c|}{\textbf{Encodings}}                                                                           & \textbf{Instruction}         \\ \midrule
     \multicolumn{4}{|c|}{\Code{imm[20:1]}}                                         & \Code{rs/rd   } & \Code{0101011}  & \Code{JALS(rs, imm) = rd  }  \\ \hline   
     \Code{0000000  }     & \Code{rs2    }     & \Code{rs1    }   & \Code{000}      & \Code{rd      } & \Code{0001011}  & \Code{JALRS(rs1, rs2) = rd}  \\ \hline  
     \multicolumn{2}{|c|}{\Code{000000000000}} & \Code{rs1 = 0}   & \Code{001}      & \Code{rd = 0  } & \Code{0001011}  & \Code{ENTRY               }  \\ \hline  
@@ -286,7 +290,10 @@ corresponding values for the \Code{scause} and \Code{stval} registers
 storing exception details.
 
 \begin{table}[t]
-  \begin{tabular}{| l | l | l | l |}
+  \centering
+  \begin{tabular}{ !l | ?l | ?l | ?l }
+    \toprule
+    \rowstyle\bfseries
     Instruction & Exception Cause             & \Code{scause} code                & \Code{stval}                                                                            \\ \midrule
     EXCL        & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
     EXCL        & Illegal permissions         & \Code{\_ILL\_PERM}                & \makecell[l]{
@@ -371,7 +378,9 @@ storing exception details.
 
 \begin{table}[t]
   \ContinuedFloat
-  \begin{tabular}{ l | l | l | l |}
+  \begin{tabular}{ !l | ?l | ?l | ?l }
+    \toprule
+    \rowstyle\bfseries
     Instruction & Exception Cause             & \Code{scause} code                & \Code{stval}                                                                            \\ \midrule
     TFER        & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & 0 if cell is invalid                                                                    \\ \hline
     INVAL       & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
@@ -408,7 +417,9 @@ storing exception details.
 
 \begin{table}
   \centering
-  \begin{tabular}{| l | l |}
+  \begin{tabular}{ !l | ?l }
+    \toprule
+    \rowstyle\bfseries
     \Code{scause} code        & Value  \\ \midrule
     \Code{\_ILL\_ADDR}        & 0x18   \\
     \Code{\_ILL\_PERM}        & 0x19   \\

@@ -1005,19 +1005,21 @@ may also be affected by the tail latency~\cite{LiSPG14} of these operations.
 
 \begin{table}
   \begin{threeparttable}
-    \begin{tabular}{l | l | l | l | l | l}
-          Mechanism & Threat Model &  Access Control     & Syscall Filtering & Entry Point         & Threading     \\ \midrule
-          Process   & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
-          XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked          & S/M\tnote{3}  \\
-          $lwC$     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
-          MMP       & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
-          CODOMs    & A            &  Data + Instruction & HW-tracked        & HW-tracked\tnote{2} & S/M\tnote{3}  \\
-          MPK       & A            &  Data               & None              & None                & M             \\
-          ERIM      & A + B        &  Data               & None\tnote{1}     & SW-enforced         & S/M\tnote{3}  \\
-          Donky     & A + B + C    &  Data               & Inbuilt           & Lib-tracked         & S             \\
-          CHERI     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
-          \seccells & A + B + C    &  Data + Instruction & HW-tracked        & HW-checked          & S/M           \\ 
-          \bottomrule
+    \begin{tabular}{!l | ?l | ?l | ?l | ?l | ?l}
+      \toprule
+      \rowstyle{\bfseries}
+      Mechanism & Threat Model &  Access Control     & Syscall Filtering & Entry Point         & Threading     \\ \midrule
+      Process   & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+      XPC       & A + B + C    &  Data + Instruction & HW-tracked        & HW-tracked          & S/M\tnote{3}  \\
+      $lwC$     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+      MMP       & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+      CODOMs    & A            &  Data + Instruction & HW-tracked        & HW-tracked\tnote{2} & S/M\tnote{3}  \\
+      MPK       & A            &  Data               & None              & None                & M             \\
+      ERIM      & A + B        &  Data               & None\tnote{1}     & SW-enforced         & S/M\tnote{3}  \\
+      Donky     & A + B + C    &  Data               & Inbuilt           & Lib-tracked         & S             \\
+      CHERI     & A + B + C    &  Data + Instruction & OS-tracked        & OS-tracked          & S             \\
+      \seccells & A + B + C    &  Data + Instruction & HW-tracked        & HW-checked          & S/M           \\ 
+      \bottomrule
     \end{tabular}
     \begin{tablenotes}
       \item[1] ERIM has limited support for filtering.
@@ -1038,7 +1040,9 @@ may also be affected by the tail latency~\cite{LiSPG14} of these operations.
 
 \begin{table}
       \ContinuedFloat
-      \begin{tabular}{l | l | l | l | l |l}
+      \begin{tabular}{!l | ?l | ?l | ?l | ?l }
+        \toprule
+        \rowstyle{\bfseries}
             Mechanism & Call control & Permission Tx.         & AC Scalability &  Switch (cycles) \\\hline
             Process   & Filtering    & Bilateral              & TLB-stressed   &  $\sim 10^{3}$        \\
             XPC       & Hardware     & Relay segment          & TLB-stressed   &  $\sim 10^{1}$        \\

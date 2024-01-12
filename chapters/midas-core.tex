@@ -343,9 +343,10 @@ tsafrir2008portably} are out of scope.
 
 \begin{table}
   \centering
-    \begin{tabular}{  l | l | l | l }
+    \begin{tabular}{ !l | ?l | ?l | ?l }
   \toprule
-      & \textbf{Userspace} & \textbf{Kernel} & \textbf{Device} \\ \midrule
+      \rowstyle{\bfseries}
+      & Userspace    & Kernel                & Device \\ \midrule
 
       % Note: this is a manually tuned fixup. multirow just sucks.
       & Intra AS     & User mapping          & DMA       \\
@@ -805,13 +806,14 @@ to after the double fetch reads.
 
 \begin{table}
   \begin{center}
-    \begin{tabular}{  l  l }
+    \begin{tabular}{  !l  ?l }
     \toprule
-      \textbf{System Call} & \textbf{Exemption reason} \\
+      \rowstyle{\bfseries}
+      System Call   & Exemption reason \\
     \midrule
-      \Code{futex} & Relies on concurrent write \\
+      \Code{futex}  & Relies on concurrent write \\
       \Code{execve} & Remaps address space \\
-      \Code{write} & Invulnerable, improves performance \\
+      \Code{write}  & Invulnerable, improves performance \\
     \bottomrule
     \end{tabular}
   \end{center}
@@ -1473,14 +1475,15 @@ but instruments all syscalls including \Code{write}.
 
 \begin{table}
   \centering
-  \begin{tabular}{l l}
+  \begin{tabular}{!l ?l}
     \toprule
-    \textbf{Microbenchmark} & \textbf{Top syscalls used} \\
+    \rowstyle{\bfseries}
+    Microbenchmark          & Top syscalls used \\
     \midrule
-    File creation & \Code{openat}, \Code{fstat}, \Code{write}, \Code{close} \\
+    File creation           & \Code{openat}, \Code{fstat}, \Code{write}, \Code{close} \\
     Thread/Process creation & \Code{mmap}, \Code{clone}, \Code{exit}, \Code{wait} \\
-    Program launch & \Code{mmap}, \Code{execve}\Code{readlink}, \Code{openat} \\
-    Mem alloc & \Code{brk} \\
+    Program launch          & \Code{mmap}, \Code{execve}\Code{readlink}, \Code{openat} \\
+    Memory allocation       & \Code{brk} \\
     \bottomrule
   \end{tabular}
   \caption{Prominent syscalls used by OSBench microbenchmarks.}

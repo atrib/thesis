@@ -64,6 +64,7 @@
                             % For autoref
 \usepackage{listofitems}    % For `readlist` used for \newreviewer command
 \usepackage{soul}           % For strikethrough \st
+\usepackage{array}          % For whole row `\rowstyle'
 
 
 %%%%%%%%%% Sid's list of packages %%%%%%%%%%
@@ -271,11 +272,11 @@
 % Custom command for making formatting changes to an entire row in tables
 % For example, \setrow{\bfseries} in front of a row to make it bold
 % https://tex.stackexchange.com/questions/4811/make-first-row-of-table-all-bold
-% \newcolumntype{!}{>{\global\let\currentrowstyle\relax}}
-% \newcolumntype{?}{>{\currentrowstyle}}
-% \newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
-%   #1\ignorespaces
-% }
+\newcolumntype{!}{>{\global\let\currentrowstyle\relax}}
+\newcolumntype{?}{>{\currentrowstyle}}
+\newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
+  #1\ignorespaces
+}
 
 % Cross and tick marks
 \newcommand{\cmark}{\ding{51}}%
