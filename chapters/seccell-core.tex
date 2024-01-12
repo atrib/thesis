@@ -1229,6 +1229,8 @@ The \sdswitch instruction is implemented purely in hardware, and the
 remaining permission-modifying instructions are emulated through firmware.
 Additional hardware helpers, designed to aid operations trivially achieved
 in hardware but costly in software, simplify and accelerate the emulation.
+We describe these hardware modifications in detail in
+\autoref{app:seccells:trapacceleration}.
 One notable operation is the lookup of the cell's index in the 
 \ptable, which is common for all added instructions.
 While a binary search in software is expensive, the MMU already holds this
