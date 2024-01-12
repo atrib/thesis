@@ -249,7 +249,7 @@ added instructions.
   \label{tab:seccells:instmapping}
   \caption[Mapping \seccells instructions to the RISC-V prototype instructions]
           {Mapping \seccells instructions and arguments to the RISC-V prototype instructions. 
-          Instructions returning values write to the rd register}
+          Instructions returning values write to the \Code{rd} register}
 \end{table}
 
 \begin{table}
@@ -287,9 +287,9 @@ storing exception details.
 
 \begin{table}[t]
   \begin{tabular}{| l | l | l | l |}
-    Instruction & Exception Cause             & \Code{scause}                     & \Code{stval}                                                                            \\ \midrule
-    EXCL        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    EXCL        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{
+    Instruction & Exception Cause             & \Code{scause} code                & \Code{stval}                                                                            \\ \midrule
+    EXCL        & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
+    EXCL        & Illegal permissions         & \Code{\_ILL\_PERM}                & \makecell[l]{
                                                                                       (type $\ll$ 8) | perm                                                                 \\
                                                                                       type = 
                                                                                       $
@@ -300,10 +300,10 @@ storing exception details.
                                                                                         \end{cases}
                                                                                       $
                                                                                     }                                                                                       \\ \hline
-    EXCL        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
-    GRANT       & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    GRANT       & Target too high             & \Code{\_INV\_SDID} (0x1a)         & SD$_{tgt}$                                                                              \\ \hline
-    GRANT       & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+    EXCL        & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & 0 if cell is invalid                                                                    \\ \hline
+    GRANT       & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
+    GRANT       & Target too high             & \Code{\_INV\_SDID}                & SD$_{tgt}$                                                                              \\ \hline
+    GRANT       & Illegal permissions         & \Code{\_ILL\_PERM}                & \makecell[l]{                                              
                                                                                       (type $\ll$ 8) | perm                                                                 \\
                                                                                       type = 
                                                                                       $
@@ -314,11 +314,10 @@ storing exception details.
                                                                                         \end{cases}
                                                                                       $
                                                                                     }                                                                                       \\ \hline
-    GRANT       & Illegal grant               & \Code{\_ILL\_GRANT}               & 0, identifying GRANT                                                                    \\ \hline
-    GRANT       & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
-    RECV        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    RECV        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
-    RECV        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+    GRANT       & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & 0 if cell is invalid                                                                    \\ \hline
+    RECV        & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
+    RECV        & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & 0 if cell is invalid                                                                    \\ \hline
+    RECV        & Illegal permissions         & \Code{\_ILL\_PERM}                & \makecell[l]{                                              
                                                                                       (type $\ll$ 8) | perm                                                                 \\
                                                                                       type = 
                                                                                       $
@@ -329,8 +328,7 @@ storing exception details.
                                                                                         \end{cases}
                                                                                       $
                                                                                     }                                                                                       \\ \hline
-    RECV        & Illegal grant               & \Code{\_ILL\_GRANT}               & 1, identifying RECV                                                                     \\ \hline
-    RECV        & Invalid SD                  & \Code{\_INV\_SDID} (0x1a)         & \makecell[l]{
+    RECV        & Invalid SD                  & \Code{\_INV\_SDID}                & \makecell[l]{
                                                                                       (type $\ll$ 32) | SD                                                                  \\
                                                                                       type =
                                                                                       $
@@ -340,8 +338,8 @@ storing exception details.
                                                                                         \end{cases}
                                                                                       $
                                                                                     }                                                                                       \\ \hline
-    PROT        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    PROT        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+    PROT        & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
+    PROT        & Illegal permissions         & \Code{\_ILL\_PERM}                & \makecell[l]{                                              
                                                                                       (type $\ll$ 8) | perm                                                                 \\
                                                                                       type = 
                                                                                       $
@@ -351,10 +349,10 @@ storing exception details.
                                                                                         \end{cases}
                                                                                       $
                                                                                     }                                                                                       \\ \hline
-    PROT        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
-    TFER        & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    TFER        & Target too high             & \Code{\_INV\_SDID} (0x1a)         & SD$_{tgt}$                                                                              \\ \hline
-    TFER        & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+    PROT        & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & 0 if cell is invalid                                                                    \\ \hline
+    TFER        & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
+    TFER        & Target too high             & \Code{\_INV\_SDID}                & SD$_{tgt}$                                                                              \\ \hline
+    TFER        & Illegal permissions         & \Code{\_ILL\_PERM}                & \makecell[l]{                                              
                                                                                       (type $\ll$ 8) | perm                                                                 \\
                                                                                       type = 
                                                                                       $
@@ -364,7 +362,7 @@ storing exception details.
                                                                                           \text{2} &\text{\makecell[l]{if SD$_{cur}$ has insufficient \\perms}}             \\
                                                                                         \end{cases}
                                                                                       $
-                                                                                    }                                                                                       \\ \hline
+    }                                                                                       \\ \bottomrule
   \end{tabular}
   \caption[\seccells exception codes]
           {Exception causes, \Code{scause} and \Code{stval} register values for \seccells exceptions}
@@ -373,12 +371,11 @@ storing exception details.
 
 \begin{table}[t]
   \ContinuedFloat
-  \begin{tabular}{| l | l | l | l |}
-    Instruction & Exception Cause             & \Code{scause}                     & \Code{stval}                                                                            \\ \midrule
-    TFER        & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 0 if cell is invalid                                                                    \\ \hline
-    TFER        & Illegal grant               & \Code{\_ILL\_GRANT}               & 2, identifying TFER                                                                     \\ \hline
-    INVAL       & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    INVAL       & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & \makecell[l]{
+  \begin{tabular}{ l | l | l | l |}
+    Instruction & Exception Cause             & \Code{scause} code                & \Code{stval}                                                                            \\ \midrule
+    TFER        & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & 0 if cell is invalid                                                                    \\ \hline
+    INVAL       & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
+    INVAL       & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & \makecell[l]{
                                                                                       type                                                                                  \\
                                                                                       type = 
                                                                                       $
@@ -389,9 +386,9 @@ storing exception details.
                                                                                         \end{cases}
                                                                                       $
                                                                                     }                                                                                       \\ \hline
-    REVAL       & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    REVAL       & Cell description invalid    & \Code{\_INV\_CELL\_STATE} (0x1b)  & 1 if cell is already valid                                                              \\ \hline
-    REVAL       & Illegal permissions         & \Code{\_ILL\_PERM} (0x19)         & \makecell[l]{                                              
+    REVAL       & Illegal address             & \Code{\_ILL\_ADDR}                & addr                                                                                    \\ \hline
+    REVAL       & Cell description invalid    & \Code{\_INV\_CELL\_STATE}         & 1 if cell is already valid                                                              \\ \hline
+    REVAL       & Illegal permissions         & \Code{\_ILL\_PERM}                & \makecell[l]{                                              
                                                                                       (type $\ll$ 8) | perm                                                                 \\
                                                                                       type = 
                                                                                       $
@@ -401,14 +398,27 @@ storing exception details.
                                                                                         \end{cases}
                                                                                       $
                                                                                     }                                                                                       \\ \hline
-    JAL(R)S     & Illegal address             & \Code{\_ILL\_ADDR} (0x18)         & addr                                                                                    \\ \hline
-    JAL(R)S     & Target too high             & \Code{\_INV\_SDID} (0x1a)         & SD$_{tgt}$                                                                              \\ \hline
-    JAL(R)S     & Illegal target instruction  & \Code{\_ILL\_TGT} (0x1c)          & Target addr                                                                              \\ \hline
-    
+    JAL(R)S     & Target too high             & \Code{\_INV\_SDID}                & SD$_{tgt}$                                                                              \\ \hline
+    JAL(R)S     & Illegal target instruction  & \Code{\_ILL\_TGT}                 & Target addr                                                                             \\ \bottomrule
   \end{tabular}
   \caption[]
-          {(cont.) Exception causes, \Code{scause} and \Code{stval} register values for \seccells exceptions}
+          {(cont.) Exception causes, \Code{scause} code and \Code{stval} register values for \seccells exceptions}
   \label{tab:seccells:exceptions}
+\end{table}
+
+\begin{table}
+  \centering
+  \begin{tabular}{| l | l |}
+    \Code{scause} code        & Value  \\ \midrule
+    \Code{\_ILL\_ADDR}        & 0x18   \\
+    \Code{\_ILL\_PERM}        & 0x19   \\
+    \Code{\_INV\_SDID}        & 0x1a   \\
+    \Code{\_INV\_CELL\_STATE} & 0x1b   \\
+    \Code{\_ILL\_TGT}         & 0x1c   \\ \bottomrule
+
+  \end{tabular}
+  \caption{Mapping \seccells exception codes to values}
+  \label{tab:seccells:exceptioncodes}
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
