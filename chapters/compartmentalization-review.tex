@@ -319,7 +319,11 @@ target compartments, who agree to mutually transfer permissions.
 \begin{figure}
       \centering
       \includegraphics[width=0.75\linewidth]{media/compreview/permission_shrink_grant.pdf}
-      \caption{TODO Stuff}
+      \caption[Argument passing by reference between compartments.]
+              {Argument passing by reference between compartments, showing a nested call
+              where the callers spatially shrink the argument's region and pass permission
+              to the next callee. For example, stages in a networking pipeline progressively
+              removing each layer of protocol headers.}
       \label{fig:compreview:permshrink}
 \end{figure}
 Additional properties are desirable when passing
