@@ -345,7 +345,7 @@ a mechanism's checks and protections, and on the frequency at which these
 overheads are encountered.
 In this section, we will generally describe the operations required to
 support compartmentalization, explain why they are required and their
-frequency of occurence. 
+frequency of occurrence. 
 This information will allow us to compare the performance characteristics
 of compartmentalized applications across different mechanisms.
 
@@ -397,7 +397,7 @@ with lower overhead mechanisms allowing applications to implement
 finer-grained compartmentalization while maintaining the same performance.
 High-performance software requiring 
 compartmentalization~\cite{HwangRW14,MartinsAROHBH14,RamCCR13,HondaHLR15}
-relies on unoptimal designs like pinning compartments to cores to skip the
+relies on non-optimal designs like pinning compartments to cores to skip the
 cost of switching compartments on a core and reliance on memory shared between
 all compartments to prevent data movement between compartments.
 Core pinning wastes core time, as each core typically does not need the same
@@ -519,7 +519,7 @@ syscall filtering.
 The generated code region can be shared between the JIT and sandboxes, along
 with code sections for shared libraries.
 Processes can also communicate using inter-process communication (IPC) system 
-calls (like sendmsg/recvmsg).
+calls (like \Code{sendmsg}/\Code{recvmsg}).
 A remote (cross-process) procedure call typically consists of serialization of
 arguments into a buffer, sending the buffer across using a system call,
 and then deserialization of the arguments on the receiving side followed by
@@ -1010,9 +1010,9 @@ may also be affected by the tail latency~\cite{LiSPG14} of these operations.
       \item[3] Limited support for static threading.
     \end{tablenotes}
   \end{threeparttable}
-  \caption[A comparison of comparmentalization mechanisms (summarized)]
+  \caption[A comparison of compartmentalization mechanisms (summarized)]
         {
-        A comparison of comparmentalization mechanisms (summarized).
+        A comparison of compartmentalization mechanisms (summarized).
         The threat model column uses threat definitions (A/B/C) from 
         \autoref{sec:compreview:comparison:model}.
         The threading model is defined by S = Static, and M = Migrating.
@@ -1040,7 +1040,7 @@ may also be affected by the tail latency~\cite{LiSPG14} of these operations.
       \end{tabular}                    
       \caption[]
       {
-      (cont.) A comparison of comparmentalization mechanisms (summarized).
+      (cont.) A comparison of compartmentalization mechanisms (summarized).
       ``AC'' = Access Control.
       We report compartment switching latencies as order of magnitude of cycles.
       }
@@ -1236,7 +1236,7 @@ with specific code sequences.
 ERIM's code sequences check permissions in the PKRU register in the call
 gates following PKRU writes, ensuring that a correct value is written.
 However, the paper is not clear how this check is implemented for mutually
-distrustful compartment or comparments with dynamically-changing permissions.
+distrustful compartment or compartments with dynamically-changing permissions.
 ERIM's call gates are classified as ``SW-enforced''.
 
 \seccells relies on a special instruction \Code{SDEntry} to explicitly
@@ -1303,7 +1303,7 @@ The supervisor can validate whether a caller-callee transition is allowed
 based on rules installed at program startup.
 While the paper does not describe call filtering, Donky's privileged
 library can also validate compartment switches against a pre-specified
-allowlist using softare, similar to system-call filtering.
+allowlist using software, similar to system-call filtering.
 
 Hardware-checked mechanisms can also be used to validate calls.
 XPC maintains a two-dimensional XCALL capability bitmap, which defines
@@ -1356,7 +1356,7 @@ convenient system for transferring permissions to arguments during a
 cross-compartment call.
 A CHERI compartment can pass one or more capabilities to memory holding
 arguments to the target compartment during a call, allowing the target to
-use the capabilites to access the arguments.
+use the capabilities to access the arguments.
 Further, CHERI capabilities can be shrunk, allowing a compartment to
 pass on permission for subregions during nested compartment calls.
 Finally, compartments can use memory capabilities to further load
@@ -1393,7 +1393,7 @@ by dynamically mapping received network buffers into userspace
 during a \Code{read} system call, but does not describe a way to
 move data between compartments without copying.
 Similarly, MPK and ERIM does not have any checks on permission 
-transfers betweek compartments as each compartment can specify its 
+transfers between compartments as each compartment can specify its 
 own permissions to data regions.
 XPC relies on a single relay segment to transfer data between
 compartments without copying.
