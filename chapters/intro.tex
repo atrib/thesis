@@ -47,7 +47,7 @@ including
       % Individual devs are allowed to contribute their own improvements, 
       % alongside improvements planned centrally by Linus, maintainers and co.
       \item mainline kernel code written by a informal melange of developers
-            distributed across the globe and varying 
+            distributed across the globe with varying 
             industrial/academic/governmental/individual affiliation,
       % fragmentation of sources/developers
       \item numerous device drivers written by the respective hardware 
@@ -98,7 +98,7 @@ The designs of these interfaces reflect the requirements and threat landscape
 from their respective design periods, but fail to adequately address modern
 needs.
 One consequence is that key interfaces might not adequately mitigate threats
-that have arisen or worsened \emph{after} the design of the interface.
+that have arisen or worsened after the design of the interface.
 For example, the kernel system call interface has always been cognizant of
 the threat
 of attacks from untrusted userspace, and system calls typically check the 
@@ -158,8 +158,8 @@ call interface, primarily focussing on finding and fixing instances of this
 class of bugs.
 One group of proposals leverage 
 static analysis~\cite{dftinker, wang2017double, wang2019dftracker, deadline}
-to comb the 
-kernel codebases for vulnerable double fetches.
+to comb through the 
+kernel codebase looking for vulnerable double fetches.
 These static analysis techniques have progressively improved
 from matching code against known double-fetch bug patterns to
 symbolic execution-based analyzers.
@@ -177,7 +177,7 @@ feature
 designed for accelerating database transactions to instead dynamically
 detect user updates between kernel double fetches, rolling back the
 system call execution to prevent exploitation.
-Bug finding techniques, however, are insufficient --- they can only fix
+Bug squashing techniques, however, are insufficient --- they can only fix
 bugs found --- and both static and dynamic analysis are incomplete.
 The significant churn in code further complicates the challenge, as every
 change potentially introduces new double-fetch bugs.
@@ -208,10 +208,10 @@ bugs~\cite{schwartzDECAF} using Intel TSX and to implement
 compartmentalization~\cite{HedayatiGJCSSM19Hodor,LeeSK18} using Intel VT-x.
 This approach is limited by dependence on specific 
 systems (using Intel CPUs, for example) and potentially
-inhibits running applications requiring these features for their proper 
-functionality.
-Most importantly, such defence techniques lack principled design and 
-resemble targeted defences rather than 
+inhibits concurrently using applications requiring these features for their 
+proper functioning.
+Most importantly, such defense mechanisms lack principled design and 
+resemble targeted protections rather than 
 fundamental security guarantees baked into interface design.
 
 % Insights: Problems with abstractions can be fixed. 
@@ -245,7 +245,7 @@ Time-of-Check to Time-of-Use (\tocttou) bugs.
 Double-fetch bugs contain an implicit assumption by the developer
 that the fetched data is the same, which may be violated by another thread
 through a concurrent modification.
-OS kernels generally use a softare interface to access user memory, to manage
+OS kernels generally use a software interface to access user memory, to manage
 protections like Supervisor Memory Access Prevention (SMAP), and we can
 extend this interface with a secure invariant.
 % 
@@ -255,17 +255,17 @@ scheduling slots to finer grained module or library-level isolation, which
 demands sub-microsecond operations (for example, switching trust domains).
 An userspace process needs to be further divided into isolated compartments
 which can communicate along well-defined APIs.
-Software OS mechanisms are expensive --- even supervisors optimized for
+OS-based mechanisms are expensive --- even supervisors optimized for
 inter-process communication (IPC) on commodity hardware achieve 
-millisecond-scale compartment switches at best.
-We notice that the traditional trusted-computing base includes the hardware
-alongside the supervisor.
-Hence, we can securely delegate some operations (access control, inter-compartment
+microsecond-scale compartment switches at best.
+We notice that the traditional trusted-computing base (TCB) includes the 
+processor hardware alongside the supervisor.
+Hence, we can securely delegate particular operations (access control, inter-compartment
 control, and data flow) from the supervisor to the hardware, improving 
 performance while maintaining the same security guarantees.
-Improvements and trends in microarchitectural design, such as the trend towards
+Improvements and trends in microarchitectural design, such as the move towards
 VMA-based access control in the core's translation-lookaside buffer 
-(TLB)~\cite{0003BOBFP21midgard} greatly assist in this transition.
+(TLB)~\cite{0003BOBFP21midgard}, greatly assist in this transition.
 
 
 % Solution:
@@ -285,7 +285,7 @@ VMA-based access control in the core's translation-lookaside buffer
 %         userspace instructions for accelerating compartmentalization operations.
 % \end{itemize}
 In this thesis, we present secure designs 
-for the user-kernel interface used by processes and 
+for the user-kernel interface used by processes, and 
 for interfaces between intra-process domains, 
 both of which are security- and performance-critical.
 Midas provides systematic protection to the user-kernel interfaces against
@@ -330,7 +330,7 @@ primary attack vector for attacker processes to compromise an entire system.
 The kernel must, therefore, implement extensive checks at this interface to
 protect itself from malicious arguments to syscalls.
 Most modern OS kernels trace their heritage to systems designed or developed in
-the 1980's and 90's. 
+the 1980's and 90's, and inherit many of their system calls.
 The Linux, Darwin/XNU (used by MacOS) and FreeBSD kernels are all 
 mostly compatible with the POSIX interface, first defined in 
 1988~\cite{AtlidakisAGMN16}.
@@ -452,8 +452,9 @@ The operating system (OS) kernel tasked with system management is already
 isolated from userspace processes running untrusted applications.
 Commercial hardware provides the abstraction of privilege levels, 
 allowing the kernel to reliably isolate itself within a separate level.
-The kernel also isolates separate applications and applications from
-separate users with a common abstraction, processes.
+The kernel isolates applications from different users and 
+different applications from the same user using 
+a common abstraction: processes.
 Processes protect applications from other faulting or malicious applications,
 with isolated per-process virtual memory spaces and kernel resources.
 These abstractions provide systems crucial security and robustness 
@@ -479,12 +480,12 @@ code downloaded from untrusted websites.
 To prevent website code, controlled by a remote adversary, from directly 
 accessing local resources, modern browsers are already compartmentalized into
 two components: 
-an outside-facing rendering engine running in one process 
+an internet-facing rendering engine running in one process 
 interacting with 
-a separate inside-facing kernel process
+a separate local system-facing kernel process
 using a well-defined API over remote procedure calls (RPCs).
 This architecture is motivated by the browser's strong security requirements,
-but limited by the coarse-grained abstraction of isolation (processes)
+but remains limited by the coarse-grained abstraction of isolation (processes)
 available on traditional systems.
 Bugs in the sandbox within the rendering engine can still compromise all
 other components in the sandbox, including the just-in-time compiler.
@@ -496,7 +497,7 @@ processes require system calls incurring microsecond-scale overheads.
 The first limitation prevents applications from implementing and enforcing 
 barriers expressing the complex trust relations between code components.
 Applications rely on complex software isolation techniques like 
-sandboxing and softare fault isolation,
+sandboxing and software fault isolation,
 which are buggy at scale.
 The second downside limits how finely applications can be decomposed into
 processes, due to performance overhead considerations.
@@ -543,12 +544,12 @@ systems, against emerging threat models.
 While the security of current systems is of paramount importance, the
 performance of these systems must also satisfy strict deployment 
 requirements.
-Foremost, we prioritize the security of our proposed interfaces, but also
+Foremost, we prioritize the security of our proposed interfaces, and
 consider performance as a crucial secondary requirement.
-For the user-kernel interface, we also consider compatibility with
+For the user-kernel interface, we consider compatibility with
 the existing system call semantics as an essential requirement.
-For intra-address space compartmentalization, we also deem the flexibility
-of the interface to support varying softare use-cases to be vital for adoption.
+For intra-address space compartmentalization, we  deem the flexibility
+of the interface to support varying software use-cases to be vital for adoption.
 
 % Summary of contributions
 We present two redesigned security- and performance-critical 
@@ -571,7 +572,7 @@ will return the same value}.
 A \emph{security property} derived from this invariant is enforced ---
 Midas uses kernel metadata to track userspace pages accessed, maintains
 page-table permissions to enforce immutability and leverages page faults
-to on-demand duplicate pages where necesssary to preserve an original
+to on-demand duplicate pages where necessary to preserve an original
 copy for a system call.
 A \emph{correctness property} is also described in this thesis,
 showing how the system's execution remains correct under execution with
@@ -579,21 +580,21 @@ Midas.
 Since, the user-kernel interface is performance-critical and 
 affects the system's performance on syscall-intensive workloads,
 Midas' design optimizes for low overheads.
-As concurrent writes to system call arguments is practically non-existent
+As concurrent writes to system call arguments are practically non-existent
 for well-behaved programs, Midas strives to minimize expensive page 
 duplications and relies on snapshotting for protecting accesses.
 
-Midas can be used in various scenarios. 
-First, Midas protects systems against existing, even potentially unknown,
-double-fetch bugs on current and future production systems.
-Second, Midas can protect the kernel against double-fetch bugs in code
-dynamically added to the kernel such as modules and eBPF code.
-Third, Midas can help extend the functionality of system call filters,
-enabling examination of arguments passed by reference without the introduction
-of vulnerable double-fetches.
-Finally, Midas can protect older systems where updates for modules or other
-vulnerable components might be discontinued with a single update to the
-kernel core.
+Midas has numerous use cases.
+First, Midas defends against existing, even potentially unknown,
+double-fetch bugs on current and future systems.
+Second, Midas can protect the kernel against double-fetch bugs in
+dynamically-added code such as modules and eBPF code.
+Third, Midas can enable system call filters to securely examine 
+arguments passed by reference without introducing
+vulnerable double-fetches.
+Finally, Midas can protect older systems, where modules or other
+vulnerable components lack bug-fixing updates, with a single update 
+to the kernel core.
 
 % Results summarized
 We have implemented a Midas prototype for the Linux kernel, demonstrating its
@@ -647,7 +648,7 @@ We investigate the performance characteristics of our prototype core, using
 microbenchmarks designed to test the limits of access control, compartment 
 switching and dataflow between compartments, and compare them to related work.
 SecureCells' in-order core can switch between compartments (a key performance
-metric) in as few as 8 cycles, which compares favourably to state-of-the-art
+metric) in as few as 8 cycles, which compares favorably to state-of-the-art
 compartmentalization mechanisms and is orders of magnitude faster than the
 traditional process abstraction.
 We also demonstrate that SecureCells can help isolate the networking and
@@ -688,8 +689,8 @@ This thesis is distributed across three chapters.
 kernel double-fetch bugs.
 \autoref{ch:seccells} describes SecureCells, a novel secure and performant 
 mechanism for intra-address space compartmentalization.
-Finally, \autoref{ch:compreview} contains a comprehensive survey comparing
-compartmentalization mechanisms in qualitative and quantitative terms.
+Finally, \autoref{ch:compreview} contains a comprehensive comparison of
+compartmentalization mechanisms along qualitative and quantitative metrics.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%% Reference the included papers and contributors
