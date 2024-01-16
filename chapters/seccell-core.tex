@@ -160,7 +160,7 @@ In this chapter, we:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Compartmentalization is built on a few basic principles:
-modularity, least privilege, and defence in depth.
+modularity, least privilege, and defense in depth.
 Compartmentalization mechanisms implement these principles to provide security
 to applications through two major properties, isolation of compartments
 and controlled communication between compartments.
@@ -241,24 +241,24 @@ different data.
 Implementing least privilege for modern applications can leverage the
 modularity on which systems are already built.
 
-\paragraph{Defence in depth}
-Defence in depth poses that systems should not rely on a single layer of
-defence, instead using multiple protective measures for the same objective.
-Defence in depth mitigates possible shortcomings in a particular defence by
-relying on one of the other defences to mitigate attacks.
-This principle essentially removes the single point of failure for defences.
-For systems software, developers should rely on more than one defence
+\paragraph{Defense in depth}
+Defense in depth poses that systems should not rely on a single layer of
+defense, instead using multiple protective measures for the same objective.
+Defense in depth mitigates possible shortcomings in a particular defense by
+relying on one of the other defenses to mitigate attacks.
+This principle essentially removes the single point of failure for defenses.
+For systems software, developers should rely on more than one defense
 mechanism to provide stronger security guarantees.
 While compartmentalization and memory safety, for example, can both defend
 against some memory corruption attacks, each of them can protect against
 attacks which the other cannot.
-For example, compartmentalization provides no defence against a function
+For example, compartmentalization provides no defense against a function
 overflowing one of its stack objects into another, which is prevented with
 memory safety.
 However, memory safety mechanisms might not detect a malicious arbitrary
 write from one module to another module's data, but this attack should be
 mitigated through compartmentalization.
-In general, defence in depth posits that mitigations for memory safety and
+In general, defense in depth posits that mitigations for memory safety and
 compartmentalization complement each other, rather than replacing each other.
 
 %-------------------------------
