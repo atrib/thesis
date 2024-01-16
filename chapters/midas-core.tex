@@ -132,7 +132,7 @@ Architectures rely on page tables orchestrated by the operating system
 to translate between these address spaces and to protect memory accesses.
 Page tables are arranged as radix trees, where different bits of the
 virtual address are used as indices into successive levels of the page table.
-At the leaf page table, a unique pagetable entry (PTE) stores the
+At the leaf page table, a unique page table entry (PTE) stores the
 translation and protection information for a page.
 
 A PTE in x86-64 is a 64-bit value holding, among others, the following metadata:
@@ -204,9 +204,9 @@ The PTE entries for kernel mappings, located in the top half of the
 address space, have the $U/S$ bit set.
 These kernel mappings are identical for all address spaces, and are
 kept consistent across the corresponding page tables.
-In contrast, the PTE entries for userpace mappings, located in the 
+In contrast, the PTE entries for userspace mappings, located in the 
 bottom half of the address space, have the $U/S$ bit reset.
-A userspace page has atleast one userspace mapping and atleast one
+A userspace page has at least one userspace mapping and at least one
 kernel mapping.
 Shared userspace memory is implemented by mapping a page in more than
 one address space.
@@ -247,7 +247,7 @@ or code within its accessible memory, then exploit a kernel
 bug to make the kernel use these data structures, or execute
 this code.
 This class of attacks is known as confused-deputy attacks, since the
-privileged softare (kernel) tasked with isolating userspace processes
+privileged software (kernel) tasked with isolating userspace processes
 confuses its own code/data with the user's.
 
 Architectures and OSs have mitigated these vulnerabilities
@@ -490,7 +490,7 @@ code remains unaffected.
 \midas' implementation builds on the protection mechanisms provided by
 existing virtual memory implementations.
 On modern platforms, virtual memory protection is set up by the OS at
-page granularity by setting bits in pagetable entries (PTEs).
+page granularity by setting bits in page table entries (PTEs).
 These permission bits are checked by the hardware on memory access,
 efficiently enforcing the permissions, and raising a fault when they
 are violated.
@@ -535,7 +535,7 @@ of a system with two tasks (A and B):
   \item Task B writes to the same user page before issuing a syscall which
   resumes task A.
 \end{itemize}
-In this case, if Task A's read to the page preceeds Task B's write,
+In this case, if Task A's read to the page precedes Task B's write,
 Task B will be blocked waiting for A to complete its syscall.
 Task A will also remain blocked waiting for Task B's syscall,
 introducing a circular dependency, leading to deadlock.
@@ -575,7 +575,7 @@ Transactions read from a snapshot of the database state from when
 they started, and writes update the up-to-date state of the database.
 %
 \emph{Essentially, \midas is a multi-versioning system for pages where
-syscalls read from immutable versions to prevent \tocttou bugs and
+syscalls read from immutable versions to prevent \tocttou bugs, and
 syscalls and userspace both write to a single mutable version
 holding the latest state of the page.}
 
@@ -1013,10 +1013,10 @@ map from a page's frame number to its snapshots list or
 reuse existing data members (e.g., \Code{struct list_head lru} which
 can be used as a generic list by page owners).
 
-Each pagetable entry for a user page in different address spaces
+Each page table entry for a user page in different address spaces
 maps the copy $C_L$, enabling userspace to directly access the page
 with reads (and writes for writable pages).
-We use one software-controlled bit (SW3) in the pagetable entries
+We use one software-controlled bit (SW3) in the page table entries
 to track the protection status of the page, and another
 (SW2)\footnote{The SW2 bit is alternatively used by the experimental Software Dirty Pages feature of
 Linux, and cannot be run alongside \midas in our prototype.}
@@ -1354,7 +1354,7 @@ a generic methodology.
 \section{Evaluation}
 %%%%%%%%%%%%%%%%%%%%
 
-In this section, we emperically verify \midas' ability to mitigate
+In this section, we empirically verify \midas' ability to mitigate
 a known double fetch vulnerability, and quantify \midas' overhead on
 workloads with different characteristics including both compute-bound
 applications which rarely use syscalls and a mix of syscall-heavy applications
@@ -1679,7 +1679,7 @@ rates and different core configurations, we study Nginx's (version 1.18)
 throughput while varying payload sizes and different worker counts.
 Each worker is single threaded and uses one core.
 The server is loaded with requests from a separate machine running
-a load generater (\Code{bombardier}) with 100 concurrent
+a load generator (\Code{bombardier}) with 100 concurrent
 connections (chosen to maximize throughput) over a 1Gbps link.
 The clients send http requests for files ranging between 20B and
 10000B.
