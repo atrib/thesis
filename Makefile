@@ -29,7 +29,7 @@ data/%.pdf: $$(@D)/data.csv
 clean:
 	rm -rf $(DOC).pdf $(MEDIA) 
 	rm -rf *-blx.bib *.log *.run.xml *.toc *.rubbercache
-	rm -rf *.aux _minted-* *.blg *.bbl *.lot *.lof
+	rm -rf *.aux _minted-* *.blg *.bbl *.lot *.lof *.bcf
 	rm -rf chapters/*.aux 
 	make -C resume clean
 

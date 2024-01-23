@@ -127,15 +127,26 @@
 % \usepackage{scalerel}
 % \usepackage{graphicx}
 % \usepackage{threeparttable} % Table with footnotes
-% \usepackage[
-%   backend=bibtex,
-%   style=numeric-comp,
-%   hyperref=true,
-%   defernumbers=true,
-%   maxbibnames=99,
-%   maxcitenames=1
-% ]{biblatex}
-% \addbibresource{thesis.bib}
+
+% biblatex allows use \printbibliography with keyword tags
+% biblatex also offer \fullcite for citing stuff in text
+\usepackage[
+  backend=bibtex,                   % bibtex is nice, allows \fullcite
+  style=numeric-comp,               % citation with ranges 11-15
+  hyperref=true,                    % citations hyperref to refs
+  backref=true,                     % references hyperref back to citations
+  defernumbers=true,
+  maxnames=99,                      % Don't use 'et. al.' before 99 authors
+  mincrossrefs=99
+  % maxbibnames=99,
+  % maxcitenames=1
+]{biblatex}                
+% Fixing backrefs from default "cit. on" to "cited on page"
+\DefineBibliographyStrings{english}{
+  backrefpage={cited on page},
+  backrefpages={cited on pages}
+}             
+\addbibresource{thesis.bib}
 
 %%%%%%%%%%%%%%%%%%%%% Commenter's sections %%%%%%%%%%%%%%%%%%%%%%%
 % Enable or disable reviews
@@ -531,10 +542,9 @@ available on the project website \url{https://hexhive.epfl.ch/securecells}.
 %-------------------------------------------------------------------------------
 \backmatter
 
-\bibliographystyle{IEEEtran}
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
-\bibliography{thesis}
+\printbibliography
 
 
 \end{document}
