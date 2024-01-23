@@ -1,21 +1,160 @@
-Stuff to be done
+This thesis investigates the security and performance implications of
+legacy interfaces on modern computing systems.
+We have demonstrate the shortcomings of two key interfaces, 
+based on aging designs developed decades back, and
+proposed requisite designs targeting stronger defence principles and 
+higher performance software needs.
+Nonetheless, further research is required to both enable developers to
+implement and adopt the proposed interfaces, 
+and to keep these interfaces concurrent with newly emerging threats.
+Finally, researchers must leverage emerging hardware features to address
+the major shortcomings of our implementations of the proposed interfaces.
 
-In this thesis, we have investigated two interfaces, yada yada
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Beyond \midas: Double-fetch Protection and More}
+\label{sec:conclusion:midas}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+While \midas provides systematic double-fetch protection to the 
+kernel interface,
+here we propose future use cases for \midas and 
+suggest further improvements to its protection and performance 
+guarantees.
 
-With \midas, we did this and that stuff.
-Our prototype is good and all, but there is more to be done.
-- How do we integrate with other virtual memory architectures?
-- Can we use physical memory permission systems?
-- Using \midas for deep argument inspection for system call filters
+Besides providing double-fetch protection, \midas can be used as a 
+sanitizer for finding double-fetch bugs during dynamic testing of a
+OS kernel and for enabling deep-argument checks for system call filters.
+For example, \midas can be used as a sanitizer with 
+Syzkaller~\cite{vyukov2019syzkaller} while fuzzing the kernel interface.
+System call filters like SECCOMP add hooks to checks which validate
+system call arguments before a system call executes, 
+restricting processes from using potentially harmful system calls.
+\midas can help fix a major shortcoming for modern system call
+filtering mechanisms: the lack of deep-argument inspection.
+Essentially, the filters cannot ``check'' any by-reference arguments stored
+in user memory without creating a TOCTTOU instance since these arguments
+will later be ``used'' by the kernel.
+The introduced TOCTTOU bug makes the filtering check ineffective.
+\midas, however, can be used to eliminate the TOCTTOU condition.
+When running with \midas, the kernel would transparently create a snapshot 
+when system call filters inspect userspace objects, with the same
+snapshots serving data during the system call itself.
+\midas, therefore, can make system call filtering more capable and
+enable better isolation of userspace processes.
 
-With \seccells, we presented a mechanism for compartmentalization.
-We also presented a review of mechanisms.
-Compartmentalization, however, needs a lot more work.
-Mechanisms might want to separate isolation and translation.
-Integration with Midgard.
-Work on the policy side.
-Automated program compartmentalization.
-Compartmentalization frameworks and description languages.
-PL-based compartmentalization.
-Comprehensively supporting compartmentalization in the operating system,
-including fixing the system call interface as required.
+\midas will benefit from hardware protection for physical memory
+ranges for preserving snapshots of accessed memory objects.
+Particularly, \midas can reduce the cost of creating snapshots, 
+which potentially incurs the cost of changing page table 
+permissions across each virtual address space where an accessed page
+is mapped, and the cost of corresponding TLB shootdowns.
+Virtual page-based snapshotting also introduces false-positives due to
+false-sharing of objects on the same page, as described in 
+\autoref{sec:midas:design}.
+New and upcoming hardware architectures can provide the physical
+memory protection mechanisms required to implement snapshotting at low cost.
+First, RISC-V's Physical Memory Protection (PMP) mechanism is ideal for
+protecting a small number of physical memory ranges, only requiring updates
+to per-core protection registers optionally accessible by the privileged
+supervisor. 
+PMPs are also flexible, allowing specifying protections for naturally aligned
+power-of-2 address ranges enabling supervisors to protect memory at a
+smaller granularity than pages.
+However, PMP updates must be propagated across cores in order to protect
+against cross-core attacks.
+Midas can also benefit from architectures like Midgard, where a system wide
+page table stores permissions to physical frames applicable across all
+virtual address spaces.
+Essentially, Midas can leverage Midgard's backside-page table entries to
+make a single permission change for a snapshot.
+
+Considering the increasing use of on- and off-chip accelerators accessible to
+userspace applications, future work can extend \midas' protection to include
+the threat of snapshot corruption through direct memory access (DMA)
+from accelerators.
+One strategy would be to use existing protection mechanisms for DMA, including
+I/O Memory Management Units (IOMMUs) to protect snapshots.
+Linux's reverse mapping must also be modified to include mappings for 
+DMA-capable devices.
+
+Hypervisor interfaces also require double-fetch protection, and can benefit 
+from \midas' protection.
+We leave the investigation of double-fetch protection of hypervisors to future
+research.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Widespread Compartmentalization with \seccells}
+\label{sec:conclusion:seccells}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Following the eras of battling memory corruption, code injection and 
+control-flow attacks,
+we believe that the next frontier of defences lie with compartmentalization.
+Particularly, this thesis highlights the need for isolation within
+application components sharing a virtual memory space, and how the
+architectural interface for virtual memory is crucial for supporting
+isolation of memory accesses.
+
+Ushering the era of well-compartmentalized applications requires 
+secure policies for decomposing applications into compartments,
+secure and performant mechanisms for implementing the policies, and
+developer-friendly toolchains for supporting the process.
+In this thesis, we propose \seccells as a supporting mechanism and
+present a survey of related mechanisms in \autoref{ch:compreview}.
+Future work in compartmentalization is required to address the
+shortcomings of \seccells, implement \seccells as a back-end supporting
+existing compartmentalization toolchains and
+improve software support for \seccells.
+We believe that parallel efforts into developing secure compartmentalization
+policies for existing programs plays an equally crucial part in realizing
+our vision of a compartmentalized future.
+
+Our comparison of compartmentalization mechanisms shows potential
+for improving \seccells.
+Particularly, \seccells focuses on the issue of memory isolation.
+Future work can add supervisor support for isolating kernel resources
+to \seccells, perhaps involving system call filtering.
+The granularity of passing data between compartments with zero-copy with
+\seccells is a virtual memory area, which can be unsuitable for 
+applications where compartments communicate with arguments held in 
+fragmented data structures which do not map to a VMA.
+Improvements can consider integrating CHERI's capability model for
+fine-grained access to memory objects with \seccells to support cheap 
+permission granting for complicated and fragmented data structures.
+Finally, more research is required to investigate the requirement for
+revocation of granted permissions, and the addition of this feature
+to \seccells.
+\seccells' cell description table, for example, can be used to encode
+a VMA's owner, opening the potential for the implementation of an
+unprivileged instruction allowing a VMA's owner to revoke another
+compartment's permissions to that memory region.
+
+Softare support for emerging architectures is crucial for their adoption.
+We envision that future efforts will improve operating system support for
+\seccells, along with porting of the requisite compiler toolchains and
+libraries.
+Automated or compiler-generated compartmentalization will be crucial to
+compartmentalization efforts, and \seccells can be used as a backend to
+tools like Enclosures~\cite{GhosnKPLB21}.
+
+
+% With \seccells, we presented a mechanism for compartmentalization.
+% We also presented a review of mechanisms.
+% Compartmentalization, however, needs a lot more work.
+% Mechanisms might want to separate isolation and translation.
+% Integration with Midgard.
+% Work on the policy side.
+% Automated program compartmentalization.
+% Compartmentalization frameworks and description languages.
+% PL-based compartmentalization.
+% Comprehensively supporting compartmentalization in the operating system,
+% including fixing the system call interface as required.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+\label{sec:conclusion:conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Stuff
+
