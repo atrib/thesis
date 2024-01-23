@@ -467,7 +467,7 @@ attacks from this user falls outside of our threat model.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\midas Design}
-\label{sec:midas:midas:design}
+\label{sec:midas:design}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \midas maintains a single, core, \emph{invariant}:
@@ -519,7 +519,7 @@ straightaway.
 \midas' invariant therefore prevent exploitation of double-fetch
 vulnerabilities even when the fetched objects span multiple pages.
 We elaborate on this case with an example in 
-\autoref{sec:midas:midas:design:discussion}.
+\autoref{sec:midas:design:discussion}.
 
 A major requirement for \midas is to allow concurrent access to pages
 by user/kernel code running in parallel with a syscall which reads from
@@ -727,7 +727,7 @@ Therefore, dropping a snapshot $S_i$ is trivial and does not require
 writes from the syscall to be merged into the latest copy.
 
 \subsection{Discussion}
-\label{sec:midas:midas:design:discussion}
+\label{sec:midas:design:discussion}
 
 \paragraph{Correctness of syscalls directly updating snapshot $L$}
 \midas' design lets all writes, including those from syscalls, to directly
@@ -951,11 +951,11 @@ prune false positives.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\midas Implementation}
-\label{sec:midas:midas:impl}
+\label{sec:midas:impl}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Our \midas prototype implements the state machine described in
-\autoref{sec:midas:midas:design} on Linux version 5.11, targeting the x86-64
+\autoref{sec:midas:design} on Linux version 5.11, targeting the x86-64
 architecture.
 A page protected by \midas transitions between states on
 either a kernel read to user memory, or when user or kernel code
@@ -1075,7 +1075,7 @@ We also implement \Code{get_user} and \Code{unsafe_get_user}
 \paragraph{Exemptions}
 Our prototype \midas kernel exempts a couple of functions
 from \midas' invariant (in addition to those described in
-\autoref{sec:midas:midas:design:discussion}), and these functions are
+\autoref{sec:midas:design:discussion}), and these functions are
 therefore not instrumented
 to follow the aforementioned steps while accessing userspace
 memory.
