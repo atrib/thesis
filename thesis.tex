@@ -148,6 +148,26 @@
 }             
 \addbibresource{thesis.bib}
 
+
+%%%%%%%%%%%%%%%%%%%%% Commenter's sections %%%%%%%%%%%%%%%%%%%%%%%
+%%% Colorboxes %%%
+\definecolor{thesisboxcolor}{HTML}{858287}
+\crefname{example}{example}{examples}
+\makespecialtcb[auto counter, number within=chapter]{example}{exampleboxcolor}{%
+  \renewcommand{\theFancyVerbLine}{\sffamily%
+    \textcolor{codelinenumbercolor}{\tiny%
+    \arabic{FancyVerbLine}}%
+  }%
+  \textbf{Example~\thetcbcounter}\hspace{1em}%
+}{}
+\makespecialtcb{further}{furtherboxcolor}{}{}
+\makespecialtcb[auto counter, number within=chapter]{definition}{definitionboxcolor}{%
+  \textbf{Definition~\thetcbcounter}\hspace{1em}%
+}{}
+\makespecialtcb{thesis}{thesisboxcolor}{}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 %%%%%%%%%%%%%%%%%%%%% Commenter's sections %%%%%%%%%%%%%%%%%%%%%%%
 % Enable or disable reviews
 \newif\ifreview
@@ -194,6 +214,7 @@
 \makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SecureCells definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
