@@ -4,52 +4,18 @@ compartmentalization \emph{policy}.
 A compartmentalization \emph{mechanism} is responsible for upholding the
 isolation and communication rules as described by the \emph{policy}.
 A developer has a choice between a plethora of academic and industrial 
-mechanisms\footnotemark
-proposed to support compartmentalization.
-However, mechanisms differ in the threat models they are designed to protect
-against, their performance characteristics, the use cases they support, and
-their compatibility with existing or upcoming system architectures.
+proposals for compartmentalization mechanisms.
+However, mechanisms\footnotemark differ in the threat models they are designed
+to protect against, their performance characteristics, supported use cases,
+and their compatibility with existing or upcoming system architectures.
 A survey of compartmentalization mechanisms is required to understand the
 properties and guarantees of different proposals, and compare their
 suitability for compartmentalization use cases.
 In this chapter, we will take a deeper dive into a wide range of 
-compartmentalization mechanisms and compare them on security and performance
-properties.
+compartmentalization mechanisms and compare their 
+security and performance properties.
 \footnotetext{In this chapter, the term ``mechanism'' refers to a 
 compartmentalization mechanism.}
-
-%%%%% Parts of this background are already discussed in the SecureCells paper.
-%%%%% However, we need not repeat this stuff in this section.
-% \section{Background on Compartmentalization}
-
-% \begin{itemize}
-%       \item Modern software is monolithic, or compartmentalized at a coarse granularity.
-%       \item Monolithic software runs all parts of an application in a single address space
-%       \item Issues with monolithic software includes:
-%             Memory safety bugs can compromise data throughout the address space
-%             Control flow hijack/bending allows any code to call any other code
-%             Can lead to system calls being called from unexpected code
-% \end{itemize}
-
-% In contrast, a compartmentalized program separates logical components of the application
-% and isolates them in individual compartments, which implies some degree of separation.
-% Isolation restricts which resources each compartment has access to, in order to prevent
-% one or more of the above attack vectors.
-
-% Compartments are logical, and not necessarily linked to code. 
-% For example, compartments for a browser can include the JIT compiler, the runtime and the
-% untrusted sandbox code. 
-% While these are isolated, they may have access to the same code, including libraries like
-% libc.
-% Additionally, there might be one or more sandboxes which are instances of the same module,
-% for example, and thereby share exactly the same code regions. 
-% However, they would need to have separate data regions or some isolated contexts.
-% All of this is to say that we should not make a 1:1 link between code and compartment.
-
-% The aim of this section is to provide background of compartmentalization as a software design principle to provide enhanced security. 
-% This section will explain the terminology of "monolithic" and "compartmentalized" programs. 
-% This section will also describe the attacker model for compartmentalization and what attacks can be prevented.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Description of use cases and threats}
@@ -58,12 +24,28 @@ compartmentalization mechanism.}
 In this section, we introduce some characteristic use cases for 
 compartmentalization, and 
 describe some typical attacker models.
-These examples will allow us to compare the mechanisms described later.
+These examples will allow us to highlight the necessity of particular
+security or performance properties for mechanisms, and to thereby
+compare the mechanisms described later.
+Practically, applications may be composed of compartments having any
+mix of the following trust relations.
 
 %-------------------------------
 \subsection{Hierarchical trust} 
 \label{sec:compreview:usecases:hierarchical}
 %-------------------------------
+
+\begin{figure}
+      \centering
+      \includegraphics[width=0.75\linewidth]{media/compreview/hierarchy_trust.pdf}
+      \caption[Illustrating hierarchical trust between application compartments.]
+              {Example of sandboxing applications, illustrating a hierarchy of
+              trust between compartments.
+              Trust relations are generally transitive, and nested sandboxes rely
+              indirectly on the sandboxing engine.}
+      \label{fig:compreview:asdf}
+\end{figure}
+
 Let us consider a system with hierarchical notions of trust.
 In \autoref{sec:seccells:reqs}, we have already encountered the example of
 a browser running untrusted code from a web application.
@@ -106,6 +88,18 @@ which either
 \end{inparaenum}
 Compartmentalization must, nonetheless, protect the Engine and other WebApp 
 from a malicious WebApp which exploits the buggy Engine's code generation.
+
+\atri{TODO: Integrate and phrase this section around the new example.}
+Compartments within a hierarchical trust-based system can also contain 
+mutually distrusting compartments.
+For example, two sandboxes managed by the same engine might distrust each
+other.
+However, they can rely on a common root of trust, like the sandbox engine, to 
+mediate operations between them.
+Calls between sandboxes, for example, pass via the Engine.
+The Engine, therefore, can implement isolation between the sandboxes.
+This model remains separate from the model of mutual distrust described
+in the next section.
 
 %-------------------------------
 \subsection{Mutual distrust} 
@@ -249,8 +243,8 @@ Fixed entry points are also vital to implement call gates, which enable
 compartments to implement vital checks at inter-compartment interfaces.
 We describe a couple of these checks next.
 
-Compartmentalization should limit which compartments are allowed which other
-compartments, as an application of least privilege. 
+Compartmentalization should limit which compartments are allowed to call
+which other compartments, as an application of least privilege. 
 A sandboxing engine could require, for example, that calls between sandboxes
 are interposed by the engine.
 To implement this check, mechanisms might track allowed caller-callee 
@@ -264,7 +258,7 @@ When compartments do not trust each other, a compartmentalization mechanism
 must enable compartments to maintain their own contexts (static threading).
 Without static threading (migrating threading), the register context following
 an inter-compartment call may be malicious.
-For example, the stack pointer register could point to a attacker-crafted
+For example, the stack pointer register could point to an attacker-crafted
 malicious stack.
 Mechanisms might themselves implement secure context switching at compartment
 boundaries, or enable compartments to perform the context switch as part of
@@ -404,9 +398,8 @@ Core pinning wastes core time, as each core typically does not need the same
 amount of execution. 
 When virtualized network functions are pinned to cores, cores executing stages
 with lesser computation must wait for cores executing longer stages.
-Memory shared between all stages removes some of the benefit of 
-compartmentalization, as a corrupted stage can also corrupt data being 
-processed by other stages.
+Memory shared between all stages removes some compartmentalization benefits, 
+as a corrupted stage can also corrupt data being processed by other stages.
 
 %-------------------------------
 \subsection{Usability Properties}
