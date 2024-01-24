@@ -87,7 +87,7 @@ research.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Following the eras of battling memory corruption, code injection and 
 control-flow attacks,
-we believe that the next frontier of defences lie with compartmentalization.
+we believe that the next frontier of defenses lies with compartmentalization.
 Particularly, this thesis highlights the need for isolation within
 application components sharing a virtual memory space, and how the
 architectural interface for virtual memory is crucial for supporting
@@ -134,3 +134,18 @@ libraries.
 Automated or compiler-generated compartmentalization will be crucial to
 compartmentalization efforts, and \seccells can be used as a backend to
 tools like Enclosures~\cite{GhosnKPLB21}.
+
+Finally, compartmentalization can improve microarchitectural security for
+applications by helping the hardware identify untrusted program components
+and limiting microarchitectural interactions or leakage channels between
+their compartments.
+Hardware mitigations for side channels, typically adopted at transitions
+at crucial boundaries such as during system calls, can also be introduced
+when transitioning between compartment.
+Hardware or software partitioning techniques typically used to 
+microarchitecturally isolate untrusted code in separate processes or privilege
+levels can also bring benefits to isolating compartments within an application.
+However, applications will typically involve more compartment switches than 
+system calls, and the performance overheads of introducing intra-application
+microarchitectural isolation remains to be determined and is left for future
+work.
