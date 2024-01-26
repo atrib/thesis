@@ -66,6 +66,14 @@ page table stores permissions to physical frames applicable across all
 virtual address spaces.
 Essentially, Midas can leverage Midgard's backside-page table entries to
 make a single permission change for a snapshot.
+Finally, \midas can leverage proposed linear capability systems like 
+Capstone~\cite{YuWBCS23}.
+Capstone guarantees that only a single active capability to an object 
+in the physical address space exists at any point in time.
+During a system call, the kernel possessing a linear capability to 
+a user object can be assured that userspace cannot simultaneously hold a 
+capability to the same object, guaranteeing that the object remains
+unmodified.
 
 Considering the increasing use of on- and off-chip accelerators accessible to
 userspace applications, future work can extend \midas' protection to include
