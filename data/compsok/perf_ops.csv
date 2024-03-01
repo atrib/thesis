@@ -1,0 +1,26 @@
+mechanism     ,          switching,      revocation,                    permtx, memmgmt          
+Mechanism name, CompSwitch latency, Revocation cost,  Permission transfer time, Memory management
+TRAD         ,           Syscall ,             NA ,                   Syscall,            Syscall
+MMP           ,           Syscall ,             NA ,                        NA,           Syscall
+lwC           ,  Syscall-fastpath ,             NA ,                   Syscall,  Syscall-fastpath
+CODOMs        ,              10NS ,             NA ,                      Zero,                NA
+XPC           ,              10NS ,             NA ,                      Zero,                NA
+ARMlock       ,           Syscall ,             NA ,                        NA,           Syscall
+MPK           ,              10NS ,             NA ,                        NA,           Syscall
+ERIM          ,              10NS ,             NA ,                        NA,           Syscall
+Donky         ,       Syscall-lib ,             NA ,                        NA,       Syscall-lib
+CHERI         ,       Syscall-lib ,        MemScan ,                      Zero,       Syscall-lib
+SecureCells   ,              10NS ,             NA ,                  Hardware,      User-limited
+CAPSTONE      ,              10NS ,       NodeScan ,                      Zero,              User
+#
+# switching: Compartment switching
+# revocation: Revoking granted permissions
+# permtx: Transferring permissions
+# memalloc: memory allocation
+# 
+# CAPSTONE: revocation involves a scan of revocation-tree nodes, potentially
+# faster than a full memscan, but worse than having a lifetime counter
+#
+# memoryalloc: CAPSTONE can do proper allocation with unique capabilities in userspace
+# SecureCells can only do INVAL/REVAL with pre-allocated regions.
+# Yuanlong's future work might be full user.

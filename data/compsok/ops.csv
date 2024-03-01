@@ -1,0 +1,24 @@
+mechanism     , callpairs, gates    , permtxperm , permtxtarget , permtxrevok, permtxbilateral
+Mechanism name, XCompCall, CallGates, Permtx perm, Permtx target, Perm revoke, Bilateral perm tx
+TRAD          , Y        ,  Y       , N          , Y            , N          , Y                
+MMP           , S        ,  Y       , NA         , NA           , NA         , NA               
+lwC           , S        ,  Y       , Y          , Y            , N          , Y                
+CODOMs        , Y        ,  N       , P          , Y            , N          , N                
+XPC           , Y        ,  S       , N          , Y            , Y          , N                
+ARMlock       , N        ,  Y       , NA         , NA           , NA         , NA               
+MPK           , N        ,  N       , NA         , NA           , NA         , NA               
+ERIM          , N        ,  Y       , NA         , NA           , NA         , NA               
+Donky         , N        ,  Y       , NA         , NA           , NA         , NA               
+CHERI         , Y        ,  Y       , Y          , Y            , Y          , N                
+SecureCells   , S        ,  Y       , Y          , Y            , N          , Y                
+CAPSTONE      , N        ,  Y       , Y          , N            , Y          , N                
+#
+# callpairs   : Restrictions on caller-callee pairs
+# gates       : Entry point restrictions
+# permtxperm  : Checks on which perms can be transferred
+# permtxtarget: Check on which target compartment perms are sent to
+# permtxrevok : Can restrict which perms get revoked
+# permtxbilateral: Are permission transfers bilateral
+#
+# Callpairs: S = supported, either in user software or kernel
+# permrevocation: S = slow, i.e. full memory scan for CHERI

@@ -1,0 +1,19 @@
+mechanism     , regalign        , reggrain    , regcount          , permtxgrain 
+Mechanism name, Region alignment, Region grain, Region count limit, permtx grain
+TRAD          , 4K              , 4K          , Inf               , 4K          
+MMP           , 4B              , VMA         , Inf               , NA          
+lwC           , 4K              , 4K          , Inf               , 4K          
+CODOMs        , 4K              , 4K          , Inf               , All         
+XPC           , 4K              , 4K          , Inf               , VMA         
+ARMlock       , 2M              , 2M          , 16                , NA 
+MPK           , 4K              , 4K          , 16                , NA          
+ERIM          , 4K              , 4K          , 16                , NA          
+Donky         , 4K              , 4K          , 1024              , NA          
+CHERI         , 1B              , Object      , Inf               , 1B          
+SecureCells   , 4K              , VMA         , Inf               , VMA         
+CAPSTONE      , 1B              , Object      , Inf               , 1B          
+#
+# regalign: Alignment of memory region
+# reggrain: Smallest granularity of perms
+# regcount: Max supported memory regions
+# permtxgrain: P = partial, i.e., static, or perhaps determined by callee?

@@ -1,0 +1,12 @@
+{
+  "security"     : {
+                    "res"  : "Resources",
+                    "ops"  : "Operands", 
+                    "insts": "Insts."
+                  },
+  "practicality" : {
+                    "perf_resacc" : "Access Control Perf.", 
+                    "perf_ops"    : "Ops. Perf.", 
+                    "limits"      : "Flexibility"
+                  }
+}

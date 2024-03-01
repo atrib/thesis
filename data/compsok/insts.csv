@@ -1,0 +1,22 @@
+mechanism     , syscalls   , permmod       , permrevoke    , memalloc   , uarch             , xcore     , sysregacc    , xcompcalls         
+Mechanism name, System call, Permission mod, Revoke Perms  , MemoryAlloc, Microarchitectural, Cross-core, Access Uncore, Cross-compmt calls
+TRAD          , N          , N             , N             , P          , Y                 , N         , N            , N                 
+MMP           , N          , N             , N             , N          , Y                 , N         , N            , N                 
+lwC           , N          , N             , N             , N          , Y                 , N         , N            , N                 
+CODOMs        , N          , N             , N             , N          , N                 , N         , N            , N                 
+XPC           , N          , N             , N             , N          , N                 , N         , N            , N                 
+ARMlock       , Y          , N             , N             , N          , N                 , N         , N            , N
+MPK           , N          , N             , N             , N          , N                 , N         , N            , N                 
+ERIM          , N          , N             , N             , N          , N                 , N         , N            , N                 
+Donky         , Y          , N             , N             , N          , N                 , N         , N            , N                 
+CHERI         , N          , N             , N             , N          , Y                 , N         , N            , N                 
+SecureCells   , N          , N             , N             , N          , N                 , N         , N            , N                 
+CAPSTONE      , N          , N             , N             , N          , N                 , N         , N            , N                 
+#
+# Syscalls   - Compartments call OS
+# Permmod    - Compartments modify permissions (drop, tx, recv)
+# Permrevoke - Permission revocation
+# Memalloc   - Memory management/allocation instructions (like crafting capabilities)
+# SysRegAcc  - Access to system/uncore resources (e.g., common seed generators)
+# xcompcalls - Cross-compartment calls
+#

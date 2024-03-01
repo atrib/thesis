@@ -1,0 +1,18 @@
+{
+  "help"         : {
+                      "loadstore"    : "Access control for load/stores ",
+                      "exec"         : "Access control for inst. fetch ",
+                      "excl"         : "Support for exclusive access to memory ",
+                      "ctx"          : "Support for context isolation ",
+                      "kernelid"     : "Support for supervisor to identify compartment using system call ",
+                      "syscallfilter": "System call filtering support ",
+                      "pmem"         : "Physical memory access control "
+                    },
+  "loadstore"    : { "Y": 1, "N": 0},
+  "exec"         : { "Y": 1, "N": 0},
+  "excl"         : { "Y": 2, "S": 1, "P": 0.5, "N": 0},
+  "ctx"          : { "Y": 1, "N": 0},
+  "kernelid"     : {"Direct-unique": 2, "Indirect-unique": 1, "Indirect-common": 0, "NA": 0, "Missing": 0},
+  "syscallfilter": {"Existing": 2, "Possible": 1, "Vague": 0, "Impossible": 0},
+  "pmem"         : { "Y": 2, "P": 1, "N": 0}
+}

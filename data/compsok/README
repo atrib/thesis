@@ -1,0 +1,12 @@
+
+We can create multiple scoring plots, as specified in `axes.json`.
+Each top level key corresponds to a graph named `scoring_<key>.pdf`.
+
+Within a graph, we will create a radar plot with `n` axes as specified in the
+corresponding value in `axes.json`.
+For example, the key `security` has the axes `res`, `ops` and `insts`.
+The spider plot will plot a bunch of mechanisms on these axes for this graph.
+
+For each field/axis in a comparison spider plot, we will have two files:
+- `feature.csv` listing classification factors and value for each mechanism
+- `feature_key.json` will manage scoring, listing points for different values for a factor

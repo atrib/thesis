@@ -65,6 +65,7 @@
 \usepackage{listofitems}    % For `readlist` used for \newreviewer command
 \usepackage{soul}           % For strikethrough \st
 \usepackage{array}          % For whole row `\rowstyle'
+\usepackage{rotating}       % For rotating tables: sidewaystable
 
 
 %%%%%%%%%% Sid's list of packages %%%%%%%%%%
@@ -218,6 +219,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SecureCells definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\lwc}{$lwC$\xspace}
 \newcommand{\seccells}{SecureCells\xspace}
 \newcommand{\ptable}{PTable\xspace}
 \newcommand{\gtable}{GTable\xspace}
@@ -241,6 +243,20 @@
 \newcommand{\xid}{\Code{XID}\xspace}
 % Requirements
 \newcommand{\req}[1]{\textbf{O#1}\xspace}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CompSOK definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\nmechs}{12\xspace}
+\newcommand{\browser}{\emph{Browser}\xspace}
+\newcommand{\local}{\emph{Local}\xspace}
+\newcommand{\renderer}{\emph{Renderer}\xspace}
+\newcommand{\sandbox}{\emph{Sandbox}\xspace}
+\newcommand{\nested}{\emph{Nested}\xspace}
+\newcommand{\manager}{\emph{Manager}\xspace}
+
+\input{data/compsok/table_macros.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%% Atri's design choices %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -487,6 +503,51 @@ benchmark suites.
 \input{chapters/midas-core}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CompSOK CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{SoK: Classifying Compartmentalization Mechanisms}
+\label{ch:compsok}
+
+% Copying abstract from CompSOK
+Compartmentalization is the next major frontier of defense for 
+modern applications, providing security based on the principles of 
+least privilege and defense in depth
+% While the idea of least privilege originates in the 1970s, 
+in the modern era of extensive code sharing and internet-connected devices.
+%  has
+% highlighted the potential of security through compartmentalization.
+% Simultaneously, improvements in transistor counts have allowed architects to
+% implement more checks in hardware at low overheads.
+Compartmentalized applications rely on isolation between compartments,
+enforced by mechanisms through checks restricting a compartment's operations 
+to those allowed by a policy.
+These checks aim to limit each compartment's privileges and ensure that 
+interactions between compartments conform to the developer's intentions.
+Practically, the assorted commercial and research offerings for 
+compartmentalization mechanisms vary greatly in their design goals and 
+offer support for restricting different classes of privileges, and to
+different degrees.
+This fragmentation hinders the development of hardware based on a
+common mechanism for greater adoption within the application ecosystem.
+
+% Simultaneously, improvements in transistor counts have allowed architects to
+% implement more checks in hardware at low overheads.
+
+This chapter classifies the checks mitigating various attack vectors 
+for inter-compartment attacks into three major heads:
+restrictions on executable operations, their operands, and the resources 
+accessed by these operations.
+We systematically score \nmechs{} mechanisms, 
+chosen from commercially available and state-of-the-art proposals, 
+on axes measuring how comprehensively they implement checks for each 
+category of restrictions listed above, how fast these checks are,
+and the limitations of these checks.
+From this comparison, we highlight the commonalities and difference
+between the surveyed mechanisms, and underscore common weaknesses
+to highlight opportunities for future mechanisms to improve upon.
+\input{chapters/compsok-core}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SecureCells CORE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{SecureCells: A Secure Compartmentalized Architecture}
@@ -551,14 +612,18 @@ in-memory key-value store with negligible overhead of less than $3\%$.
 % Appendix stuff
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{appendices}
-
+%-------------------------
 \chapter{\midas Artifact}
 
 Detailed documentation for \midas is available on the project website 
 \url{https://hexhive.epfl.ch/midas}.
 
 \input{chapters/midas-appendix}
+%-------------------------
+\chapter{SoK on Compartmentalization Mechanisms Appendix}
+\input{chapters/compsok-app}
 
+%-------------------------
 \chapter{\seccells Details}
 
 Detailed documentation for \seccells{}' prototype and code artifacts is

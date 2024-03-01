@@ -1,0 +1,10 @@
+{
+  "help"       : {
+                    "memaccctl"  : "Performance of memory access control ",
+                    "excl"       : "Cost of exclusive memory access ",
+                    "memmgmt"    : "Cost of memory management "    
+                  },
+  "memaccctl"  : { "INF": 3, "VMA": 2, "PLB": 2, "TLB": 1, "TLB/N": 0, "2x+INF": -0.5},
+  "excl"       : { "Zero": 3, "100NS": 2, "ZeroS": 1, "NA": 0},
+  "memmgmt"    : { "NA": 0, "syscall": 1, "trap": 1.5, "LimitHW": 2}
+}

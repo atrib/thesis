@@ -1,0 +1,20 @@
+{
+  "help"       : {
+                  "syscalls"   : "Per-compartment restriction for system calls",
+                  "permmod"    : "Per-compartment restriction for perm. modification ops.",
+                  "permrevoke" : "Per-compartment restriction for perm. revocation ops.",
+                  "memalloc"   : "Per-compartment restriction for memory alloc. ops.",
+                  "uarch"      : "Per-compartment restriction for microarch. mgmt. ops.",
+                  "xcore"      : "Per-compartment restriction for cross-core ops.",
+                  "sysregacc"  : "Per-compartment restriction for access to system registers",
+                  "xcompcalls" : "Per-compartment restriction for cross-compartment calls"
+                },
+  "syscalls"   : { "Y": 1, "N": 0 },
+  "permmod"    : { "Y": 1, "N": 0 },
+  "permrevoke" : { "Y": 1, "N": 0 },
+  "memalloc"   : { "Y": 1, "P": 0.5, "N": 0 },
+  "uarch"      : { "Y": 1, "N": 0 },
+  "xcore"      : { "Y": 1, "N": 0 },
+  "sysregacc"  : { "Y": 1, "N": 0 },
+  "xcompcalls" : { "Y": 1, "N": 0 }
+}

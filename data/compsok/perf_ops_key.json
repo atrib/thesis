@@ -1,0 +1,12 @@
+{
+  "help"       : {
+                    "switching"  : "Performance of compartment switching ",
+                    "revocation" : "Performance of permission revocation ",
+                    "permtx"     : "Performance of permission transfers ",
+                    "memmgmt"    : "Performance of memory management ops. "
+                  },
+  "switching"  : { "Syscall": 0, "Syscall-fastpath": 1, "Syscall-lib": 2, "10NS": 3},
+  "revocation" : { "NA": 0, "MemScan": 0.5, "NodeScan": 1, "O(1)": 2},
+  "permtx"     : { "NA": 0, "Syscall": 1, "Hardware": 2, "Zero": 3},
+  "memmgmt"    : { "NA": 0, "Syscall": 1, "Syscall-fastpath": 1.5, "Syscall-lib": 2, "User-limited": 2.5, "User": 3}
+}

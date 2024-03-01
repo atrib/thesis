@@ -1,0 +1,33 @@
+mechanism,      loadstore             , exec               , excl            , ctx              , kernelid       ,  syscallfilter        , pmem 
+Mechanism name, Load/store permissions, Execute permissions, Exclusive access, Context Isolation, identification ,  System call filtering, Physmem
+TRAD          , Y                     , Y                  , S               , Y                , Indirect-unique,               Existing, N  
+MMP           , Y                     , Y                  , N               , Y                , Indirect-unique,               Possible, N 
+lwC           , Y                     , Y                  , S               , Y                , Indirect-unique,               Possible, N 
+CODOMs        , Y                     , Y                  , S               , N                , Indirect-unique,               Possible, N 
+XPC           , Y                     , Y                  , Y               , N                ,   Direct-unique,               Possible, P
+ARMlock       , Y                     , Y                  , P               , Y                , Indirect-unique,               Existing, N
+MPK           , Y                     , N                  , N               , N                , Indirect-common,                  Vague, N 
+ERIM          , Y                     , N                  , N               , N                , Indirect-common,               Existing, N 
+Donky         , Y                     , N                  , N               , Y                , Indirect-unique,               Existing, N 
+CHERI         , Y                     , Y                  , N               , Y                , Indirect-unique,               Possible, N 
+SecureCells   , Y                     , Y                  , Y               , Y                ,   Direct-unique,               Possible, N 
+CAPSTONE      , Y                     , Y                  , Y               , Y                ,         Missing,             Impossible, Y 
+#
+# loadstore - Checks for mem load/store
+# exec      - Checks for mem inst fetch
+# excl      - Checks for exclusive access
+# ctx       - Context isolation
+# kernelid  - Can the kernel ID the caller compartment on syscalls?
+# syscallfilter - Does the mechanism support system call filtering
+# pmem      - Protection of physical memory
+##
+# Identification rules
+# Direct - HW/variable tracks compartment ID, Indirect - HW/var tracks compartment property (e.g. PTBase)
+# Unique - ID/variable is necessarily unique, common - may be shared between compartments
+# Missing - No ID/variable exists.
+# Capstone has an interesting design where calls are managed in hardware(?)
+#
+# Exclusive access: TRAD provides MAP_PRIVATE at mmap time, XPC has relay segment
+#                   SecureCells has SCExcl, CAPSTONE has linear capabilities
+# Exclusive access: Y = Yes, dynamic, S = Yes, static, N = No
+# Physical mmory: Y = Yes, P = partial, N = No

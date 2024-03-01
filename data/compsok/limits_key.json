@@ -1,0 +1,12 @@
+{
+  "help"       : {
+                    "permtxgrain": "Permission transfer granularity",
+                    "regalign"   : "Alignment of region for permissions",
+                    "reggrain"   : "Granularity of region for permissions",
+                    "regcount"   : "Limit on count of permission regions"
+                  },
+  "permtxgrain": {"1B": 3, "4K": 2, "VMA": 1.5, "All": 1, "NA": 0},
+  "regalign"   : { "1B": 3, "4B": 3, "4K": 2, "2M": 1},
+  "reggrain"   : { "Object": 2, "VMA": 1.5, "4K": 1, "2M": 0.5},
+  "regcount"   : { "Inf": 2, "1024": 1, "16": 0.5, "2": 0}
+}

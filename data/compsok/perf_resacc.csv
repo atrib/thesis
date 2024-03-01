@@ -1,0 +1,22 @@
+mechanism     ,          memaccctl,             excl, memmgmt     
+Mechanism name, Access Control Mem, Exclusive Access, Mem Managemt
+TRAD          ,              TLB/N,            ZeroS,      syscall
+MMP           ,                PLB,               NA,      syscall
+lwC           ,              TLB/N,            ZeroS,      syscall
+CODOMs        ,                TLB,            ZeroS,      syscall
+XPC           ,              TLB/N,             Zero,      syscall
+ARMlock       ,                TLB,               NA,           NA
+MPK           ,                TLB,               NA,           NA
+ERIM          ,                TLB,               NA,           NA
+Donky         ,                TLB,               NA,         trap
+CHERI         ,                INF,               NA,      syscall
+SecureCells   ,                VMA,            100NS,      LimitHW
+CAPSTONE      ,             2x+INF,             Zero,      syscall
+#
+# memaccctl: Performance limits of memory access control
+# excl     : Performance cost of enforcing excl access
+# mgmt     : Memory allocation/region creation
+# 
+# CAPSTONE: each memory access by a linear capability results in atleast
+# two memory accesses, second of which is a 128-bit check for the revocation
+# node
