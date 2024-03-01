@@ -248,10 +248,10 @@ added instructions.
     SCInval                           & addr                   &               & \Code{INVAL}                      & addr = \Code{rs1}                                             \\
     SCExcl                            & addr, perm             & True/False    & \Code{EXCL}                       & addr = \Code{rs1}, perm = \Code{rs2}                          \\ \bottomrule
   \end{tabular}
-  \label{tab:seccells:instmapping}
   \caption[Mapping \seccells instructions to the RISC-V prototype instructions]
           {Mapping \seccells instructions and arguments to the RISC-V prototype instructions. 
           Instructions returning values write to the \Code{rd} register}
+  \label{tab:seccells:instmapping}
 \end{table}
 
 \begin{table}
@@ -276,10 +276,10 @@ added instructions.
     \Code{imm[11:5]}     & \Code{rs2    }     & \Code{rs1    }   & \Code{110}      & \Code{imm[4:0]} & \Code{0001011}  & \Code{RECV(rs1, rs2, imm) }  \\ \hline   
     \Code{0000000  }     & \Code{rs2    }     & \Code{rs1    }   & \Code{111}      & \Code{rd      } & \Code{0001011}  & \Code{EXCL(rs1, rs2) = rd }  \\ \bottomrule
   \end{tabular}
-  \label{tab:seccells:instencodings}
   \caption[Instruction encodings for \seccells' prototype]
           {Instruction encodings for \seccells' prototype. 
           The first part shows the four instruction encoding types supported by RISC-V.}
+  \label{tab:seccells:instencodings}
 \end{table}
 
 \paragraph{Exception details}
