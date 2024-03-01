@@ -310,7 +310,7 @@ def generate_macros_and_images(fracs):
       filename = 'circle{}_{}.pdf'.format(n, d)
       commandname = 'frac{}outof{}'.format(to_words(n), to_words(d))
       # Create macro for latex
-      line = '\\newcommand{{\\{}}}{{\\includegraphics[height=2ex]{{data/{}}}}}'.format(commandname, filename)
+      line = '\\newcommand{{\\{}}}{{\\includegraphics[height=2ex]{{data/compsok/{}}}}}'.format(commandname, filename)
       print(line, file = fd)
       
       # Create pdf for table
