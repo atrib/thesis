@@ -334,7 +334,7 @@ def generate_table_frontmatter(fd, ncols, continued = False):
   # print('\t\\centering', file = fd)
   # Ignore {{\\linewidth}}
   print('\t\\begin{{tabular}}{{{}}}'.format(columnformat), file=fd)
-  print('\t\t\\toprule', file = fd)
+  # print('\t\t\\toprule', file = fd)
   
 def generate_table_endmatter(fd, caption, label, help, continued = False):
   print('\t\t\\bottomrule', file = fd)
@@ -342,12 +342,17 @@ def generate_table_endmatter(fd, caption, label, help, continued = False):
   # print('\t\\caption[{}]{{{}}}'.format('' if continued else caption, caption), file = fd)
   # print('\t\\label{{{}}}'.format(label), file = fd)
   
+  if len(help) > 12:
+    print('\t\\begin{multicols}{2}', file = fd)
   print('\t\\begin{tablenotes}', file=fd)
   count = 0
+  
   for htext in help:
     count += 1
     print('\t\t\\item[{}] {}'.format(count, htext), file = fd)
   print('\t\\end{tablenotes}', file=fd)
+  if len(help) > 12:
+    print('\t\\end{multicols}', file = fd)
   
   print('\\end{threeparttable}', file=fd)
 

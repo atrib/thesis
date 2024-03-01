@@ -4,7 +4,7 @@
                       "exec"         : "Access control for inst. fetch ",
                       "excl"         : "Support for exclusive access to memory ",
                       "ctx"          : "Support for context isolation ",
-                      "kernelid"     : "Support for supervisor to identify compartment using system call ",
+                      "kernelid"     : "Support for supervisor to ID compartment using system call ",
                       "syscallfilter": "System call filtering support ",
                       "pmem"         : "Physical memory access control "
                     },
