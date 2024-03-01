@@ -1,7 +1,7 @@
 DOC := thesis
 
 TEMPLATE = $(wildcard *.sty *.cls)
-# FIG = $(call rglob,media,*)
+FIG = $(wildcard media/midas/*.pdf) $(wildcard media/seccells/*.pdf)
 MEDIA = data/seccells/32ksim/mycached_full.pdf data/seccells/network_1ktlb_sim/nfv_full.pdf
 MAINTEX = $(wildcard ./*.tex)
 CHAPTERS = $(wildcard chapters/*.tex)
