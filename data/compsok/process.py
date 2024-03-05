@@ -259,9 +259,9 @@ def plot(graphname, axes, labels, tables, normalize = 1):
   mechanisms = tables[axes[0]].mechanisms
   factors = tables[axes[0]].factors
   theta = radar_factory(len(axes), frame='polygon')
-  ncols = 4
+  ncols = 3
   nrows = math.ceil(len(mechanisms) / ncols)
-  fig, axs = plt.subplots(figsize=(6 * ncols, 4.5 * nrows), 
+  fig, axs = plt.subplots(figsize=(6 * ncols, 5 * nrows), 
                           nrows=nrows, ncols=ncols,
                           subplot_kw=dict(projection='radar'))
   edgebuffer = 0.05

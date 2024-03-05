@@ -875,11 +875,11 @@ We also exclude mechanisms abusing non-security hardware features for non-system
 point protections~\cite{HedayatiGJCSSM19Hodor, GuanLLJW15}.
 Finally, we exclude mechanisms with very limited protections~\cite{FrassettoJLS18}.
 
+\atri{Rework the browser example across mechanisms}
 %-------------------------------
-\subsection{Process-based compartmentalization}
+\subsubsection{Process-based compartmentalization (TRAD)}
 %-------------------------------
-
-The traditional abstraction of isolation is based on processes.
+The traditional abstraction of isolation is based on processes (TRAD).
 We will describe process-based compartmentalization in UNIX-like OSs
 (particularly Linux), 
 though the concepts generalize to other OS kernels.
@@ -894,6 +894,9 @@ A process can have one or more kernel threads, corresponding to independent thre
 of execution, but sharing the same address space and OS resources.
 Everything within a process shares the same permissions to access its memory and
 its OS resources, including the program's executable, libraries, and loaded modules.
+The OS relies on hardware enforced permissions for virtual memory, typically 
+implemented by per-core memory-management units (MMUs) reading permissions from a
+per-process page table structure.
 
 % Explain how processes allow compartmentalization
 To compartmentalize a program, that program needs to isolate each compartment in
@@ -939,95 +942,7 @@ the local system from the other parts interacting with untrusted
 code~\cite{barth2008security}.
 
 %-------------------------------
-\subsection{XPC: Architectural support for secure and efficient cross process call}
-%-------------------------------
-
-% Context and introduction of XPC
-XPC~\cite{DuHXZC19XPC} shares much of the abstractions from the process-based
-isolation, but attempts to accelerate inter-process calls, in particular, 
-while maintaining the same interface.
-Backward compatibility is a major design directive.
-Particularly, XPC replaces the system calls used for IPC with hardware 
-instructions supported by state machines implementing the same functionality.
-XPC aims to reduce the cost of IPC compared to kernel software, 
-also eliminating software dispatch and scheduling overheads in the common case.
-XPC also focusses on cheap zero-copy data movement between processes,
-dedicating a single relay segment for the purpose.
-
-% Explain how XPC allows compartmentalization
-A compartmentalized program running under XPC looks essentially identical
-to that using processes.
-% Isolation part
-Just like previously, each process has their own address space and OS 
-resources and capabilities.
-The XPC hardware engine tracks the page-table pointer and capability pointer
-for each process of a compartmentalized program in an \emph{x-entry} held in
-an in-memory \emph{X-Entry Table}.
-The OS sets up the X-Entry Table during a program launch.
-While a process is running, the XPC engine ensures that the hardware uses the
-correct page table pointer and capabilities.
-% Communication part
-XPC accelerates remote procedure calls, introducing the \Code{xcall} and
-\Code{xret} instructions to replace \Code{sendmsg}.
-On executing \Code{xcall}, the hardware fetches and installs the relevant 
-page table pointer and capabilities for the target process, 
-and put an entry for the caller on a \emph{Link Stack}.
-Executing \Code{xret} allows the callee to return to the caller, and the
-hardware engine pops the caller's information and installs it in the
-corresponding system registers (including the return address). 
-XPC eliminates the OS kernel from inter-compartment calls, relying on the 
-hardware to implement traditional kernel functionality.
-Additionally, data passed between processes can use the relay segment, which
-is a single dedicated segment mapping memory separately from the page tables.
-
-% Explain how XPC compartmentalize a browser
-A browser compartmentalized using XPC looks essentially the same as
-using UNIX processes. 
-The JIT and each sandbox occupy separate processes.
-The major change is that IPC system calls are replaced by 
-\Code{xcall}/\Code{xret} pairs.
-
-%-------------------------------
-\subsection{Light-weight contexts: An OS abstraction for safety and performance}
-%-------------------------------
-% Context and introduction of lwc
-This paper~\cite{LittonVE0BD16} introduces a new eponymous OS abstraction,
-Light-weight contexts ($lwC$s),
-which are independent units of isolated execution.
-Contexts, like processes, have separate memory address spaces, OS resources,
-and capabilities.
-However, contexts remain part of a single process and share metadata in the 
-kernel, resembling kernel threads.
-Contexts offer the primary advantage that switching contexts within a process is 
-faster than switching processes, or even kernel threads within the same process.
-$lwC$ achieves faster switching between contexts by eliminating unnecessary kernel
-processing due to the kernel scheduler and resource accounting.
-
-% Explain how lwc allow compartmentalization
-% Isolation part
-Contexts diverge from the point of calling \Code{lwCreate} which acts like
-the \Code{clone} system call, where each resulting context has an 
-independent memory address space and OS resource handles.
-Like processes, OS resource handles can persist across a \Code{lwCreate}, or be
-invalidated in the child.
-Further shared resources can be generated using the \Code{lwOverlay} system 
-call.
-During program setup, numerous contexts may be created, each of which can
-perform private setup steps or further restrict their resource rights using
-\Code{lwRestrict}.
-% Communication part
-Execution of contexts resembles processes, merely replacing inter-process system
-calls with the faster inter-lwC switches.
-
-% Explain how lwc compartmentalize a browser
-A browser compartmentalized using lwC looks essentially the same as
-using UNIX processes. 
-The JIT and each sandbox occupy separate contexts, instead of processes.
-With $lwC$, message passing system calls will be replaced by
-\Code{lwSwitch} system calls.
-
-%-------------------------------
-\subsection{Mondrian Memory Protection (MMP)}
+\subsubsection{Mondrian Memory Protection (MMP)}
 %-------------------------------
 % Context and introduction of MMP
 MMP~\cite{WitchelCA02MMP} tackles the challenge of flexible, 
@@ -1085,7 +1000,46 @@ Further, transitions between the sandboxes and the JIT engine use protected
 calls with call gates which ensure proper checks on these transitions.
 
 %-------------------------------
-\subsection{Code-centric Memory Domains (CODOMs)}
+\subsubsection{Light-weight contexts: An OS abstraction for safety and performance}
+%-------------------------------
+% Context and introduction of lwc
+This paper~\cite{LittonVE0BD16} introduces a new eponymous OS abstraction,
+Light-weight contexts ($lwC$s),
+which are independent units of isolated execution.
+Contexts, like processes, have separate memory address spaces, OS resources,
+and capabilities.
+However, contexts remain part of a single process and share metadata in the 
+kernel, resembling kernel threads.
+Contexts offer the primary advantage that switching contexts within a process is 
+faster than switching processes, or even kernel threads within the same process.
+$lwC$ achieves faster switching between contexts by eliminating unnecessary kernel
+processing due to the kernel scheduler and resource accounting.
+
+% Explain how lwc allow compartmentalization
+% Isolation part
+Contexts diverge from the point of calling \Code{lwCreate} which acts like
+the \Code{clone} system call, where each resulting context has an 
+independent memory address space and OS resource handles.
+Like processes, OS resource handles can persist across a \Code{lwCreate}, or be
+invalidated in the child.
+Further shared resources can be generated using the \Code{lwOverlay} system 
+call.
+During program setup, numerous contexts may be created, each of which can
+perform private setup steps or further restrict their resource rights using
+\Code{lwRestrict}.
+% Communication part
+Execution of contexts resembles processes, merely replacing inter-process system
+calls with the faster inter-lwC switches.
+
+% Explain how lwc compartmentalize a browser
+A browser compartmentalized using lwC looks essentially the same as
+using UNIX processes. 
+The JIT and each sandbox occupy separate contexts, instead of processes.
+With $lwC$, message passing system calls will be replaced by
+\Code{lwSwitch} system calls.
+
+%-------------------------------
+\subsubsection{Code-centric Memory Domains (CODOMs)}
 %-------------------------------
 % Context and introduction of CODOMs
 CODOMs~\cite{VilanovaBNEV14} enabled fine-grained intra-address space 
@@ -1126,7 +1080,61 @@ in the APLs, where the engine should be granted write permission to
 each sandbox's domain pages.
 
 %-------------------------------
-\subsection{Intel Memory Protection Keys (MPK)}
+\subsubsection{XPC: Architectural support for secure and efficient cross process call}
+%-------------------------------
+
+% Context and introduction of XPC
+XPC~\cite{DuHXZC19XPC} shares much of the abstractions from the process-based
+isolation, but attempts to accelerate inter-process calls, in particular, 
+while maintaining the same interface.
+Backward compatibility is a major design directive.
+Particularly, XPC replaces the system calls used for IPC with hardware 
+instructions supported by state machines implementing the same functionality.
+XPC aims to reduce the cost of IPC compared to kernel software, 
+also eliminating software dispatch and scheduling overheads in the common case.
+XPC also focusses on cheap zero-copy data movement between processes,
+dedicating a single relay segment for the purpose.
+
+% Explain how XPC allows compartmentalization
+A compartmentalized program running under XPC looks essentially identical
+to that using processes.
+% Isolation part
+Just like previously, each process has their own address space and OS 
+resources and capabilities.
+The XPC hardware engine tracks the page-table pointer and capability pointer
+for each process of a compartmentalized program in an \emph{x-entry} held in
+an in-memory \emph{X-Entry Table}.
+The OS sets up the X-Entry Table during a program launch.
+While a process is running, the XPC engine ensures that the hardware uses the
+correct page table pointer and capabilities.
+% Communication part
+XPC accelerates remote procedure calls, introducing the \Code{xcall} and
+\Code{xret} instructions to replace \Code{sendmsg}.
+On executing \Code{xcall}, the hardware fetches and installs the relevant 
+page table pointer and capabilities for the target process, 
+and put an entry for the caller on a \emph{Link Stack}.
+Executing \Code{xret} allows the callee to return to the caller, and the
+hardware engine pops the caller's information and installs it in the
+corresponding system registers (including the return address). 
+XPC eliminates the OS kernel from inter-compartment calls, relying on the 
+hardware to implement traditional kernel functionality.
+Additionally, data passed between processes can use the relay segment, which
+is a single dedicated segment mapping memory separately from the page tables.
+
+% Explain how XPC compartmentalize a browser
+A browser compartmentalized using XPC looks essentially the same as
+using UNIX processes. 
+The JIT and each sandbox occupy separate processes.
+The major change is that IPC system calls are replaced by 
+\Code{xcall}/\Code{xret} pairs.
+
+%-------------------------------
+\subsubsection{ARMlock}
+%-------------------------------
+\atri{TODO: Populate}
+
+%-------------------------------
+\subsubsection{Intel Memory Protection Keys (MPK)}
 %-------------------------------
 % Context and introduction of MPK
 Memory Protection Keys assign keys to regions of memory, and maintain
@@ -1171,7 +1179,7 @@ During sandbox execution, the PKRU register holds executable permissions for
 that sandbox's code region, and no permissions for any non-sandbox regions.
 
 %-------------------------------
-\subsection{ERIM: Secure, efficient in-process isolation with protection keys}
+\subsubsection{ERIM: Secure, efficient in-process isolation with protection keys}
 %-------------------------------
 % Context and introduction of ERIM
 ERIM~\cite{ERIMOberwagner19} builds on top of Intel MPK to implement 
@@ -1206,7 +1214,7 @@ Data can be passed through pointers directly, just as with MPK, though
 compartment transitions use ERIM's aforementioned call gates.
 
 %-------------------------------
-\subsection{Donky: Domain keys - Efficient in-process isolation for RISC-V and x86}
+\subsubsection{Donky: Domain keys - Efficient in-process isolation for RISC-V and x86}
 %-------------------------------
 % Context and introduction of Donky
 Donky~\cite{SchrammelWSS0MG20Donky} aims to retain MPK's primary 
@@ -1251,7 +1259,7 @@ Arguments must be passed through either registers, or through shared memory
 between domains.
 
 %-------------------------------
-\subsection{CHERI: A hybrid capability-system architecture for scalable 
+\subsubsection{CHERI: A hybrid capability-system architecture for scalable 
             software compartmentalization}
 %-------------------------------
 % Context and introduction of CHERI
@@ -1315,7 +1323,7 @@ when they are required to process certain data, including new data packets,
 with zero-copy.
 
 %-------------------------------
-\subsection{SecureCells: A Secure Compartmentalized Architecture}
+\subsubsection{SecureCells: A Secure Compartmentalized Architecture}
 %-------------------------------
 % Context and introduction of SecureCells
 SecureCells~\cite{BhattacharyyaHLGSFP23} introduces a compartmentalization 
@@ -1360,6 +1368,11 @@ arguments.
 If arguments are isolated within a memory region, compartments with 
 \seccells can also move these arguments between compartments without copying
 by transferring permissions.
+
+%-------------------------------
+\subsubsection{CAPSTONE}
+%-------------------------------
+\atri{TODO: populate}
 
 %-------------------------------
 \subsection{Methodology and Rationale}
