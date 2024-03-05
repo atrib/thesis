@@ -951,6 +951,60 @@ disjoint bytes.
 A precise sanitizer could maintain a bitmask of accessed bytes to
 prune false positives.
 
+\paragraph{Double-fetch exploition using speculative execution}
+Speculative execution attacks (SEA) on modern processors leverage speculative
+execution of instructions to bypass permission checks and illegally access and
+leak information.
+Assuming the presence of specific microarchitectural optimizations, an attacker
+may speculatively bypass Midas' protection, and leverage a double-fetch bug to
+leak information from the kernel.
+However, an attacker cannot mount an SEA to corrupt kernel state as processors
+eventually discard the results from incorrect speculation and roll back to
+the correct execution path where Midas prevents double fetch exploitation.
+Moreover, the SEA attack relies on load-to-store forwarding between logical
+threads on a simultaneously multi-threaded (SMT) processor, an optimization
+described in an academic proposal~\cite{HiltonR10} but not implemented in 
+contemporary commercial processors.
+Finally, the entire sequence from the attacker's illegal write to the victim
+syscall leaking sensitive kernel information must complete within the attacking
+thread's speculative window, typically lasting up to a couple of hundred cycles.
+Consequently, the victim syscall must use the value from the second read 
+immediately after userspace memory copy.
+Given the requirements for this attack, including experimental hardware 
+optimizations, strict timing requirements and the need for specific code patterns,
+we consider this attack theoretical, rather than practical.
+A hardware fix for this attack scenario is possible, restricting results from
+potentially faulting writes from being speculatively forwarded to a different thread.
+When the attacker and victim execute on separate physical cores, this attack
+is impossible as speculative writes are not forwarded across cores.
+Next, we describe the steps of this potential attack vector.
+
+For this attack, we assume that the attacker and victim run on two logical
+hardware threads running on a single physical core on a SMT processor.
+The steps of the attack are described now.
+\begin{enumerate}
+  \item The victim syscall fetches a user object for the first time,
+        marking the corresponding page as protected (State 1), 
+  \item The attacker thread starts speculation behind a long-latency operation
+        (e.g., a last-level cache miss for a data read),
+  \item The attacker speculatively writes to the protected page, 
+  \item The attacker's write is held in the core's shared load-store queue,
+        and the page fault (for writing to a read-only page) is delayed till
+        the commit phase,
+  \item The victim syscall initiates the second fetch, and speculatively reads
+        the attacker's write from the shared load-store queue, 
+  \item The result from the speculative read is forwarded to dependent 
+        instructions in the victim, causing a side-channel leakage of
+        kernel secrets.
+  \item The attacker finishes the long-latency instruction and ends speculation,
+  \item The core rolls back the attacker execution, including the illegal 
+        write, 
+  \item The core rolls back the victim's execution based on the illegal 
+        write, and
+  \item Both the attacker and victim continue on an architecturally legal
+        execution path.
+\end{enumerate}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\midas Implementation}
