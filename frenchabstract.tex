@@ -23,9 +23,10 @@ Nous présentons \seccells, une nouvelle interface architecturale pour la compar
 Dans des microbenchmarks, \seccells permet à un cœur ordré à 5 étages de passer d'un compartiment à un autre en seulement 8 cycles, réduisant le coût des transitions d'un ordre de grandeur par rapport aux meilleures alternatives. 
 Nous construisons également un prototype complet de \seccells, basé sur le cœur RISC-V RocketChip exécutant le noyau seL4, pour évaluer des benchmarks d'espace utilisateur.
 
-De plus, cette thèse présente la première comparaison exhaustive entre les mécanismes de compartimentation, évaluant à la fois les propriétés qualitatives et quantitatives. 
+De plus, cette thèse présente la première systématisation des connaissances sur les mécanismes de compartimentation, évaluant à la fois les propriétés qualitatives et quantitatives. 
 Nous décrivons les propriétés de sécurité et de performance pertinentes pour une compartimentation pratique, et montrons dans quelle mesure chaque mécanisme fournit chaque propriété. 
 Une revue complète des techniques de compartimentation vise à permettre aux développeurs de systèmes informatiques de définir de future interfaces sécurisées, performantes et utilisables pour soutenir la compartimentation généralisée des applications.
+Notre systématisation expose les lacunes communes de ces mécanismes, orientant ainsi les efforts de recherche future vers des opportunités de soutien à la compartimentation plus exhaustive.
 
 Cette thèse soutient que les interfaces entre les composants des systèmes informatiques modernes entravent leurs garanties de sécurité, et explore les problèmes de deux interfaces majeures. 
 Nous montrons qu'une refonte raisonnée de ces interfaces permet la mise en œuvre de systèmes plus sécurisés tout en soutenant les besoins d'applications haute performance, avec la conception et la mise en œuvre de \midas et \seccells pour résoudre les défis aux interfaces noyau-utilisateur et intra-processus respectivement.
