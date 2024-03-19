@@ -503,6 +503,43 @@ benchmark suites.
 \input{chapters/midas-core}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SecureCells CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{SecureCells: A Secure Compartmentalized Architecture}
+\label{ch:seccells}
+% \epigraph{The real cool stuff was already done.}%
+%         {\textit{Me}}
+
+% Copying securecells' paper abstract here
+Modern programs are monolithic, combining code of varied provenance without 
+isolation, all the while running on network-connected devices. 
+A vulnerability in any component may compromise code and data of all other 
+components. 
+Compartmentalization separates programs into fault domains with limited 
+policy-defined permissions, following the principle of least privilege, 
+preventing arbitrary interactions between components. 
+Unfortunately, existing compartmentalization mechanisms target weak attacker 
+models, incur high overheads, or overfit to specific use cases, precluding 
+their general adoption. 
+The need of the hour is a secure, performant, and flexible mechanism on which 
+developers can reliably implement an arsenal of compartmentalized software. 
+
+We present SecureCells, a novel architecture for intra-address space 
+compartmentalization. 
+SecureCells enforces per-Virtual Memory Area (VMA) permissions for secure and
+scalable access control, and introduces new userspace instructions for 
+secure and fast compartment switching with hardware-enforced call gates and 
+zero-copy permission transfers. 
+SecureCells enables novel software mechanisms for call stack maintenance and 
+register context isolation. 
+In microbenchmarks, SecureCells switches compartments in only 8 cycles on a 
+5-stage in-order processor, reducing the switching cost by an order of magnitude
+compared to the state-of-the-art. 
+Consequently, SecureCells helps secure high-performance software such as an 
+in-memory key-value store with negligible overhead of less than $3\%$.
+\input{chapters/seccell-core}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CompSOK CORE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{SoK: Classifying Compartmentalization Mechanisms}
@@ -548,43 +585,6 @@ to highlight opportunities for future mechanisms to improve upon.
 \input{chapters/compsok-core}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SecureCells CORE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{SecureCells: A Secure Compartmentalized Architecture}
-\label{ch:seccells}
-% \epigraph{The real cool stuff was already done.}%
-%         {\textit{Me}}
-
-% Copying securecells' paper abstract here
-Modern programs are monolithic, combining code of varied provenance without 
-isolation, all the while running on network-connected devices. 
-A vulnerability in any component may compromise code and data of all other 
-components. 
-Compartmentalization separates programs into fault domains with limited 
-policy-defined permissions, following the principle of least privilege, 
-preventing arbitrary interactions between components. 
-Unfortunately, existing compartmentalization mechanisms target weak attacker 
-models, incur high overheads, or overfit to specific use cases, precluding 
-their general adoption. 
-The need of the hour is a secure, performant, and flexible mechanism on which 
-developers can reliably implement an arsenal of compartmentalized software. 
-
-We present SecureCells, a novel architecture for intra-address space 
-compartmentalization. 
-SecureCells enforces per-Virtual Memory Area (VMA) permissions for secure and
-scalable access control, and introduces new userspace instructions for 
-secure and fast compartment switching with hardware-enforced call gates and 
-zero-copy permission transfers. 
-SecureCells enables novel software mechanisms for call stack maintenance and 
-register context isolation. 
-In microbenchmarks, SecureCells switches compartments in only 8 cycles on a 
-5-stage in-order processor, reducing the switching cost by an order of magnitude
-compared to the state-of-the-art. 
-Consequently, SecureCells helps secure high-performance software such as an 
-in-memory key-value store with negligible overhead of less than $3\%$.
-\input{chapters/seccell-core}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Compartmentalization Mechanism Review
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \chapter{A Review of Compartmentalization Mechanisms }
@@ -619,9 +619,6 @@ Detailed documentation for \midas is available on the project website
 \url{https://hexhive.epfl.ch/midas}.
 
 \input{chapters/midas-appendix}
-%-------------------------
-\chapter{SoK on Compartmentalization Mechanisms Appendix}
-\input{chapters/compsok-app}
 
 %-------------------------
 \chapter{\seccells Details}
@@ -630,6 +627,11 @@ Detailed documentation for \seccells{}' prototype and code artifacts is
 available on the project website \url{https://hexhive.epfl.ch/securecells}.
 
 \input{chapters/seccell-appendix}
+
+%-------------------------
+\chapter{Details for SoK on Compartmentalization Mechanisms}
+\input{chapters/compsok-app}
+
 \end{appendices}
 
 %-------------------------------------------------------------------------------
