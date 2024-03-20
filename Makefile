@@ -1,7 +1,7 @@
 DOC := thesis
 
 TEMPLATE = $(wildcard *.sty *.cls)
-MAINTEX = $(wildcard ./*.tex)
+MAINTEX = $(wildcard *.tex)
 CHAPTERS = $(wildcard chapters/*.tex)
 RESUME = resume/main.pdf
 
@@ -25,6 +25,24 @@ $(DOC).pdf: $(DOC).tex $(DOC).bib $(DEP)
 	echo $(GEN)
 	$(call pdflatex,$(DOC))
 
+.PHONY: diff
+diff: 
+	# Copy over supporting files
+	mkdir -p diffdir
+	mkdir -p diffdir/chapters
+	cp -r data   diffdir/
+	cp -r media  diffdir/
+	cp -r resume diffdir/
+	cp *.cls diffdir
+	cp *.bib diffdir
+	cp *.bst diffdir
+	cp Makefile diffdir
+	# Generate latex diffs 
+	for i in $(MAINTEX) ; do latexdiff draft/$$i $$i > diffdir/$$i ; done
+	for i in $(CHAPTERS) ; do latexdiff draft/$$i $$i > diffdir/$$i ; done
+	# Compile diff
+	make -C diffdir
+
 resume/%:
 	make -C resume $(@F)
 
@@ -42,6 +60,7 @@ clean:
 	rm -rf chapters/*.aux 
 	rm -rf $(GEN)
 	make -C resume clean
+	rm -drf diffdir
 
 define pdflatex
 pdflatex -interaction=nonstopmode -halt-on-error -shell-escape $(1).tex 
