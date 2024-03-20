@@ -1,0 +1,62 @@
+Systems security is a continuous arms race between attackers and defences.
+This thesis highlights two key interfaces in modern systems which lag
+behind in this race, and proposes interfaces designed to mitigate attacks
+exploiting the user-kernel system call interface, and the
+userspace virtual memory interface.
+
+\midas focuses on the vulnerability introduced by double-fetch bugs in
+privileged software like OS kernels, and describes a systematic mitigation
+mechanism to block this attack vector.
+\midas identifies the implicit assumption underlying the existing system call 
+interface's design and secures the interface by elevating the assumption to
+an explicit guarantee.
+This thesis also shows a practical implementation of \midas' design for
+a popular OS running on commercial off-the-shelf hardware
+In general, \midas highlights the security implications of implicit assumptions
+made by system designers, and 
+how changing computing systems can invalidate assumptions.
+Comprehensive defence, instead, can be achieved through well-defined and
+explicit security properties enforced across interfaces.
+\midas guarantees a security invariant preserving the values of userspace data
+objects accessed during system calls, ensuring that all reads to the same
+objects return the same value.
+
+\seccells investigates the mechanisms supporting userspace application
+compartmentalization and makes the case for a mechanism enabling 
+secure, performant and flexible intra-address space compartmentalization.
+\seccells identifies the requirements supporting the three key application
+objectives, and proposes a mechanism designed to support widespread
+application compartmentalization.
+\seccells provides strong isolation between compartments for data accesses
+based on permissions stored in a permissions table storing
+per-compartment per-memory region permissions.
+\seccells introduces unprivileged instructions for implementing frequent 
+operations in compartmentalized applications, like inter-compartment
+control flow and zero-copy permission transfers at sub-microsecond time
+scales while also implementing strict security conditions.
+This thesis also describes our full-system prototype for \seccells based
+on modified RISC-V RocketChip cores, the secure seL4 microkernel OS and
+userspace benchmarks used for evaluating our design.
+We are optimistic that \seccells will add momentum to the ongoing push
+towards compartmentalization, improving interfaces within userspace applications
+to reflect the varying trust relationships between application components.
+This thesis also contributes a survey comparing state-of-the-art and
+commercially used compartmentalization mechanisms.
+This survey explores the design space across reviewed mechanisms and 
+highlight the key security and performance ideals which mechanisms strive to
+provide.
+
+To support the ideal of open science, the code and other other artifacts
+supporting this thesis are available openly and freely.
+Detailed documentation for \midas is maintained on the project's website
+\url{https://hexhive.epfl.ch/midas}.
+The evaluation results for \midas were submitted for artifact evaluation,
+earning badges qualifying the artifact as ``Available'', ``Functional''
+and ``Reproduced''.
+Detailed documentation for \midas is maintained on the project's website
+\url{https://hexhive.epfl.ch/midas}.
+\seccells{}' prototype, benchmarks, supporting infrastructure and
+requisite documentation are also available at 
+\url{https://www.hexhive.epfl.ch/securecells}.
+
+

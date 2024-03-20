@@ -1,0 +1,580 @@
+\documentclass[lablogo]{thesis}
+
+
+\title{Secure Interface Design \\Leveraging Hardware/Software Support}
+\author{Atri Bhattacharyya}
+\president{Prof. Carmela González Troncoso}
+\director{Prof. Mathias Payer}
+\codirector{Prof. Babak Falsafi}
+\internal{Prof. Sanidhya Kashyap}
+\external{Dr. Anil Kurmus, IBM Research}
+\external{Dr. Anjo Lucas Vahldiek-oberwagner, Intel Labs}
+
+\cv{resume/main.pdf}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% Standard list of used packages %%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{cite}
+\usepackage{amsmath,amsfonts}
+% \usepackage{amssymb, amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{booktabs}
+% \usepackage[hyphens]{url}
+\usepackage[mathscr]{euscript}
+
+% \usepackage[normalem]{ulem}
+
+% Atri's list of typically used packages
+% List of unused packages from Midas/TikTok
+\usepackage{adjustbox}
+% \usepackage{amsmath}
+% \usepackage{filecontents}
+% \usepackage{tikz}
+\usepackage{xspace}
+\usepackage{listings}
+% \usepackage{xcolor}
+% \usepackage{textcomp}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{subcaption}
+% \usepackage{todonotes}
+\usepackage{multirow}
+\usepackage{multicol}
+% \usepackage{booktabs}
+\usepackage{paralist}       % For inparaenum
+% \usepackage{enumitem}
+% \usepackage{tabulary}
+% \usepackage{verbatim}
+\usepackage{balance}
+\usepackage{tabularx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{braket}         % Fancy brackets
+\usepackage{threeparttable} % Table with footnotes
+\usepackage{makecell}       % Fancy multiline cells in table
+\usepackage{pifont}         % For fancy dingbats, example xmark
+\usepackage{comment}        % For comment environment
+\usepackage{prettyref}    % For labels for autoref
+% \usepackage[bookmarks=true,breaklinks=true,letterpaper=true,colorlinks,linkcolor=black,citecolor=blue,urlcolor=black]{hyperref}
+                            % For autoref
+\usepackage{listofitems}    % For `readlist` used for \newreviewer command
+\usepackage{soul}           % For strikethrough \st
+\usepackage{array}          % For whole row `\rowstyle'
+
+
+%%%%%%%%%% Sid's list of packages %%%%%%%%%%
+% \usepackage[normalem]{ulem}
+% \usepackage[final]{microtype}
+% \usepackage[keeplastbox]{flushend}
+% \usepackage{soul}
+% \usepackage{makecell}
+% \usepackage{hyphenat}
+% \usepackage{subfig}
+% \usepackage{color}
+% \usepackage{balance}    
+% \usepackage{verbatimbox}
+% \usepackage{fancyvrb}
+% \usepackage{enumitem}
+
+%%%%%%%%%% Packages borrowed from Ahmad's thesis %%%%%%%%%%%%%%%%%%
+% \usepackage{titlesec}
+% \titleformat{\chapter}[display]
+%   {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+% \titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+
+% \usepackage{xcolor}
+% \usepackage{xspace}
+\usepackage{epigraph}
+% \usepackage{enumitem}                 % custom lists
+% \usepackage{listings}                 % code formatting
+% \usepackage{tikz}
+% \usepackage{expl3}
+% \usepackage{caption}                  % figure captioning
+% \usepackage{subcaption}               % subfigures
+% \usepackage{listofitems}              % \readlist
+% \usepackage{fontawesome}              % faArrowUp, etc...
+% \usepackage{siunitx}                  % \num, SI units
+% \usepackage{xpatch}                   % \xapptocmd
+% \usepackage{minted}                   % listing environment (TODO replace with consistent code listings)
+% \usepackage{algorithm}                % algorithm environment
+% \usepackage{algpseudocode}            % \algnewcommand, \Procedure, \Call, etc...
+% \usepackage{varwidth}                 % varwidth environment
+% \usepackage{fmtcount}                 % \numberstringnum
+% \usepackage{refcount}                 % \getrefnumber
+% \usepackage{soul}                     % \sethlcolor
+% \usepackage{adjustbox}                % adjustbox environment
+% \usepackage{booktabs}                 % \toprule
+% \usepackage{multirow}                 % \multirow
+% \usepackage{colortbl}                 % \cellcolor
+% \usepackage{pifont}                   % \ding
+% \usepackage{makecell}                 % \multirowcell
+% \usepackage{rotating}                 % sideways environment
+% \usepackage{pgfplots}                 % axis environment
+% \usepackage{csquotes}                 % \enquote
+% % \usepackage{annotate-equations}
+% \usepackage{bbding}                   % \XSolidBold
+% \usepackage{ifsym}                    % \textifsymbol
+% \usepackage{nicefrac}                 % \nicefrac
+% % \usepackage{amsmath}
+% \usepackage{amssymb}                  % \npreceq etc...
+% \usepackage{pgf-umlsd}                % sequencediagram environment
+% \usepackage{tikz-layers}
+% \usepackage{scalerel}
+% \usepackage{graphicx}
+% \usepackage{threeparttable} % Table with footnotes
+
+% biblatex allows use \printbibliography with keyword tags
+% biblatex also offer \fullcite for citing stuff in text
+\usepackage[
+  backend=bibtex,                   % bibtex is nice, allows \fullcite
+  style=numeric-comp,               % citation with ranges 11-15
+  hyperref=true,                    % citations hyperref to refs
+  backref=true,                     % references hyperref back to citations
+  defernumbers=true,
+  maxnames=99,                      % Don't use 'et. al.' before 99 authors
+  mincrossrefs=99
+  % maxbibnames=99,
+  % maxcitenames=1
+]{biblatex}                
+% Fixing backrefs from default "cit. on" to "cited on page"
+\DefineBibliographyStrings{english}{
+  backrefpage={cited on page},
+  backrefpages={cited on pages}
+}             
+\addbibresource{thesis.bib}
+
+
+%%%%%%%%%%%%%%%%%%%%% Commenter's sections %%%%%%%%%%%%%%%%%%%%%%%
+%%% Colorboxes %%%
+\definecolor{thesisboxcolor}{HTML}{858287}
+\crefname{example}{example}{examples}
+\makespecialtcb[auto counter, number within=chapter]{example}{exampleboxcolor}{%
+  \renewcommand{\theFancyVerbLine}{\sffamily%
+    \textcolor{codelinenumbercolor}{\tiny%
+    \arabic{FancyVerbLine}}%
+  }%
+  \textbf{Example~\thetcbcounter}\hspace{1em}%
+}{}
+\makespecialtcb{further}{furtherboxcolor}{}{}
+\makespecialtcb[auto counter, number within=chapter]{definition}{definitionboxcolor}{%
+  \textbf{Definition~\thetcbcounter}\hspace{1em}%
+}{}
+\makespecialtcb{thesis}{thesisboxcolor}{}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%% Commenter's sections %%%%%%%%%%%%%%%%%%%%%%%
+% Enable or disable reviews
+\newif\ifreview
+% \reviewtrue   % comment this line to disable reviews
+% newreviewer command description
+\newcounter{ReviewerID}
+\readlist*\annotationcolors{blue, red, orange, green, purple, yellow, brown, olive}
+\newcommand{\newreviewer}[2]{%
+  \ifnum \theReviewerID=\annotationcolorslen
+    \setcounter{ReviewerID}{0} % cycle through colors
+  \fi
+  \stepcounter{ReviewerID}%
+  \expandafter\edef\csname bootstrap#1\endcsname{%
+    \expandafter\def\csname #1\endcsname####1{%
+      \ifreview%
+        {\noexpand\color{\annotationcolors[\theReviewerID]} {\noexpand\bf{\noexpand\fbox{#2}} {\noexpand\it ####1} }}
+      \else%
+        {}% disable annotations
+      \fi%
+    }%
+  }%
+  \csname bootstrap#1\endcsname%
+}
+% List of reviewers
+% Command: \newreviewer{latexcommand}{visiblename}
+% You will be able to use a command \latexcommand{comment}
+% to generate a colored comment prepended by visiblename.
+\newreviewer{mat}{Mat}
+\newreviewer{atri}{AB}
+% \newreviewer{florian}{FH}
+\newreviewer{babak}{BF}
+% \newreviewer{andres}{AS}
+% \newreviewer{yuanlong}{YL}
+% \newreviewer{sg}{Sid}
+% \newreviewer{ant}{AV}
+% \newreviewer{ahmad}{AH}
+% \newreviewer{nicolas}{NB}
+
+\graphicspath{{./media}}
+
+\makeatletter
+\providecommand*{\input@path}{}
+\g@addto@macro\input@path{{./chapters/}} % append
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SecureCells definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\seccells}{SecureCells\xspace}
+\newcommand{\ptable}{PTable\xspace}
+\newcommand{\gtable}{GTable\xspace}
+\newcommand{\cell}{cell\xspace}
+\newcommand{\cellx}  [1]{$Cell_{#1}$\xspace}
+\newcommand{\secdiv}{SD\xspace}
+\newcommand{\secdivx}[1]{$SD_{#1}$\xspace}
+% List of SD/SC instructions
+\newcommand{\sdswitch}{\Code{SDSwitch}\xspace}
+\newcommand{\sdentry} {\Code{SDEntry}\xspace}
+\newcommand{\scprot}  {\Code{SCProt}\xspace}
+\newcommand{\scgrant} {\Code{SCGrant}\xspace}
+\newcommand{\screcv}  {\Code{SCRecv}\xspace}
+\newcommand{\sctfer}  {\Code{SCTfer}\xspace}
+\newcommand{\scinval} {\Code{SCInval}\xspace}
+\newcommand{\screval} {\Code{SCReval}\xspace}
+\newcommand{\scexcl}  {\Code{SCExcl}\xspace}
+% List of SD/SC registers
+\newcommand{\sid}{$SDID$\xspace}
+\newcommand{\rid}{$RID$\xspace}
+\newcommand{\xid}{\Code{XID}\xspace}
+% Requirements
+\newcommand{\req}[1]{\textbf{O#1}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% Atri's design choices %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{minilisting}
+  {\minipage[b]{\linewidth}\verbatim}
+  {\endverbatim\endminipage}
+
+\lstdefinestyle{cstyle}{
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{black!85}\bfseries,
+  keywordstyle=[2]\color{black!85}\bfseries\emph,
+  showstringspaces=false,
+  language={C},
+  breaklines=false,
+  mathescape=true,
+  escapechar={@}
+}
+\lstdefinestyle{inline}{
+  style=cstyle,
+  mathescape=false,
+  breaklines=true,
+  keywordstyle=,
+  keywordstyle=[2],
+  extendedchars=true,
+  basicstyle=\ttfamily\small
+}
+\newcommand{\Code}[1]{\lstinline[style=inline,breaklines=false]@#1@}
+\let\realparagraph\paragraph
+\let\paragraph\relax
+\newcommand{\paragraph}[1]{\textbf{#1.}}
+% \newcolumntype{Q}{>{\centering\arraybackslash}X}
+% \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+% These old were useful with the prettyref package
+% Now overruled by the autoref package
+% \newrefformat{cha}{\hyperref[#1]{Chapter~\ref*{#1}}}
+% \newrefformat{sec}{\hyperref[#1]{Section~\ref*{#1}}}
+% \newrefformat{sub}{\hyperref[#1]{Section~\ref*{#1}}}
+% \newrefformat{tab}{\hyperref[#1]{Table~\ref*{#1}}}
+% \newrefformat{fig}{\hyperref[#1]{Figure~\ref*{#1}}}
+% \newrefformat{line}{\hyperref[#1]{line~\ref*{#1}}}
+% \newrefformat{lst}{\hyperref[#1]{Listing~\ref*{#1}}}
+% \newrefformat{pat}{\hyperref[#1]{Patch~\ref*{#1}}}
+% \newrefformat{alg}{\hyperref[#1]{Algorithm~\ref*{#1}}}
+% Customizing reference formats for
+\addto\extrasenglish{%
+\renewcommand{\sectionautorefname}{Section}
+\let\subsectionautorefname\sectionautorefname
+\let\subsubsectionautorefname\sectionautorefname
+\renewcommand{\chapterautorefname}{Chapter}
+}
+
+
+\newcommand{\algorithmautorefname}{Instruction}
+% Custom naming for algorithm, used for table of securecells instructions
+\makeatletter
+\newcommand{\removelatexerror}{\let\@latex@error\@gobble}
+\renewcommand{\ALG@name}{Instruction}
+\makeatother
+
+% Custom command for making formatting changes to an entire row in tables
+% For example, \setrow{\bfseries} in front of a row to make it bold
+% https://tex.stackexchange.com/questions/4811/make-first-row-of-table-all-bold
+\newcolumntype{!}{>{\global\let\currentrowstyle\relax}}
+\newcolumntype{?}{>{\currentrowstyle}}
+\newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
+  #1\ignorespaces
+}
+
+% Cross and tick marks
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+% Aliases:
+% yes: for checkmark to make readable
+\newcommand{\yes}{\checkmark}
+
+% End of SecureCells definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Midas definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% Duplicate from SecureCells, commented out
+% \newenvironment{minilisting}
+% {\minipage[b]{\linewidth}\verbatim}
+% {\endverbatim\endminipage}
+
+% \lstdefinestyle{cstyle}{
+% basicstyle=\footnotesize\ttfamily,
+% keywordstyle=\color{black!85}\bfseries,
+% keywordstyle=[2]\color{black!85}\bfseries\emph,
+% showstringspaces=false,
+% language={C},
+% breaklines=false,
+% mathescape=true,
+% escapechar={@}
+% }
+% \lstdefinestyle{inline}{
+% style=cstyle,
+% mathescape=false,
+% breaklines=true,
+% keywordstyle=,
+% keywordstyle=[2],
+% extendedchars=true,
+% basicstyle=\ttfamily\small
+% }
+% \newcommand{\Code}[1]{\lstinline[style=inline,breaklines=false]@#1@}
+% \let\realparagraph\paragraph
+% \let\paragraph\relax
+% \newcommand{\paragraph}[1]{\textbf{#1.}}
+% \newcolumntype{Q}{>{\centering\arraybackslash}X}
+% \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
+
+\newcommand{\tocttou}{TOCTTOU\xspace}
+\newcommand{\midas}{Midas\xspace}
+
+%%% More repitition from SecureCells
+%   \newrefformat{cha}{\hyperref[#1]{Chapter~\ref*{#1}}}
+%   \newrefformat{sec}{\hyperref[#1]{Section~\ref*{#1}}}
+%   \newrefformat{sub}{\hyperref[#1]{Section~\ref*{#1}}}
+%   \newrefformat{tab}{\hyperref[#1]{Table~\ref*{#1}}}
+%   \newrefformat{fig}{\hyperref[#1]{Figure~\ref*{#1}}}
+%   \newrefformat{line}{\hyperref[#1]{line~\ref*{#1}}}
+%   \newrefformat{lst}{\hyperref[#1]{Listing~\ref*{#1}}}
+%   \newrefformat{pat}{\hyperref[#1]{Patch~\ref*{#1}}}
+%   \newrefformat{alg}{\hyperref[#1]{Algorithm~\ref*{#1}}}
+%   \renewcommand{\sectionautorefname}{Section}
+%   \let\subsectionautorefname\sectionautorefname
+%   \let\subsubsectionautorefname\sectionautorefname
+
+\renewcommand\itemautorefname{Attack}
+
+% Probably don't need DOI for artificat
+\newcommand{\doinumber}{5753026}
+\newcommand{\zenodorecord}[0]{\url{https://zenodo.org/record/\doinumber}}
+\newcommand{\zenododoi}[0]{10.5281/zenodo.\doinumber\xspace}
+
+\newcommand{\footremember}[2]{%
+   \footnote{#2}
+    \newcounter{#1}
+    \setcounter{#1}{\value{footnote}}%
+}
+\newcommand{\footrecall}[1]{%
+    \footnotemark[\value{#1}]%
+}
+
+% End of Midas definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Thesis front matter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Change epigraph length to fix Adams' quote
+\setlength\epigraphwidth{.45\textwidth}
+
+\begin{dedication}
+  \epigraph{
+    \raggedleft
+    Let us think the unthinkable, \\
+    Let us do the undoable, \\
+    Let us prepare to grapple with the ineffable itself, \\
+    And see if we may not eff it after all.
+  }{\textit{Douglas Adams}}
+  \begin{absolute}
+    \makebox[0pt]{\parbox{\textwidth}{
+      \centering
+      To those who inspired and encouraged my pursuit of knowledge
+    }}
+  \end{absolute}
+\end{dedication}
+
+\begin{acknowledgments}
+\input{acknowledgements}
+\end{acknowledgments}
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\begin{frenchabstract}
+\input{frenchabstract}
+\end{frenchabstract}
+
+% End of thesis front matter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Thesis CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\chapter{Introduction}
+% \epigraph{Testing can only prove the presence of idiots, not their absence. Software is written---for the most part---by idiots.}%
+%          {\textit{Aristotle}}
+% TODO Epigraph?
+
+\input{chapters/intro}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Midas CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Midas: Systematic Kernel \tocttou Protection}
+\label{ch:midas}
+% \epigraph{Thanks, Uros, really.}%
+%         {\textit{Me}}
+
+% Copying Midas' paper abstract
+Double-fetch bugs are a plague across all major operating system kernels. 
+These bugs occur when data is fetched twice across the user/kernel trust 
+boundary while allowing concurrent modification, violating an implicit
+assumption at this interface.
+Double-fetches enable an attacker to illegally access memory, cause 
+denial of service, or to escalate privileges.
+%
+So far, the only protection against double-fetch bugs is to detect and fix them.
+However, existing methods to find double-fetch bugs are incomplete.
+%
+The double-fetch problem also fundamentally prohibits efficient, kernel-based
+stateful system call filtering.
+Thus, we propose \emph{\midas} to mitigate double-fetch bugs and secure the
+system call interface.
+\midas creates on-demand
+snapshots and copies of accessed data, enforcing the key invariant
+that throughout a system call's lifetime, every read to a userspace object
+will return the same value.
+
+\midas shows no noticeable drop in performance when evaluated on compute-bound
+workloads. 
+On system call heavy workloads, \midas incurs~0.2--14\% performance overhead, 
+while protecting the kernel against any \tocttou attacks. 
+On average, \midas shows a~$3.4\%$ overhead on diverse workloads across two 
+benchmark suites.
+
+\newpage
+\input{chapters/midas-core}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SecureCells CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{SecureCells: A Secure Compartmentalized Architecture}
+\label{ch:seccells}
+% \epigraph{The real cool stuff was already done.}%
+%         {\textit{Me}}
+
+% Copying securecells' paper abstract here
+Modern programs are monolithic, combining code of varied provenance without 
+isolation, all the while running on network-connected devices. 
+A vulnerability in any component may compromise code and data of all other 
+components. 
+Compartmentalization separates programs into fault domains with limited 
+policy-defined permissions, following the principle of least privilege, 
+preventing arbitrary interactions between components. 
+Unfortunately, existing compartmentalization mechanisms target weak attacker 
+models, incur high overheads, or overfit to specific use cases, precluding 
+their general adoption. 
+The need of the hour is a secure, performant, and flexible mechanism on which 
+developers can reliably implement an arsenal of compartmentalized software. 
+
+We present SecureCells, a novel architecture for intra-address space 
+compartmentalization. 
+SecureCells enforces per-Virtual Memory Area (VMA) permissions for secure and
+scalable access control, and introduces new userspace instructions for 
+secure and fast compartment switching with hardware-enforced call gates and 
+zero-copy permission transfers. 
+SecureCells enables novel software mechanisms for call stack maintenance and 
+register context isolation. 
+In microbenchmarks, SecureCells switches compartments in only 8 cycles on a 
+5-stage in-order processor, reducing the switching cost by an order of magnitude
+compared to the state-of-the-art. 
+Consequently, SecureCells helps secure high-performance software such as an 
+in-memory key-value store with negligible overhead of less than $3\%$.
+\input{chapters/seccell-core}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compartmentalization Mechanism Review
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{A Review of Compartmentalization Mechanisms }
+\label{ch:compreview}
+% \epigraph{Why does the janitor have the nuclear launch codes?}%
+%         {\textit{President-sir, probably}}
+\input{chapters/compsok}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Future work/conclusions?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Future Work}
+\label{ch:future}
+\input{chapters/future}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Future work/conclusions?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Conclusion}
+\label{ch:conclusion}
+\input{chapters/conclusion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appendix stuff
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{appendices}
+
+\chapter{\midas Artifact}
+
+Detailed documentation for \midas is available on the project website 
+\url{https://hexhive.epfl.ch/midas}.
+
+\input{chapters/midas-appendix}
+
+\chapter{\seccells Details}
+
+Detailed documentation for \seccells{}' prototype and code artifacts is
+available on the project website \url{https://hexhive.epfl.ch/securecells}.
+
+\input{chapters/seccell-appendix}
+\end{appendices}
+
+%-------------------------------------------------------------------------------
+\backmatter
+
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\printbibliography
+
+
+\end{document}
+% End of Thesis CORE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

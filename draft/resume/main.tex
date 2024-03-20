@@ -1,0 +1,285 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Medium Length Graduate Curriculum Vitae
+% LaTeX Template
+% Version 1.1 (9/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Rensselaer Polytechnic Institute (http://www.rpi.edu/dept/arc/training/latex/resumes/)
+%
+% Important note:
+% This template requires the res.cls file to be in the same directory as the
+% .tex file. The res.cls file provides the resume style used for structuring the
+% document.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[margin, 10pt]{res} % Use the res.cls style, the font size can be changed to 11pt or 12pt here
+
+\usepackage{helvet} % Default font is the helvetica postscript font
+%\usepackage{newcent} % To change the default font to the new century schoolbook postscript font uncomment this line and comment the one above
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{enumitem}
+\setlength{\textwidth}{5.1in} % Text width of the document
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	NAME AND ADDRESS SECTION
+%----------------------------------------------------------------------------------------
+
+
+\name{Atri Bhattacharyya} 
+
+
+\address{ \href{http://atrib.bitbucket.io}{Homepage: atrib.bitbucket.io} \\ \href{www.linkedin.com/in/atri-bhattacharyya/}{LinkedIn: /atri-bhattacharyya} \\  \href{mailto:atri.bhattacharyya@epfl.ch}{atri.bhattacharyya@epfl.ch}}
+
+% \address{\\ +41-078-675-1239}
+
+\address{Lausanne, Vaud \\ Switzerland}
+
+%\moveleft.5\hoffset\centerline{\large\bf Atri Bhattacharyya} % Your name at the top
+ 
+% \moveleft\hoffset\vbox{\hrule width\resumewidth height 1pt}\smallskip % Horizontal line after name; adjust line thickness by changing the '1pt'
+ 
+ 
+
+%\moveleft.5\hoffset\centerline{\href{www.linkedin.com/in/atri-bhattacharyya/}{www.linkedin.com/in/atri-bhattacharyya} | HomePage}
+%\moveleft.5\hoffset\centerline{\href{mailto:atri.bhattacharyya@epfl.ch}{atri.bhattacharyya@epfl.ch} | +41-078-675-1239}
+
+%----------------------------------------------------------------------------------------
+
+\begin{resume}
+
+%----------------------------------------------------------------------------------------
+%	OBJECTIVE SECTION
+%----------------------------------------------------------------------------------------
+ 
+\section{INTERESTS }  
+ 
+% \begin{itemize}
+% \item 
+Security at the HW/SW interface: security-focused ISA extensions, OS security, microarchitectural security. 
+% \item 
+Datacenter architectures: tackling challenges in protection of the virtual memory abstraction
+% \end{itemize}
+%----------------------------------------------------------------------------------------
+%	EDUCATION SECTION
+%----------------------------------------------------------------------------------------
+
+\section{EDUCATION}
+
+{\bf PhD candidate, Computer Science}  \hfill '18 - '24 (expected) \\
+Ecole Polytechnique Federale de Lausanne, Switzerland 
+
+{\bf MS in Computer Science}  \hfill '16 - '18 \\
+Ecole Polytechnique Federale de Lausanne, Switzerland \\
+GPA: 5.73/6 (equivalent to 3.73/4) 
+
+{\bf BT in Electrical Eng. with major in Comp. Sc. and Eng.} \hfill  '11 - '16 \\
+Indian Institute of Technology Kanpur, India \\
+GPA: 9.1/10 (equivalent to 3.64/4)
+ 
+%----------------------------------------------------------------------------------------
+%	PROFESSIONAL EXPERIENCE SECTION
+%----------------------------------------------------------------------------------------
+ 
+\section{INDUSTRY EXPERIENCE}
+{\bf Engineering Intern}\hfill Jun '22 - Aug '22 \\
+Qualcomm, San Diego, US \\
+Worked on analyzing configurations and investigating improvements for physical-address based {\bf on-chip access control} for Qualcomm products.
+
+{\bf Research Assistant}\hfill August '17 - Feb '18 \\
+Oracle Labs, Zurich, Switzerland \\
+Developed a {\bf DPDK}-based multi-user capable {\bf userspace-networking framework in C} capable of saturating 10Gbit/s interfaces with a single core while providing the benefits of in-kernel networking: isolation, flexibility and security.
+\begin{itemize}
+\item Integrated the framework with a network-processing bound DDoS detection pipeline to increase its maximum throughput by around 15x.
+\end{itemize}
+
+{\bf UnnaTI Embedded Software Intern} \hfill May '14 - July '14 \\
+Texas Instruments, Bangalore, India\\
+Developed a {\bf profiler for cycle-wise timing} of C/assembly level instruction execution on an embedded platform to enable rapid profiling and benchmarking to:
+\begin{itemize}
+\item Augment and verify manual benchmarking results in less than 20\% of the time.
+\item Benchmark, optimize TI’s low-power MCU software and FreeRTOS on Cortex-M0+ processor. Achieved $>$50\% improvement for certain OS benchmarks.
+\end{itemize} 
+
+\section{RESEARCH}
+
+{\bf Secure and high-performance virtual memory compartmentalization} \\
+{\sl \href{https://infoscience.epfl.ch/record/301914/files/seccell.pdf?ln=en}{SecureCells: A Secure Compartmentalized Architecture}}, \hfill \emph{IEEE S\&P'23}. \\
+{\sl \href{http://nebelwelt.net/files/21ISCA.pdf}{Rebooting Virtual Memory with Midgard}} \hfill \emph{ISCA'21} \\
+SecureCells proposes a {\bf novel virtual memory architecture} for high-performance hardware-enforced intra-address space isolation of compartments.
+% with nanosecond-scale compartment switching and zero-copy data transfer operations. 
+SecureCells builds on Midgard and RISC-V, using virtual memory areas (VMAs) as the granularity of protection and translation. 
+For SecureCells, we {\bf ported the full  RISC-V software stack} including an OS (seL4), the GNU compiler toolchain and benchmarks.
+We also created two implementations, {\bf modifying QEMU emulator} and the {\bf RISC-V RocketChip FPGA}.
+\\
+{\sl Skills}: C, RISC-V, QEMU, gcc, seL4, Linux
+
+\newpage
+{\bf Systematic data race protection for the kernel} \\
+{\sl \href{http://nebelwelt.net/files/22SEC.pdf}{Midas: Systematic Kernel TOCTTOU Protection}} \hfill \emph{Usenix SEC'22} \\
+Midas is a {\bf systematic and comprehensive protection mechanisms} for OS kernels to defend against Time-of-Check-to-Time-of-Use attacks. I {\bf modified kernel APIs}, creating a multiversioning system for userspace data, assuring the kernel that user data accessed from a system call remains immutable and userspace is not blocked.\\
+{\sl Skills}: Linux kernel development, C
+
+{\bf Speculative side-channel exploitation} \\
+{\sl \href{https://infoscience.epfl.ch/record/278929}{SpecROP: Speculative Exploitation of ROP Chains}} \hfill \emph{RAID'20} \\
+{\sl \href{https://dl.acm.org/doi/abs/10.1145/3319535.3363194}{SMoTherSpectre: Exploiting speculative execution through port contention}} \hfill \emph{CCS'19} \\
+SMoTherSpectre presents a {\bf speculative-execution attack} using port contention as a side-channel, enabling leakage of private key from OpenSSH server. % running on a vulnerable Intel platform.
+% Worked with \textbf{\href{http://nebelwelt.net/}{Prof. Mathias Payer}} on a speculative-execution attack using port contention as a side-channel. Allows leakage of private key from OpenSSH server. 
+SpecROP leverages {\bf binary analysis} and improves attacks by speculatively chaining code gadgets leveraging the CPU's prediction structures, enabling previously impossible leakage scenarios. \\
+{\sl Skills}: Side-channel exploitation, binary analysis, CPU microarchitecture
+
+% \item 
+
+% {\sl MS project } \hfill Feb 2018 - July 2018 \\
+% Laboratoire d'architecture des processeurs (LAP) \\
+{\bf Optimizing LSQ generation for High-Level Synthesis } \\
+{\sl \href{https://ieeexplore.ieee.org/document/8977873}{Shrink It and Shred It! Minimize the Use of LSQs in Dataflow Designs}} \hfill \emph{FPT'19} \\
+{\bf Developed an optimized load-store queue design} for dynamically-scheduled elastic circuits for high-level synthesis, using an {\bf LLVM analysis pass} to determine temporal-ordering between memory operations to reduce the estimated hardware cost for LSQs by as much as 93\%. \\
+{\sl Skills}: LLVM, FPGA programming
+% Worked with \textbf{\href{https://lap.epfl.ch/people}{Prof. Paolo Ienne}} on optimizing load-store queue design for dynamically-scheduled elastic circuits generated by high-level synthesis. By exploiting temporal-ordering between memory operations, my optimization reduces the estimated hardware cost for LSQs by as much as 93\%.
+
+% {\sl MS Research Scholar} \hfill Sept 2016 - August 2017 \\
+% Parallel Systems Architecture Lab, EPFL, Switzerland \\
+% Worked with \textbf{\href{http://parsa.epfl.ch/~falsafi/}{Prof. Babak Falsafi}} on various projects.
+% \begin{itemize}
+% \item Investigated the impact of speculative store retirement by extending the memory-ordering capabilities of a full-system cycle-accurate simulator (Flexus).
+% \item Designed a netork-on-chip(NOC) for practical Scale-out-processors and investigated other aspects of the design to enable sharing on-chip resources.
+% \end{itemize} 
+
+% {\sl MITACS Globalinks Research Intern} \hfill May 2015 - July 2015 \\
+% University of Alberta, Edmonton, Canada  \\ 
+% Worked with \textbf{\href{https://sites.ualberta.ca/~delliott/}{Prof. Duncan Elliott}} to develop an experimental, open-source cube satellite, ExAlta-1, at the University of Alberta.
+% \begin{itemize} 
+% \item Implemented the data-acquisition framework for the primary payloads: multi-Needle Langmuir Probe (mNLP) and Digital Fluxgate Magnetometer(DFGM).
+% \item Developed the link-layer drivers for Cubesat Space Protocol(CSP) networking.
+% \end{itemize}
+
+% \newpage
+
+
+%----------------------------------------------------------------------------------------
+%	Publications
+%---------------------------------------------------------------------------------------- 
+
+% \section{PUBLICATIONS}
+% \begin{itemize}
+% \item{\sl \href{https://infoscience.epfl.ch/record/301914/files/seccell.pdf?ln=en}{SecureCells: A Secure Compartmentalized Architecture}}, Bhattacharyya et al., In: 44th IEEE Symposium on Security and Privacy (\emph{IEEE S\&P '23}).
+% \item {\sl \href{http://nebelwelt.net/files/22SEC.pdf}{Midas: Systematic Kernel TOCTTOU Protection}}, Bhattacharyya et al., In: 31st Usenix Security Symposium (\emph{Usenix SEC'22}). (18.7\% acceptance rate)
+% \item {\sl \href{http://nebelwelt.net/files/21ISCA.pdf}{Rebooting Virtual Memory with Midgard}}, Gupta et al., In: 46th International Symposium on Computer Architecture (\emph{ISCA'21}).
+% \item {\sl \href{https://infoscience.epfl.ch/record/278929}{SpecROP: Speculative Exploitation of ROP Chains}}, Bhattacharyya et al., In: 23rd International Symposium on Research in Attacks, Intrusions and Defenses~(\emph{RAID'20}). (25\% acceptance rate)
+% \item {\sl \href{https://ieeexplore.ieee.org/document/8977873}{Shrink It and Shred It! Minimize the Use of LSQs in Dataflow Designs}}, Josipovic et al., In: International Conference on Field-Programmable Technology (\emph{FPT'19}).  
+% \item {\sl \href{https://dl.acm.org/doi/abs/10.1145/3319535.3363194}{SMoTherSpectre: Exploiting speculative execution through port contention}}, Bhattacharyya et al., In: ACM Conference on Computer and Communication
+% Security (\emph{CCS'19}). (15\% acceptance rate). 
+% \item {\sl \href{https://www.cubesatsymposium.eu/index.php/en/download-old-ecs-material?download=4:7thecs-book-of-abstracts}{Open Source Cube Satellite Software and Hardware Subsystems}}, Stefan E. Damkjar et al., In: 7th European
+% CubeSat Symposium \\
+% \end{itemize}
+
+%--------------------------------------------------------------------------------
+%	COURSE PROJECTS
+%--------------------------------------------------------------------------------
+% \newpage
+
+% \section{COURSE PROJECTS}
+% \begin{itemize}
+% \item Advanced Computer Architecture: Implemented an AES accelerator in VHDL achieving a 74x speedup over a software-accelerated version.
+% \item Embedded Systems: Implemented a DMA-enabled controller in VHDL for the TRDB-D5M 5 megapixel camera on an FPGA.
+% \item Real Time Embedded Systems: Implemented an audio capturing and real-time streaming pipeline using an FPGA/Linux.
+% \item Computer Networks: Implemented reliable transport using UDP in Linux.
+% \item Compiler Design: Developed a D to MIPS compiler using Lex/Yacc.
+% \item Computer Architecture: Implemented pipelining in a MIPS simulator in C++.
+% \item Digital VLSI Design: 8-bit bidirectional log. bit-shifter layout, Mentor Graphics 
+% \end{itemize}
+
+%----------------------------------------------------------------------------------------
+%	Technology SKILLS SECTION
+%----------------------------------------------------------------------------------------
+
+\section{SKILLS } 
+
+{\sl Programming:} C/C++, Java, \LaTeX\, Python ($>$5000 LoC), Assembly(x86, ARMv6, RISC-V), VHDL, Shell(Bash) ($>$1000 LoC), Scala, Matlab. \\
+% {\sl Hardware:} Arduino, Atmel Atmega, DE0-Nano/DE1 FPGAs 
+% \\
+{\sl Simulators:} SimFlex, gem5 
+\\
+{\sl Software:} QEMU, Linux kernel, LLVM, GNU compiler toolchain, seL4
+
+
+%----------------------------------------------------------------------------------------
+%	Awards and achievements
+%---------------------------------------------------------------------------------------- 
+
+\section{ACHIEVEMENTS AND AWARDS} 
+\begin{tabular}{rll}
+'23        &                   & Qualcomm Innovation Fellowship, Europe \\
+'21, '22    &                   & Best TA Award, EPFL \\
+'20        &                   & IBM Research Fellowship \\
+% 2019        & 3rd               & Best Research Presentation Award, IC Research Day, EPFL\\
+'18        &                   & EPFL IC School Fellowship \\
+% 2017        & 120/120 score     & TOEFL \\
+'16 		& 					& MS Research Scholarship, EPFL \\
+% 2016		& 340/340 score	& Graduate Record Examinations(GRE) \\
+% 2014		&				& Exchange student at the University of Waterloo, Fall semester\\
+% 2014	     & 2\textsuperscript{nd} &UnnaTI intern design contest, Texas Instruments\\
+% 2014	     & 3\textsuperscript{rd} & Annontrix, Techkriti, IIT Kanpur \\
+% 2013 		& 2\textsuperscript{nd} & Embedded, Techkriti, IIT Kanpur  \\
+% 2012 		& 2\textsuperscript{nd} & Electromania, Techkriti, IIT Kanpur  \\
+'12		&University level 	& Academic Excellence Award  \\
+% 2011		&National level 	& Indian National Mathematics Olympiad(INMO) \\
+% 2011		&National level		&Offered the Kishore Vaigyanik Protsahan Yojana(KVPY) \\
+%  & & scholarship(less than 1\% qualification rate) \\
+% 2011	& National level		& Udhbhav Poddar trophy for ICSE mathematics 
+% \\
+%2009		&3\textsuperscript{rd}		& Computer Society of India, Kolkata debate \\
+\end{tabular} 
+
+
+%----------------------------------------------------------------------------------------
+%	Coursework
+%----------------------------------------------------------------------------------------
+% \section{RELEVANT COURSEWORK}
+
+% \begin{ncolumn}{2} {\sl Graduate Courses: } & {\sl Undergraduate Courses:} \\
+% Principles of Computer Systems & Computer Systems Security \\
+% Topics in Datacenter Design  & Operating Systems \\
+% Real-Time Embedded Systems & Compiler Design \\
+% Advanced Computer Architecture & VLSI System Design \\
+% Database Systems & Organic Electronics \\
+
+% \end{ncolumn}
+
+
+\section{TEACHING \\ S=Spring\\ F=Fall} 
+\begin{tabular}{lll}
+Undergraduate & CS212  & Systems Programming Project (S'19) \\
+Undergraduate & CS323  & Introduction to Operating Systems (F'19, F'20, F'21) \\
+Graduate      & CS412  & Software Security (S'20, S'21) \\
+Graduate      & CS422  & Database Systems (S'18) \\
+Graduate      & COM402 & Internet Security and Privacy (F'22, F'23)
+\end{tabular}
+
+\section{TALKS}
+\begin{tabular}{ll}
+\href{https://www.youtube.com/watch?v=HFFzP3yG7fQ}{IEEE S\&P '23}       & SecureCells: A Secure Compartmentalized Architecture \\
+\href{https://www.youtube.com/watch?v=ZAvPu99FAkQ}{Usenix Security '22} & Midas: Systematic Kernel TOCTTOU Protection \\
+\href{https://dl.acm.org/action/downloadSupplement?doi=10.1145%2F3319535.3363194&file=p785-bhattacharyya.webm}{CCS '19}             & SMoTherSpectre:  Exploiting spec. exec. through port contention 
+% InsomniHack 2020 & SMoTherSpectre:  Exploiting speculative execution through port contention
+\end{tabular}
+
+\section{SERVICE}
+\begin{tabular}{l l}
+ Reviewer & ACM Computing Surveys (CSUR) \\
+ Reviewer & ACM Transactions on Computers 
+\end{tabular}
+
+\end{resume}
+\end{document}

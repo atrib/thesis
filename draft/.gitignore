@@ -1,0 +1,11 @@
+*.bbl
+*.blg
+*-blx.bib
+*.aux
+*.log
+*.rubbercache
+*.run.xml
+*.toc
+thesis.pdf
+*.lof
+*.lot

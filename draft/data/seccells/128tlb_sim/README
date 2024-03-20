@@ -1,0 +1,3 @@
+128 TLB entries
+16M LLC
+Run on verilator

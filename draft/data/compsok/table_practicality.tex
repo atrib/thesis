@@ -1,0 +1,32 @@
+\begin{threeparttable}
+	\begin{tabular}{!l| ?c ?c ?c ?c ?c ?c ?c ?c ?c ?c ?c }
+		\rowstyle{\bfseries}
+		Mechanism & \rotatebox{90}{memaccctl\tnote{1}} & \rotatebox{90}{excl\tnote{2}} & \rotatebox{90}{memmgmt\tnote{3}} & \rotatebox{90}{switching\tnote{4}} & \rotatebox{90}{revocation\tnote{5}} & \rotatebox{90}{permtx\tnote{6}} & \rotatebox{90}{memmgmt\tnote{7}} & \rotatebox{90}{regalign\tnote{8}} & \rotatebox{90}{reggrain\tnote{9}} & \rotatebox{90}{regcount\tnote{10}} & \rotatebox{90}{permtxgrain\tnote{11}} \\ \midrule
+		TRAD& \fraczerooutofone & \fraconeoutofthree & \fraconeoutoftwo & \fraczerooutofone & \fraczerooutofone & \fraconeoutofthree & \fraconeoutofthree & \fractwooutofthree & \fraconeoutoftwo & \fraconeoutofone & \fractwooutofthree \\
+		MMP& \fractwooutofthree & \fraczerooutofone & \fraconeoutoftwo & \fraczerooutofone & \fraczerooutofone & \fraczerooutofone & \fraconeoutofthree & \fraconeoutofone & \fracthreeoutoffour & \fraconeoutofone & \fraczerooutofone \\
+		lwC& \fraczerooutofone & \fraconeoutofthree & \fraconeoutoftwo & \fraconeoutofthree & \fraczerooutofone & \fraconeoutofthree & \fraconeoutoftwo & \fractwooutofthree & \fraconeoutoftwo & \fraconeoutofone & \fractwooutofthree \\
+		CODOMs& \fraconeoutofthree & \fraconeoutofthree & \fraconeoutoftwo & \fraconeoutofone & \fraczerooutofone & \fraconeoutofone & \fraczerooutofone & \fractwooutofthree & \fraconeoutoftwo & \fraconeoutofone & \fraconeoutofthree \\
+		XPC& \fraczerooutofone & \fraconeoutofone & \fraconeoutoftwo & \fraconeoutofone & \fraczerooutofone & \fraconeoutofone & \fraczerooutofone & \fractwooutofthree & \fraconeoutoftwo & \fraconeoutofone & \fraconeoutoftwo \\
+		ARMlock& \fraconeoutofthree & \fraczerooutofone & \fraczerooutofone & \fraczerooutofone & \fraczerooutofone & \fraczerooutofone & \fraconeoutofthree & \fraconeoutofthree & \fraconeoutoffour & \fraconeoutoffour & \fraczerooutofone \\
+		MPK& \fraconeoutofthree & \fraczerooutofone & \fraczerooutofone & \fraconeoutofone & \fraczerooutofone & \fraczerooutofone & \fraconeoutofthree & \fractwooutofthree & \fraconeoutoftwo & \fraconeoutoffour & \fraczerooutofone \\
+		ERIM& \fraconeoutofthree & \fraczerooutofone & \fraczerooutofone & \fraconeoutofone & \fraczerooutofone & \fraczerooutofone & \fraconeoutofthree & \fractwooutofthree & \fraconeoutoftwo & \fraconeoutoffour & \fraczerooutofone \\
+		Donky& \fraconeoutofthree & \fraczerooutofone & \fracthreeoutoffour & \fractwooutofthree & \fraczerooutofone & \fraczerooutofone & \fractwooutofthree & \fractwooutofthree & \fraconeoutoftwo & \fraconeoutoftwo & \fraczerooutofone \\
+		CHERI& \fraconeoutofone & \fraczerooutofone & \fraconeoutoftwo & \fractwooutofthree & \fraconeoutoffour & \fraconeoutofone & \fractwooutofthree & \fraconeoutofone & \fraconeoutofone & \fraconeoutofone & \fraconeoutofone \\
+		SecureCells& \fractwooutofthree & \fractwooutofthree & \fraconeoutofone & \fraconeoutofone & \fraczerooutofone & \fractwooutofthree & \fracfiveoutofsix & \fractwooutofthree & \fracthreeoutoffour & \fraconeoutofone & \fraconeoutoftwo \\
+		CAPSTONE& \fraconenegoutofsix & \fraconeoutofone & \fraconeoutoftwo & \fraconeoutofone & \fraconeoutoftwo & \fraconeoutofone & \fraconeoutofone & \fraconeoutofone & \fraconeoutofone & \fraconeoutofone & \fraconeoutofone \\
+		\bottomrule
+	\end{tabular}
+	\begin{tablenotes}
+		\item[1] Performance of memory access control 
+		\item[2] Cost of exclusive memory access 
+		\item[3] Cost of memory management 
+		\item[4] Performance of compartment switching 
+		\item[5] Performance of permission revocation 
+		\item[6] Performance of permission transfers 
+		\item[7] Performance of memory management ops. 
+		\item[8] Alignment of region for permissions
+		\item[9] Granularity of region for permissions
+		\item[10] Limit on count of permission regions
+		\item[11] Permission transfer granularity
+	\end{tablenotes}
+\end{threeparttable}

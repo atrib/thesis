@@ -1,0 +1,31 @@
+Les systèmes informatiques font un lourd usage d'abstraction pour répondre à la croissance exponentielle de la complexité du matériel et du logiciel. 
+A cause des considérations pour maintenir une compatibilité entre des éléments de différentes générations de ces systèmes complexes, les développeurs ont favorisé des interfaces stables aux limites critiques tels que celles entre le matériel et le logiciel ou entre les espaces utilisateurs et noyaux. 
+Alors que ces interfaces perdurent depuis plus de 20 ans, l'environnement informatique moderne a évolué significativement en termes de sécurité et de performance. 
+Ces systèmes sont de plus en plus connectés et partagent des composants de provenance  très diverses. 
+Ces anciennes interfaces ne sont pas à même de contrer les menaces modernes tout en maintenant des objectifs de performances stricts. 
+L'informatique nécessite de nouvelles interfaces garantissant une plus grande sécurité tout en gardant possible des applications à haute performance. 
+L'interface utilisateur-noyau reste un des vecteurs principaux d'attaques entre applications car la compromission du noyau permet à l'attaquant de contrôler les ressources du système ainsi que les autres applications installées. 
+Au vue de l'augmentation de code tiers exécuté par les applications, par exemple des scripts Javascript téléchargé depuis l'internet, l'interface de la mémoire virtuelle est en train d'émerger comme une autre interface critique pouvant offrir à des attaquants l'accès au système. 
+Dans cette thèse, nous investiguons donc ces deux interfaces critiques afin d'améliorer leurs limites de performances et de sécurité.
+
+L’interface d'appel noyau-utilisateur souffre de bogues de double récupération pour les arguments passés par référence stockés dans la mémoire utilisateur. 
+Les double récupérations permettent à un utilisateur malveillant de compromettre l'isolation garantie par l'interface noyau-utilisateur pour accéder illégalement à la mémoire, provoquant des crashs du noyau, ou permettant l’escalade de leurs privilèges. 
+L'environnement moderne multi-utilisateur et multi-processus permet à l'utilisateur de modifier les arguments lus par le noyau à différents moments en modifiant le contenu de la mémoire à partir d'un fil concurrent. 
+La complexité du noyau empêche les développeurs de trouver et de corriger tous ses bogues. 
+L'extensibilité du noyau aggrave encore le défi, car des modules tiers chargés par le noyau peuvent également introduire des double récupérations. 
+Nous présentons \midas, une prévention systématique des double récupérations du noyau en exploitant son interface pour accéder à la mémoire utilisateur afin de garantir que chaque lecture demandée par le noyau d'un objet utilisateur lors d'un appel système renverra la même valeur. La garantie de \midas rend explicite une hypothèse implicite des développeurs du noyau, protégeant le noyau contre une classe de bogues tout en entraînant un coût de seulement $3,4\%$ sur les charges de travail diverses des suites de benchmarks NPB et PTS.
+
+Alors que les logiciels système modernes exécutent du code provenant de nombreuses sources avec des degrés de confiance variables, l'abstraction traditionnelle de la mémoire virtuelle ne permet pas l'isolation des parties non fiables d'une application partageant le même espace d'adressage virtuel. 
+Tout le code s'exécutant au sein d'un processus a le même niveau de confiance. 
+Par conséquent, un code tiers défectueux ou malveillant dans un processus peut compromettre le processus en divulguant ou modifiant directement la mémoire utilisée par d'autres composants de l'application. 
+L'interface de la mémoire virtuelle doit être repensée pour permettre aux applications d'être compartimentées, implémentant le principe du moindre privilège en isolant les parties non fiables de l'application dans des compartiments avec un accès limité à certaines ressources de l'application. 
+Nous présentons \seccells, une nouvelle interface architecturale pour la compartimentation intra-espace d'adressage. \seccells permet aux applications de définir des vues de mémoire garantie par le matériel pour les compartiments d'application avec des instructions d'espace utilisateur accélérant les appels inter-compartiments. 
+Dans des microbenchmarks, \seccells permet à un cœur ordré à 5 étages de passer d'un compartiment à un autre en seulement 8 cycles, réduisant le coût des transitions d'un ordre de grandeur par rapport aux meilleures alternatives. 
+Nous construisons également un prototype complet de \seccells, basé sur le cœur RISC-V RocketChip exécutant le noyau seL4, pour évaluer des benchmarks d'espace utilisateur.
+
+De plus, cette thèse présente la première comparaison exhaustive entre les mécanismes de compartimentation, évaluant à la fois les propriétés qualitatives et quantitatives. 
+Nous décrivons les propriétés de sécurité et de performance pertinentes pour une compartimentation pratique, et montrons dans quelle mesure chaque mécanisme fournit chaque propriété. 
+Une revue complète des techniques de compartimentation vise à permettre aux développeurs de systèmes informatiques de définir de future interfaces sécurisées, performantes et utilisables pour soutenir la compartimentation généralisée des applications.
+
+Cette thèse soutient que les interfaces entre les composants des systèmes informatiques modernes entravent leurs garanties de sécurité, et explore les problèmes de deux interfaces majeures. 
+Nous montrons qu'une refonte raisonnée de ces interfaces permet la mise en œuvre de systèmes plus sécurisés tout en soutenant les besoins d'applications haute performance, avec la conception et la mise en œuvre de \midas et \seccells pour résoudre les défis aux interfaces noyau-utilisateur et intra-processus respectivement.
