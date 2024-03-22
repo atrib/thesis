@@ -979,9 +979,25 @@ When the attacker and victim execute on separate physical cores, this attack
 is impossible as speculative writes are not forwarded across cores.
 Next, we describe the steps of this potential attack vector.
 
+
+\begin{figure}[]
+  \centering
+  \includegraphics[width=0.9\linewidth]{media/midas/midas_speculative_forward.pdf}
+  \caption[Illustration of a theoretical speculative leakage attack against Midas' protection.]
+          {Illustration of a theoretical speculative leakage attack against Midas' protection.
+           The attacker uses the core's shared load-store queue (LSQ) to forward 
+           the value from the attacker's illegal speculative write to a protected page
+           to the victim syscall's read.
+           The incorrect speculation will be rolled back eventually, but can be used to
+           transiently leak a kernel secret into a side-channel.
+          }
+  \label{fig:midas:midas_spec_forward}
+\end{figure}
+
 For this attack, we assume that the attacker and victim run on two logical
-hardware threads running on a single physical core on a SMT processor.
-The steps of the attack are described now.
+hardware threads running on a single physical core on an SMT processor.
+The steps of the attack are described below, and illustrated in
+\autoref{fig:midas:midas_spec_forward}.
 \begin{enumerate}
   \item The victim syscall fetches a user object for the first time,
         marking the corresponding page as protected (State 1), 
@@ -1000,9 +1016,10 @@ The steps of the attack are described now.
   \item The core rolls back the attacker execution, including the illegal 
         write, 
   \item The core rolls back the victim's execution based on the illegal 
-        write, and
+        read, and
   \item Both the attacker and victim continue on an architecturally legal
         execution path.
+        The attacker reads the victim's secret from a side-channel.
 \end{enumerate}
 
 
