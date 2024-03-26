@@ -11,3 +11,5 @@ thesis.pdf
 *.lot
 *.bcf
 diffdir/
+*.fdb_latexmk
+*.fls
