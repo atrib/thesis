@@ -982,13 +982,13 @@ Next, we describe the steps of this potential attack vector.
 
 \begin{figure}[]
   \centering
-  \includegraphics[width=0.9\linewidth]{media/midas/midas_speculative_forward.pdf}
+  \includegraphics[width=\linewidth]{media/midas/midas_speculative_forward.pdf}
   \caption[Illustration of a theoretical speculative leakage attack against Midas' protection.]
           {Illustration of a theoretical speculative leakage attack against Midas' protection.
            The attacker uses the core's shared load-store queue (LSQ) to forward 
            the value from the attacker's illegal speculative write to a protected page
            to the victim syscall's read.
-           The incorrect speculation will be rolled back eventually, but can be used to
+           The incorrect speculation will be rolled back, but can be used to
            transiently leak a kernel secret into a side-channel.
           }
   \label{fig:midas:midas_spec_forward}
