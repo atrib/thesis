@@ -112,11 +112,13 @@ System calls, therefore, typically check the validity of arguments passed
 from userspace.
 However, computing and the associated threat vectors developed over the
 past 30 years, rendering Linux' original system call interface dated.
-Systems running untrusted code have become ubiquitous 
-(cloud computing, applications distributed over the internet, and
-sandboxed code within browsers) necessitating stronger isolation between
-system users, and even isolation between parts of the same application.
-These systems 
+Linux has evolved from being a hobby project to becoming the operating system 
+underlying critical computer infrastructure forming the backbone of industries
+and governments.
+The threat model has simultaneously evolved from 
+accidentally triggered bugs in applications leading to crashes, 
+to sophisticated exploits developed by experienced attackers targeting remote 
+control of the entire system.
 One consequence of the dated designs of key interfaces is that these interfaces 
 might not adequately mitigate threats
 that have arisen or worsened after the design of the interface.
