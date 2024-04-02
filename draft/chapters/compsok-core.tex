@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-\label{sec:compreview:introduction}
+\label{sec:compsok:introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Context: monolithic programs are incompatible with the trust relations within
 %         actual components of programs
@@ -44,7 +44,7 @@ and defense in depth.
 % Implementing compartmentalization.
 % Requires changes in implementation, and defining policy and mechanism.
 Compartmentalization fundamentally changes software architecture, requiring
-developers to write programs out of well-defined components each of which will
+developers to write applications with well-defined components each of which will
 be isolated within a separate compartment with restrictions enforced on each
 compartment's privileges.
 The definition of compartments and allocation of application functionality to
@@ -78,23 +78,23 @@ A comprehensive systematization of compartmentalization mechanisms is
 essential to understand the strengths and weaknesses of existing
 mechanisms, and to identify the key remaining common shortcomings.
 
-In this paper, we first describe a generic compartmentalized application
+In this chapter, we first describe a generic compartmentalized application
 and list the attacker model mechanisms attempt to defend 
-against (\autoref{sec:compreview:overview}).
+against (\autoref{sec:compsok:overview}).
 Next, we systematically list the avenues for cross-compartment
 attacks, and categorize the privileges for operations involved in these
-attacks (see \autoref{fig:compreview:attacks}).
+attacks (see \autoref{fig:compsok:attacks}).
 We then propose a categorization to classify the restrictions required to 
 mitigate these attacks at different points, 
 and define security metrics for mechanisms based on how many restrictions 
 mechanisms implement and how strong these restrictions
-are (\autoref{sec:compreview:properties}).
+are (\autoref{sec:compsok:properties}).
 We also define a categorization for the performance properties of mechanisms
 for implementing the checks required to enforce these 
-restrictions (\autoref{sec:compreview:practicals}).
+restrictions (\autoref{sec:compsok:practicals}).
 Finally, we compare \nmechs mechanisms to find which attacker
 models they can protect against, and which restrictions they support
-to isolate compartments (\autoref{sec:compreview:evaluation}).
+to isolate compartments (\autoref{sec:compsok:evaluation}).
 To compare mechanisms quantitatively, we create a scale for
 scoring mechanisms' security and practicality, based on their security
 properties and their practical limitations including performance overheads.
@@ -114,11 +114,11 @@ We find that
 \end{itemize}
 Our systematization allows us to gain insights on the range of mechanisms, 
 and to highlight improvement opportunities for future mechanisms in 
-\autoref{sec:compreview:opportunities}.
+\autoref{sec:compsok:opportunities}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Compartmentalization: A Deeper Dive}
-\label{sec:compreview:overview}
+\label{sec:compsok:overview}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 To understand the security properties of compartmentalization mechanisms,
 we need to first understand how compartmentalization expresses trust
@@ -131,7 +131,7 @@ to walk readers through the steps of compartmentalization.
 Compartmentalization involves composing applications from communicating 
 components with well-defined roles, where each component is restricted to exclusively the 
 privileges required to implement their functionality.
-To build a compartmentalized program, a developer must identify separate
+To build a compartmentalized application, a developer must identify separate
 components in their application, define their privileges, and specify interfaces
 allowing communication between compartments respecting the trust relationships
 between compartments.
@@ -142,12 +142,12 @@ Only the kernel compartment can interact with local system resources like files.
 To protect the local system, the kernel compartment distrusts the 
 rendering engine compartment which handles sandboxing 
 untrusted, and possibly malicious, JavaScript code from websites.
-Practically, building a compartmentalized program may rely on a varying mix of
+Practically, building a compartmentalized application may rely on a varying mix of
 manual programming effort and automated toolchains based on program analysis or
 developer annotations.
 
 % Introduce security aspect
-The security of compartmentalized programs relies on limiting how compartments
+The security of compartmentalized applications relies on limiting how compartments
 interact, reducing the surface area available for attacks between application
 components.
 Whereas components of a typical uncompartmentalized, or monolithic, application
@@ -187,7 +187,7 @@ limits on inter-compartment control flow,
 the ability for compartments to influence other compartments' register contexts, 
 and more.
 We will later explore useful restrictions comprehensively in 
-\autoref{sec:compreview:properties}.
+\autoref{sec:compsok:properties}.
 
 % Why mechanisms matter
 In reality, mechanisms offer varying support for restrictions
@@ -206,14 +206,14 @@ and trading-off security checks for greater performance.
 \subsection{Example: \browser Compartmentalization}
 %-------------------------------
 \begin{figure}
-  \includegraphics[width=\linewidth]{media/hierarchy_trust.pdf}
+  \includegraphics[width=\linewidth]{media/compsok/hierarchy_trust.pdf}
   \caption[Architecture of a compartmentalized \browser]
           {Architecture of a compartmentalized \browser.}
-  \label{fig:compreview:browser}
+  \label{fig:compsok:browser}
 \end{figure}
 
 We shall use a fictional architecture for a browser 
-(\autoref{fig:compreview:browser})
+(\autoref{fig:compsok:browser})
 to illustrate how the properties of compartmentalization mechanisms 
 affect realistic applications.
 Our browser roughly resembles a modern Chromium~\cite{barth2008security} 
@@ -344,8 +344,8 @@ Our \browser must be able to provide a responsive browsing experience to its
 users, while incurring overheads from the supporting mechanism associated with 
 checks implementing the restrictions described above.
 Since applications have performance targets, developers seeking to introduce 
-security through compartmentalization must architect their programs considering 
-the overheads of the underlying mechanism.
+security through compartmentalization must architect their applications 
+considering  the overheads of the underlying mechanism.
 The \sandbox{}es and \nested libraries have short execution periods, and
 cross-compartment calls can execute in sub-microsecond timescales.
 The \manager compartment must manage (de)allocations equally quickly, to
@@ -376,7 +376,7 @@ developers considering compartmentalization for datacenter applications.
 
 %-------------------------------
 \subsection{Execution Model and Threat Model}
-\label{sec:compreview:threatmodel}
+\label{sec:compsok:threatmodel}
 %-------------------------------
 We assume that the system being protected is a modern general-purpose CPU
 or system-on-chip.
@@ -444,21 +444,21 @@ The attacker might attempt to:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Mechanisms Implement Restrictions}
-\label{sec:compreview:properties}
+\label{sec:compsok:properties}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[h]
-  \includegraphics[width=\linewidth]{media/attacks.pdf}
+\begin{sidewaysfigure}[]
+  \includegraphics[width=\linewidth]{media/compsok/attacks.pdf}
   \caption[Classification of operations leading to a cross-compartment attack.]
           {Classification of operations leading to a cross-compartment attack, and
           illustration of classes of mitigating restrictions.}
-  \label{fig:compreview:attacks}
-\end{figure*}
+  \label{fig:compsok:attacks}
+\end{sidewaysfigure}
 
 Compartmentalization mechanisms support the least privilege principle 
 by restricting the abilities of individual compartments.
 Attackers rely on an arsenal of different abilities which can allow them
 to maliciously leak or corrupt a victim compartment.
-In \autoref{fig:compreview:attacks}, we show how an attacker executing
+In \autoref{fig:compsok:attacks}, we show how an attacker executing
 within a compromised compartment can try to compromise other compartments
 or the executing system.
 In the figure, we highlight the classes of restrictions that mechanisms can 
@@ -468,6 +468,7 @@ can execute, limit the resources accessible by using operations, or
 limit the range of arguments that compartments can use for operations.
 
 \begin{table}
+  \centering
   \begin{tabular}{l| ll}
     \toprule
     \rowstyle{\bfseries}
@@ -495,11 +496,11 @@ limit the range of arguments that compartments can use for operations.
                                 & Memory (de)allocation                                     \\ \bottomrule
   \end{tabular}
   \caption{Summary of privileges restricted by compartmentalization mechanisms} 
-  \label{tab:compreview:abilities}
+  \label{tab:compsok:abilities}
 \end{table}
 
 % \begin{figure}
-%   \includegraphics[width=\linewidth]{media/restrictions.pdf}
+%   \includegraphics[width=\linewidth]{media/compsok/restrictions.pdf}
 %   \caption[Illustrating Restrictions from Compartmentalization]
 %           {An example of restrictions implementable by mechanisms. 
 %             Resource access control limits read instructions to the latter two memory
@@ -508,12 +509,12 @@ limit the range of arguments that compartments can use for operations.
 %             read permissions to Compartment 2.
 %             Instruction control restricts the \Code{clflush} instruction altogether.
 %           }
-%   \label{fig:compreview:restrictions}
+%   \label{fig:compsok:restrictions}
 % \end{figure}
 
 In this section, we describe abilities available for compartments, whose
 use might be limited by compartmentalization mechanisms.
-These abilities are summarized in \autoref{tab:compreview:abilities}.
+These abilities are summarized in \autoref{tab:compsok:abilities}.
 Generally, abilities are classified into restrictions on
 \begin{inparaenum}[\itshape i )\itshape] 
       \item resources accessible through instructions or operations,
@@ -522,7 +523,7 @@ Generally, abilities are classified into restrictions on
 \end{inparaenum}
 We discuss each of these abilities below.
 % , and illustrate an example of restrictions
-% in \autoref{fig:compreview:restrictions}.
+% in \autoref{fig:compsok:restrictions}.
 
 %-------------------------------
 \subsection{Resource Access}
@@ -543,7 +544,7 @@ Alternatively, the attacker might try to access files on the host system's
 disk, either to read private files used by other compartments or to compromise
 the host system itself.
 The mechanism should prevent both of the above attacks.
-In \autoref{fig:compreview:attacks}, we show how attackers can attempt to 
+In \autoref{fig:compsok:attacks}, we show how attackers can attempt to 
 dereference corrupted pointers to read/write across compartments and
 use system calls to access prohibited supervisor resources.
 
@@ -579,7 +580,7 @@ permissions (e.g., RISC-V's Physical Memory Protection registers).
 %-------------------------------
 Applications also require limits on how compartments are allowed to use
 available operations.
-\autoref{fig:compreview:attacks} shows how operation arguments can
+\autoref{fig:compsok:attacks} shows how operation arguments can
 help cross-compartment attackers bypass call gates or inject code
 and data.
 For example, system call filters can implement checks on which calls 
@@ -618,7 +619,7 @@ as per an allowlist.
 Mechanisms might altogether restrict access to ISA instructions or other
 operations, to limit non-general purpose computation (e.g., arithmetic)
 possible by compartments. 
-In \autoref{fig:compreview:attacks}, we show how different classes of
+In \autoref{fig:compsok:attacks}, we show how different classes of
 instructions enables different cross-compartment attack vectors.
 These restrictions can prevent select compartments from using 
 instructions/operations with dangerous effects on the environment.
@@ -650,7 +651,7 @@ like the \manager is permitted to.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Practical Considerations}
-\label{sec:compreview:practicals}
+\label{sec:compsok:practicals}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Using a mechanism to compartmentalize an application leads to the application
 inheriting the mechanism's performance overheads and other practical limitations.
@@ -789,28 +790,29 @@ duplication of capabilities also helps revocation performance.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Evaluating Mechanisms}
-\label{sec:compreview:evaluation}
+\label{sec:compsok:evaluation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In this SoK, we compare the security and performance characteristics of the 
-mechanisms listed below in \autoref{sec:compreview:mechanisms}.
+mechanisms listed below in \autoref{sec:compsok:mechanisms}.
 The comparison aims to illustrate common strengths and weaknesses between
 mechanisms.
 Further, we aim to expose the main missing features that we consider 
 useful for future proposals for comprehensive compartmentalization.
 We score mechanisms on features introduced in 
-\autoref{sec:compreview:properties} and 
-\autoref{sec:compreview:practicals}.
-The basis for our scores is presented in detail in \autoref{app:compreview:data}
+\autoref{sec:compsok:properties} and 
+\autoref{sec:compsok:practicals}.
+The basis for our scores is presented in detail in \autoref{app:compsok:data}
 and summarized in \autoref{fig:compsok:scoring_sec} and
 \autoref{fig:compsok:scoring_perf}.
 
 %-------------------------------
 \subsection{Mechanisms Compared}
-\label{sec:compreview:mechanisms}
+\label{sec:compsok:mechanisms}
 %-------------------------------
 \begin{table}
-  \begin{tabular*}{\linewidth}{!l| ?l| ?l| ?l| ?l}
-    % \toprule
+  \centering
+  \begin{tabular}{!l| ?l| ?l| ?l| ?l}
+    \toprule
     \rowstyle{\bfseries} 
     Mechanism                              & \makecell{HW/\\Sup} & \makecell{Perm.\\Storage} & \makecell{Runtime\\TCB} & \makecell[l]{Perm.\\Grain}  \\ \midrule
     TRAD                                   & NA                  & PT                        & Sup                     & Fixed          \\
@@ -825,17 +827,17 @@ and summarized in \autoref{fig:compsok:scoring_sec} and
     \seccells~\cite{BhattacharyyaHLGSFP23} & Both                & PT                        & HW                      & Range          \\
     CHERI~\cite{WatsonWNMACDDGL15}         & Both                & Cap                       & HW                      & Range          \\
     CAPSTONE~\cite{YuWBCS23CAPSTONE}       & Both                & Cap                       & HW                      & Range          \\ \bottomrule
-  \end{tabular*}
+  \end{tabular}
   \caption[Summary classifying compartmentalization mechanisms.]
           {Summary classifying surveyed compartmentalization mechanisms characteristics.
-            Columns are described in \autoref{sec:compreview:mechanisms}.
+            Columns are described in \autoref{sec:compsok:mechanisms}.
           }
-  \label{tab:compreview:summarymechs}
+  \label{tab:compsok:summarymechs}
 \end{table}
 
 In our SoK, we have tried to include a variety of mechanisms across a variety of
 design points.
-These mechanisms are listed in \autoref{tab:compreview:summarymechs}.
+These mechanisms are listed in \autoref{tab:compsok:summarymechs}.
 As our baseline, we include process-based compartmentalization on traditional
 operating systems, which is commercially used for software compartmentalization.
 Labeled ``TRAD'', our baseline includes traditional monolithic operating systems 
@@ -861,7 +863,7 @@ and even both.
 In our comparison, we have omitted other compartmentalization mechanisms
 solely based on software-based checks~\cite{WahbeLAG93} 
 which are incapable of protecting against strong attacks as defined in 
-\autoref{sec:compreview:threatmodel} as they
+\autoref{sec:compsok:threatmodel} as they
 do not add any protection beyond that provided by traditional processes.
 We have also excluded mechanisms based on 
 virtualization~\cite{BelayBMTMK12, KoningCBGA17, LiuZCCX15, McCuneLQZDGP10, SharifLCL09}
@@ -874,11 +876,605 @@ point protections~\cite{HedayatiGJCSSM19Hodor, GuanLLJW15}.
 Finally, we exclude mechanisms with very limited protections~\cite{FrassettoJLS18}.
 
 %-------------------------------
+\subsubsection{Process-based compartmentalization (TRAD)}
+%-------------------------------
+The traditional (TRAD) abstraction of isolation is based on OS
+processes.
+We will describe process-based compartmentalization in UNIX-like OSs
+(particularly Linux), 
+though the concepts generalize to other OS kernels.
+
+% Context about how processes emerged
+The process abstraction was introduced to isolate different applications running 
+on multi-user machines.
+Each process has an isolated memory space (architecturally-defined virtual memory)
+and individual OS resources, such as file descriptors, I/O handles or capabilities.
+The OS kernel time-multiplexes processes onto one or more processing cores.
+A process can have one or more kernel threads, corresponding to independent threads
+of execution, but sharing the same address space and OS resources.
+Everything within a process shares the same permissions to access its memory and
+its OS resources, including the application's executable, libraries, and loaded modules.
+The OS relies on hardware enforced permissions for virtual memory, typically 
+implemented by per-core memory-management units (MMUs) reading permissions from a
+per-process page table structure.
+
+% Explain how processes allow compartmentalization
+A developer can compartmentalize an application by isolating each compartment in
+a separate process.
+% Isolation part.
+Each process will have its own private memory address space, and its own 
+OS resources.
+One process cannot name a separate process' resources since they each have separate
+namespaces, and hence cannot directly access another process' resource.
+OS resources require an open-like step, ensuring that each process in the application
+only accesses allowed resources.
+Processes cannot arbitrarily gain capabilities.
+% Communication part
+Processes can, additionally, share memory and specific OS resources for 
+communication.
+Shared memory must be set up with explicit system calls, and are subject to 
+syscall filtering.
+The generated code region can be shared between the JIT and sandboxes, along
+with code sections for shared libraries.
+Processes can also communicate using inter-process communication (IPC) system 
+calls (like \Code{sendmsg}/\Code{recvmsg}).
+A remote (cross-process) procedure call typically consists of serialization of
+arguments into a buffer, sending the buffer across using a system call,
+and then deserialization of the arguments on the receiving side followed by
+the requisite processing based on the arguments.
+The cost of inter-process switching contributes a great
+deal to the expensive nature of compartmentalization with processes.
+
+% Explain how processes compartmentalize a browser
+A \browser can be compartmentalized using processes by isolating sensitive
+components in separate compartments, each of which runs in a separate process.
+For example, the \renderer can occupy one process and each \sandbox
+can be assigned a separate process.
+Microsoft's ChakraCore JavaScript engine~\cite{ChakraCore}, for example, 
+used such an architecture to isolate itself from untrusted sandboxes.
+A shared memory region between the \renderer and each \sandbox holds the 
+\sandbox's code.
+This region is mapped as executable in the \sandbox, and writable in the
+\renderer.
+The \renderer and sandboxes can communicate using the kernel's inter-process 
+message passing system calls.
+The Chromium web browser further implements a \local compartment,
+isolating parts of the \browser interacting with the local 
+system~\cite{barth2008security}.
+
+%-------------------------------
+\subsubsection{Mondrian Memory Protection (MMP)}
+%-------------------------------
+% Context and introduction of MMP
+MMP~\cite{WitchelCA02MMP} tackles the challenge of flexible, 
+fine-grained intra-address space isolation.
+Intra-address space compartmentalization differs from previous mechanisms,
+all of which have separate memory address spaces for each compartment.
+In contrast, compartments in MMP (and the following mechanisms) all share the
+same address space.
+Isolation between compartments relies on different 
+memory views, i.e., different permissions to the same address for 
+different compartments.
+Intra-address space compartmentalization can simplify the process of
+porting monolithic applications to compartmentalize them, and allow
+smaller compartments with fine-grained memory permissions.
+Data transfer for intra-address space compartmentalization can be simpler
+than with IPC, since addresses remain valid across compartments.
+
+% Explain how MMP allow compartmentalization
+% Isolation part
+Each compartment in a application compartmentalized under MMP maps to a protection
+domain, with an unique \emph{Domain ID}.
+The virtual address space is split into a number of segments.
+Each compartment has its own permission table which holds per-segment permissions,
+essentially allowing the domain to have its own view of permissions to memory.
+The permission tables can be configured to allow segments to be private (only one 
+domain has permissions), or shared.
+MMP also describes different structures for the permissions table in memory, and
+the hardware structures to read and cache permissions.
+MMP's permissions tables separate permissions from translation, and are
+independent of page tables.
+Crucially, MMPs permission tables allow segments starting and ending at
+word boundaries instead of page boundaries, allowing spatially fine-grained
+permissions.
+% Communication part
+Compartments in MMP can call each other through system calls or traps, 
+which also modify the permissions table base pointer register in hardware.
+The paper also proposes that hardware can be used to accelerate this switch,
+though the mechanism is not clearly explained.
+MMP requires call gates to prevent control flow attacks at inter-compartment
+boundaries.
+Data can also be passed between domains during switching, by marshalling
+data into copied buffers.
+However, MMP also introduces the concept of zero-copy data passing between
+compartments by modifying the permissions to the segments holding passed data.
+However, few details on maintaining coherence of on-chip permission buffers 
+are discussed.
+
+% Explain how MMP compartmentalize a browser
+In MMP, the \browser fits in a single address space with separate protection 
+domains assigned to the \renderer, \local compartment, the \manager 
+and for each of the \sandbox{}es.
+For each \sandbox, the generated code can be assigned a separate segment
+which has different permissions for the \renderer (writable), 
+and for the \sandbox domain (executable).
+Further, transitions between compartments use protected calls with 
+call gates which ensure proper checks on these transitions.
+
+%-------------------------------
+\subsubsection{Light-weight contexts: An OS abstraction for safety and performance}
+%-------------------------------
+% Context and introduction of lwc
+This proposal~\cite{LittonVE0BD16} introduces a new eponymous OS abstraction,
+Light-weight contexts (\lwc{}s),
+which are independent units of isolated execution.
+Contexts, like processes, have separate memory address spaces, OS resources,
+and capabilities.
+However, contexts remain part of a single process and share metadata in the 
+kernel, resembling kernel threads.
+Contexts offer the primary advantage that switching contexts within a process is 
+faster than switching processes, or even kernel threads within the same process.
+\lwc achieves faster switching between contexts by eliminating unnecessary kernel
+processing due to the kernel scheduler and resource accounting.
+
+% Explain how lwc allow compartmentalization
+% Isolation part
+Contexts diverge from the point of calling \Code{lwCreate} which acts like
+the \Code{clone} system call, where each resulting context has an 
+independent memory address space and OS resource handles.
+Like processes, OS resource handles can persist across a \Code{lwCreate}, or be
+invalidated in the child.
+Further shared resources can be generated using the \Code{lwOverlay} system 
+call.
+During an application's setup phase, numerous contexts may be created, each of 
+which can perform private setup steps or further restrict their resource rights 
+using \Code{lwRestrict}.
+% Communication part
+Execution of contexts resembles processes, merely replacing inter-process system
+calls with the faster inter-context switches.
+
+% Explain how lwc compartmentalize a browser
+A \browser compartmentalized using \lwc looks essentially the same as
+using UNIX processes. 
+The \renderer and each \sandbox occupy separate contexts, instead of processes.
+With \lwc, message passing system calls will be replaced by
+\Code{lwSwitch} system calls.
+
+%-------------------------------
+\subsubsection{Code-centric Memory Domains (CODOMs)}
+%-------------------------------
+% Context and introduction of CODOMs
+CODOMs~\cite{VilanovaBNEV14} enabled fine-grained intra-address space 
+compartmentalization
+with a novel architecture where domains are identified by the executing
+instruction pointer (hence the "code-centric" name), and with permissions
+to data regions determined by the executing domain. 
+Essentially, bits of page table entries identify the domain owning that
+page.
+Executing an instruction from a page tagged with a domain ID equates to
+executing as that domain.
+
+% Explain how CODOMs allow compartmentalization
+% Isolation part
+Domains in CODOMs each have permission to specific pages of memory: 
+those tagged with that domain's tag in the corresponding page-table entry.
+A domain cannot access data belonging to other domains, except if
+explicitly allowed during access protection lists (APLs).
+% Communication part
+Compartments can communicate with function calls, which implicitly
+cause compartment switches when the domain of the target address page
+differs from that of the source.
+APLs specify the ability of some domains to call other compartment,
+as well as for the caller to share their data with the callee.
+While APLs allow domains to permanently share data with other domains,
+CODOMs also proposes the use of capabilities to temporarily share
+permissions to data during cross-compartment calls.
+
+% Explain how CODOMs compartmentalize a browser
+Under CODOMs, a \browser must have separate pages corresponding to the
+\renderer and for each \sandbox. 
+Each domain's pages must be correctly tagged in the page table to allow
+the domain to be identified by the hardware.
+Each \sandbox must own the pages holding their code regions, and have
+executable permissions in the page tables. 
+The \renderer can generate new code using additional permissions specified
+in the APLs, where the \renderer should be granted write permission to
+each \sandbox's code pages.
+
+%-------------------------------
+\subsubsection{XPC: Architectural support for secure and efficient cross process call}
+%-------------------------------
+
+% Context and introduction of XPC
+XPC~\cite{DuHXZC19XPC} shares much of the abstractions from the process-based
+isolation, but attempts to accelerate inter-process calls, in particular, 
+while maintaining the same interface.
+Backward compatibility is a major design directive.
+Particularly, XPC replaces the system calls used for IPC with hardware 
+instructions supported by state machines implementing the same functionality.
+XPC aims to reduce the cost of IPC compared to kernel software, 
+also eliminating software dispatch and scheduling overheads in the common case.
+XPC also focusses on cheap zero-copy data movement between processes,
+dedicating a single relay segment for the purpose.
+
+% Explain how XPC allows compartmentalization
+A compartmentalized application running under XPC looks essentially identical
+to that using processes.
+% Isolation part
+Just like previously, each process has their own address space and OS 
+resources and capabilities.
+The XPC hardware engine tracks the page-table pointer and capability pointer
+for each process of a compartmentalized application in an \emph{x-entry} held in
+an in-memory \emph{X-Entry Table}.
+The OS sets up the X-Entry Table during an application launch.
+While a process is running, the XPC engine ensures that the hardware uses the
+correct page table pointer and capabilities.
+% Communication part
+XPC accelerates remote procedure calls, introducing the \Code{xcall} and
+\Code{xret} instructions to replace \Code{sendmsg}.
+On executing \Code{xcall}, the hardware fetches and installs the relevant 
+page table pointer and capabilities for the target process, 
+and put an entry for the caller on a \emph{Link Stack}.
+Executing \Code{xret} allows the callee to return to the caller, and the
+hardware engine pops the caller's information and installs it in the
+corresponding system registers (including the return address). 
+XPC eliminates the OS kernel from inter-compartment calls, relying on the 
+hardware to implement traditional kernel functionality.
+Additionally, data passed between processes can use the relay segment, which
+is a single dedicated segment mapping memory separately from the page tables.
+
+% Explain how XPC compartmentalize a browser
+A \browser compartmentalized using XPC looks essentially the same as
+using UNIX processes. 
+The \renderer and each \sandbox occupy separate processes.
+The major difference is that IPC system calls are replaced by faster
+\Code{xcall}/\Code{xret} pairs.
+
+%-------------------------------
+\subsubsection{ARMlock}
+%-------------------------------
+% Context and introduction of ARMlock
+ARMlock is a mechanism for hardware-supported intra-process sandboxing,
+based on ARM's support for memory domains.
+ARMlock leverages four bits in the page table entries to partition the
+process' virtual address space into 16 memory domains.
+At runtime, a core's permissions to each of these domains is dictated
+by the privileged domain access control register (DACR).
+The value in DACR allows each domain to be in one of three states: 
+inaccessible, accessible as per page table permissions (Client), or
+accessible without restrictions (Manager).
+A system call is used to change permissions to memory domains, by
+writing to the DACR register.
+
+% Explain how ARMlock allow compartmentalization
+% Isolation part
+ARMlock supports intra-process compartmentalization by dividing the
+memory space into memory domains, and by setting the DACR register
+to properly limit accessible memory during each compartment's execution.
+A memory domain can be private to a compartment, where the DACR register
+bits for that domain are set to inaccessible whenever any other compartment
+is executing. 
+Similarly, compartments can share a memory domain as equals if the DACR
+permissions are set to Client during each of their executions.
+ARMlock, however, assigns and restricts each unprivileged compartment to a
+single domain, and restricts sharing.
+The Manager permission setting allows ARMlock to implement support for
+a privileged compartment which has unrestricted access to domains.
+Finally, ARMlock implements a specialized stub including context switching
+during the system call used to switch compartments.
+
+% Explain how ARMlock compartmentalize a browser
+A \browser can implement isolation between the \renderer and each
+\sandbox with ARMlock, by assigning each \sandbox a separate domain.
+During a \sandbox's execution, the DACR register permits accesses to
+the \sandbox's domain, with read-write data permissions or read-execute
+code permissions as per the page table permissions.
+The \renderer, however, must generate code and write to the \sandbox's
+code region, and must set the DACR register to Manager mode for the
+corresponding \sandbox's memory domain.
+However, ARMlock cannot prohibit a buggy \renderer from executing
+a \sandbox's code since the domain is accessed with Manager permissions.
+ARMlock can also isolate separate privileged compartments, such as the
+\manager and \local, from the \renderer.
+The \renderer has Manager permissions for \sandbox's domains, but no
+access to \manager and \local memory domains.
+
+%-------------------------------
+\subsubsection{Intel Memory Protection Keys (MPK)}
+%-------------------------------
+% Context and introduction of MPK
+Memory Protection Keys assign keys to regions of memory, and maintain
+a separate set of access permissions for each key.
+While previous implementations in ARM, PA-RISC, Itanium and POWER-6 rely on 
+supervisor managed protection key permissions, Intel's MPK extension
+makes permission changes cheap by allowing userspace modification to
+permissions.
+MPK uses bits of the page table entry to assign each page a 4-bit color key,
+and uses permission bits in the per-core PKRU register to control permissions
+to each page color.
+PKRU permissions can be arbitrarily changed by userspace, using a special
+instruction (\Code{wrpkru}).
+A software library (libmpk~\cite{ParkLXMK19}), can be used to virtualize 
+page colors, allowing for more than 16 page colors.
+
+% Explain how MPK allow compartmentalization
+% Isolation part
+When executing a compartment, MPK uses permissions in the PKRU register
+to enforce additional restrictions on memory access. 
+Each core's PKRU register should only have permissions for page colors as
+per the compartment executing on that core.
+% Communication part
+Compartments in MPK can implicitly switch between each other using the 
+\Code{wrpkru} instruction to change the core's accessible page colors.
+Along with the permission changes, the application can also use 
+function calls to implement cross-compartment procedure calls.
+Data can be transferred between compartments using shared page colors.
+Changing page colors requires page table entry modifications, implying a
+system call, and cannot be done as fast as PKRU writes.
+MPK lacks call gates, and software must ensure control flow integrity
+between compartments.
+
+% Explain how MPK compartmentalize a browser
+A \browser can be compartmentalized with MPK, with one page color for the 
+\renderer and different colors for each of the \sandbox regions.
+The PTEs for all generated code regions must have writable and executable
+permissions, since PTE permissions are also enforced.
+During the \renderer's execution, the PKRU register holds writable permissions
+for the \sandbox code regions.
+During \sandbox execution, the PKRU register holds executable permissions for 
+that \sandbox's code region, and no permissions for any non-\sandbox regions.
+
+%-------------------------------
+\subsubsection{ERIM: Secure, efficient in-process isolation with protection keys}
+%-------------------------------
+% Context and introduction of ERIM
+ERIM~\cite{ERIMOberwagner19} builds on top of Intel MPK to implement 
+strict call gates for compartment switching, mitigating a major
+shortcoming with Intel's MPK technology.
+Essentially, ERIM limits the existence of instructions which can
+modify the PKRU value (\Code{wrpkru} and \Code{xrstor}) to within
+software call gates.
+However, ERIM must inspect all newly loaded code, including shared
+library or module loading, to ensure that new instructions which
+modify the PKRU register are not injected.
+
+% Explain how ERIM allow compartmentalization
+% Isolation part
+ERIM relies on the same set of MPK permissions described above to
+isolate compartments.
+% Communication part
+ERIM's main differentiating feature are its call gates, which should
+be the only parts in the application with executable \Code{wrpkru} or
+\Code{xrstor} instructions.
+The key feature of ERIM's call gates are that \Code{wrpkru} instructions
+are immediately followed by a call to trusted code, or by a condition which
+checks the value in the PKRU register. 
+The latter check allows control flow attacks which try to load invalid
+permissions to be immediately detected.
+
+% Explain how ERIM compartmentalize a browser
+A \browser compartmentalized with ERIM essentially looks the same as with
+MPK, with the \renderer occupying a trusted compartment, and each \sandbox
+occupying one untrusted compartment. 
+Data can be passed through pointers directly, just as with MPK, though 
+compartment transitions use ERIM's aforementioned call gates.
+
+%-------------------------------
+\subsubsection{Donky: Domain keys - Efficient in-process isolation for RISC-V and x86}
+%-------------------------------
+% Context and introduction of Donky
+Donky~\cite{SchrammelWSS0MG20Donky} aims to retain MPK's primary 
+performance advantage, by allowing changing memory views in userspace, 
+while mitigating its main weakness, 
+where an attacker with arbitrary code execution can immediately bypass
+MPK's protections.
+Donky replaces Intel's PKRU register register with a new DKRU register
+which cannot be directly modified by userspace.
+Donky effectively introduces a new privilege level within userspace, 
+running a special software monitor called the Donky monitor solely 
+capable of modifying the DKRU register.
+The Donky monitor can be trapped-into by userspace software, enabling the
+monitor to serve inter-compartment call requests, among other requests
+which modify memory keys.
+While Donky's monitor does not run within the supervisor privilege level,
+its design of entry-exit through hardware traps and ability to modify
+registers not accessible to normal userspace code makes the Donky monitor
+similar to previous works of supervisor-mediated compartmentalization.
+
+% Explain how Donky allow compartmentalization
+% Isolation part
+Compartments in Donky use separate regions of memory, with permission
+enforced as per the DKRU register, similar to compartmentalization with
+MPK.
+These permissions allow memory isolation for compartmentalization.
+% Communication part
+Compartments can call each other using \Code{dcall}s, essentially trapping
+into the monitor which modifies permissions in the DKRU register and
+sanitizes register values before dropping into the callee.
+
+% Explain how Donky compartmentalize a browser
+A \browser compartmentalized with Donky uses separate Donky domains for the 
+\renderer and for each \sandbox, created by calls to the Donky monitor.
+The \browser can also install \Code{dcall}s between the \renderer and each
+\sandbox, but prohibit \Code{dcall}s between sandboxed domains directly.
+Each transition between domains using a \Code{dcall} is interposed by the
+monitor.
+Inter-compartment \Code{dcall}s ensure that compartments are entered at
+valid entry points.
+Arguments must be passed through either registers, or through shared memory
+between domains.
+
+%-------------------------------
+\subsubsection{CHERI: A hybrid capability-system architecture for scalable 
+            software compartmentalization}
+%-------------------------------
+% Context and introduction of CHERI
+CHERI~\cite{WoodruffWCMADLNNR14} introduces architectural support for 
+memory capabilities.
+Architecturally, pointers are replaced by capabilities, which track 
+spatial bounds of memory accessible using that capability. 
+CHERI compartmentalization~\cite{WatsonWNMACDDGL15} repurposes 
+CHERI capabilities, with a customized CheriBSD
+kernel to provide intra address-space compartmentalization.
+CHERI provides compartmentalization based on the object-capability model, 
+where each compartment is represented as an object encapsulating capabilities
+for the compartment's code and data regions.
+CHERI is drastically different from the previously mentioned mechanisms,
+as access permissions for a compartment are not stored in a centralized
+permissions table or permissions register.
+Instead, CHERI relies on capabilities distributed within a compartment's 
+registers and data regions.
+
+% Explain how CHERI allow compartmentalization
+% Isolation part
+CHERI uses the capabilities to memory to spatially limit the memory regions
+accessible to a compartment.
+When executing, CHERI requires one or more code and data capabilities. 
+For compartmentalization, each compartment encapsulates its code and data
+capability within an object, and sealed by an object type capability 
+field (\Code{otype}). 
+When running as that compartment, those capabilities are installed in CPU
+capability registers, allowing the compartment to only access its code and data.
+% Communication part
+Compartments can call each other using a system call to the CheriBSD kernel,
+which securely saves the caller's state to its object, and unseals the
+callee's code and data capabilities and installs them in the core's registers 
+before dropping into the callee.
+Further, CHERI's capabilities greatly simplify passing permission to arguments
+during an inter-compartment call.
+A CHERI caller can simply pass a capability to the argument in memory during
+the call, allowing the callee to use the capability to access the corresponding
+memory.
+One consequence, which the caller must be careful about, is that the callee can
+use any capabilities stored in this argument memory region to further access other
+regions of memory.
+CHERI compartmentalization, though, lacks a mechanism for revocation,
+instead suggesting the use of garbage collectors for eventual revocation.
+A key concern for developers using CHERI is the possibility of capabilities
+being leaked during inter-compartment calls.
+
+% Explain how CHERI compartmentalize a browser
+With CHERI, each of a \browser's compartments must be allocated a separate
+object encapsulating that compartment's code and data.
+The \renderer would be an object, and each \sandbox will be implemented as
+a separate object.
+Both the \renderer and \sandbox{}es must each hold capabilities to the
+\sandbox's code region.
+The \renderer can use its own capability to a \sandbox's code region,
+permitting write operations to generate new code for the \sandbox.
+The \sandbox's own capability for this region must only allow executable 
+operations.
+Finally, the \renderer can pass temporary capabilities to \sandbox{}es
+when they are required to process certain data, including new data packets,
+with zero-copy.
+
+%-------------------------------
+\subsubsection{SecureCells: A Secure Compartmentalized Architecture}
+%-------------------------------
+% Context and introduction of SecureCells
+SecureCells~\cite{BhattacharyyaHLGSFP23} introduces a compartmentalization 
+mechanism based on hardware
+access control to variable-sized regions of memory, hardware tracked
+compartment identifiers, a unified permissions table for all compartments,
+and unprivileged instructions for securely accelerating common operations.
+SecureCells' permissions table stores permissions for each compartment to
+each data region.
+Further, SecureCells' userspace instructions enable control flow and
+zero-copy data movement between compartments with unprivileged instructions.
+SecureCells' unprivileged instructions implement hardware checks in order
+to prevent privilege escalation.
+
+% Explain how SecureCells allows compartmentalization
+% Isolation part
+Each compartment in SecureCells is assigned a \secdiv{}, whose accesses
+to memory regions are checked with an in-memory permissions table.
+Properly configured permissions allow compartments to have private regions
+to which on that compartment has permission, and selectively shared regions
+with specific other compartments having permission. 
+When executing code for a compartment, a core tracks the executing compartment
+identifier in a system register, and accordingly presents a view of memory.
+% Communication part
+Compartments can also interact with unprivileged \Code{SDSwitch} instructions
+which atomically  switch to a different compartment and jump to the callee's
+entry point.
+To aid zero-copy data transfer, SecureCells also includes unprivileged instructions
+which move permissions for regions between compartments.
+
+% Explain how SecureCells compartmentalize a browser
+A \browser compartmentalized with SecureCells will require separate
+\secdiv{}s for each \sandbox and for the \renderer.
+The permissions table is set up with per-\sandbox private regions, to which
+only each \sandbox and the \renderer have permission.
+The permissions can allow the \renderer write access and a \sandbox
+execute access to that \sandbox's code region.
+The \renderer can use \Code{SDSwitch} to enter and exit \sandbox{}es.
+Compartments must use the \Code{SDEntry} instruction to mark valid entry points
+leading to call gates to switch context and check inter-compartment call
+arguments.
+If arguments are isolated within a memory region, compartments with 
+\seccells can also move these arguments between compartments without copying
+by transferring permissions.
+
+%-------------------------------
+\subsubsection{CAPSTONE}
+%-------------------------------
+% Context and introduction of CAPSTONE
+CAPSTONE is a proposal introducing linear hardware capabilities for memory.
+Hardware capabilities in CAPSTONE limit the memory range accessible
+using that capability.
+The CAPSTONE instruction set and hardware additionally provides a uniqueness 
+property for each linear capability, guaranteeing the absence of any other 
+capability in the system allowing access to the same region of 
+physical memory.
+Linearity of capabilities solves a major shortcoming in older capability
+systems like CHERI: the potential of capability leakage.
+Further, linear capabilities allow a core to assume exclusive access to
+memory regions, removing the chance of data races and implementing
+hardware guarantees similar to Rust's ownership model.
+Finally, CAPSTONE introduces a revocation tree to enable compartments to
+generate revocation capabilities corresponding to linear capabilities,
+and later use a revocation operation to revoke capabilities transferred to
+other compartments. 
+However, each memory access under CAPSTONE using a linear capability is
+accompanied by a second corresponding access to the revocation tree to
+verify the temporal validity of the capability.
+
+% Explain how CAPSTONE allows compartmentalization
+% Isolation part
+Like other capability systems, CAPSTONE can implement compartmentalization
+by limiting the memory regions accessible during a compartment's execution
+to the regions accessible using capabilities held in processor registers
+and memory accessible through those registers.
+% Communication part
+Compartments can also call other compartments using a special \Code{call}
+operation on sealed capabilities representing the capabilities of the 
+target compartment.
+The hardware is responsible for securely and atomically switching the
+caller and callee's register contexts (including capabilities) between
+memory and the core's register file during an inter-compartment \Code{call}.
+A calling convention preserves specific registers over the call, allowing
+capabilities to arguments to be passed between compartments.
+
+% Explain how CAPSTONE compartmentalize a browser
+A \browser compartmentalized with CAPSTONE will resemble a \browser
+compartmentalized with CHERI, with a few key differences mandated by the
+use of linear capabilities.
+For example, linear capabilities prohibit the \renderer and a \sandbox to
+simultaneously hold capabilities for the \sandbox{}'s code region.
+Consequently, the \browser must pass the corresponding capability between
+the two compartments --- the \renderer passses the capability to the
+\sandbox when launching the \sandbox, and the \sandbox returns the 
+capability to the \renderer when new code needs to be generated.
+A na\"ive \browser implementation requires that a read-write-execute
+capability to allow the \renderer to write code to the same region executed
+by the \sandbox.
+
+%-------------------------------
 \subsection{Methodology and Rationale}
-\label{sec:compreview:methodology}
+\label{sec:compsok:methodology}
 %-------------------------------
 We classify mechanisms on the axes described in 
-\autoref{sec:compreview:properties}, essentially trying to measure how well 
+\autoref{sec:compsok:properties}, essentially trying to measure how well 
 each mechanism supports per-compartment restrictions to executable operations,
 resources accessible by those operations, and arguments to those operations.
 Each mechanism is individually scored on each axis, and the results are shown
@@ -901,23 +1497,23 @@ page-granular access control.
 
 %-------------------------------
 \subsection{Comparison}
-\label{sec:compreview:comparison}
+\label{sec:compsok:comparison}
 %-------------------------------
-\begin{figure*}[ht]
+\begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{data/scoring_security.pdf}
+  \includegraphics[width=0.9\textwidth]{data/compsok/scoring_security.pdf}
   \caption[Scoring security properties of mechanisms.]
           {Scoring security properties of mechanisms.}
   \label{fig:compsok:scoring_sec}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}[t]
+\begin{figure}
   \centering
-  \includegraphics[width=0.9\textwidth]{data/scoring_practicality.pdf}
+  \includegraphics[width=0.9\textwidth]{data/compsok/scoring_practicality.pdf}
   \caption[Scoring practicality and performance aspects of mechanisms.]
           {Scoring practicality and performance aspects of mechanisms.}
   \label{fig:compsok:scoring_perf}
-\end{figure*}
+\end{figure}
 % \FloatBarrier
 
 The scores for mechanisms on two aspects, security and practicality, 
@@ -1170,18 +1766,18 @@ special instruction, satisfy this criterion for security.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
-\label{sec:compreview:discussion}
+\label{sec:compsok:discussion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Compartmentalization relies on strong isolation policies implemented on capable
 mechanisms. 
-However, none of the mechanisms we compare in this paper achieved strong scores in
+However, none of the mechanisms we compare in this chapter achieved strong scores in
 all surveyed restrictions, calling for future research on improved mechanisms.
 In this section, we will discuss opportunities we identified for future mechanisms
 to introduce comprehensive security, and discuss the limitations of our approach.
 
 %-------------------------------
 \subsection{Opportunities}
-\label{sec:compreview:opportunities}
+\label{sec:compsok:opportunities}
 %-------------------------------
 This SoK explores the main areas where future compartmentalization
 mechanisms can add value.
@@ -1222,7 +1818,7 @@ efficient revocation.
 
 %-------------------------------
 \subsection{Limitations of our Methodology}
-\label{sec:compreview:limitations}
+\label{sec:compsok:limitations}
 %-------------------------------
 In this section, we discuss some of the limitations of our comparison, and
 suggest that compartmentalization mechanism proposals require more 
@@ -1253,7 +1849,7 @@ design trade-offs for mechanisms.
 \paragraph{Evaluation Testbench}
 We were unable to reproduce and test the various mechanisms due to the
 wide range of experimental designs, and their different implementations.
-Only lwC and ERIM can be run on commercial machines without hardware changes.
+Only \lwc and ERIM can be run on commercial machines without hardware changes.
 Other proposals have presented varying implementations based on
 microarchitectural simulators (geM5), experimental silicon (CHERI), and
 FPGA RTL for prototypes.
@@ -1265,8 +1861,8 @@ Due to the complexity of creating RTL prototypes, we propose the use of
 full system simulator (like geM5) models.
 
 \paragraph{Scoring mechanisms}
-This paper uses a scoring scheme to compare mechanisms quantitatively, as
-described in \autoref{sec:compreview:evaluation}. 
+This thesis uses a scoring scheme to compare mechanisms quantitatively, as
+described in \autoref{sec:compsok:evaluation}. 
 Our comparison gives equal weight to mechanisms for implementing
 orthogonal checks for instruction fetches and for microarchitecture 
 management instructions.
@@ -1279,15 +1875,15 @@ The lack of a standardized set of bugs and exploits hinders the systematic
 assignment of weights.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion}
-\label{sec:compreview:conclusion}
+\section{Summary}
+\label{sec:compsok:conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Compartmentalization is a crucial mitigation for systems security, and a steady
 stream of mechanisms has emerged to support applications requiring isolation
 between untrusted components.
 To align the wildly varying mechanism designs emerging from the variety of
 design requirements and enable a principled comparison of mechanisms along 
-common axes, this paper presents a systematization of the restrictions required
+common axes, this chapter presents a systematization of the restrictions required
 by mechanisms to mitigate cross-compartment attack vectors, and their performance
 and flexibility characteristics.
 This systematization allows us to trade-offs present in existing mechanisms,

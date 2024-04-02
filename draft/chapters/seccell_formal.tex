@@ -10,8 +10,8 @@
     \begin{algorithmic}[1]
       \State $S$ = Set of $M$ \secdiv{}s incl. supervisor $SD_{sup}$
       \State $C$ = Set of $N$ cells, each valid or invalid
-      \State Per-core register $SID$
-      \State Per-core register $RID$
+      \State Per-core register \sid
+      \State Per-core register \rid
       \State \ptable $PT: S \times C \mapsto \mathscr{P}(\set{r, w, x})$
       \State \gtable $GT: S \times C \mapsto S \times \mathscr{P}(\set{r, w, x})$
     \end{algorithmic}
@@ -41,8 +41,8 @@
           \State \textbf{assert} instruction at $addr$ is $SDEntry$
           \State \textbf{assert} $x \in PT(SD_{tgt}, c_i)$
           \State instruction pointer $\gets addr$
-          \State $RID \gets SID$
-          \State $SID \gets SD_{tgt}$
+          \State \rid $\gets$ \sid
+          \State \sid $\gets SD_{tgt}$
         \end{algorithmic}
         \label{alg:seccells:sdswitch}
     \end{algorithm}
@@ -150,7 +150,7 @@
         \ForAll{$SD_j \in S - \set{SD_{sup}, SD_{cur}}$}
           \State $p_{i, j} \gets PT(SD_j, c_i)$
           \State $(SD_{tgt}, gp_{tgt}) \gets GT(SD_j, c_i)$
-          \State \textbf{assert} $p_{i,j} = \phi \land gp_{tgt} = \phi \land SD_{tgt} = SD_{inv}$
+          \State \textbf{assert} ($p_{i,j} = \phi) \land (gp_{tgt} = \phi) \land (SD_{tgt} = SD_{inv})$
         \EndFor
 
         \State $PT(SD_{src}, c_i) \gets \phi$

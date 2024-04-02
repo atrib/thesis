@@ -32,6 +32,9 @@ exponentially over the decades, far outscaling the ability for developers to
 exhaustively test and verify their systems, leading to an abundance of bugs.
 Popular software runs hundreds of millions of lines of source code, with
 millions of lines worth of changes every year.
+Linux, a widely-used operating system, itself currently accounts for
+23 million lines of code, roughly increasing 20x since the turn of the
+millennium.
 Transistor counts for processors have roughly followed Moore's law for
 the last 50 years, and a modern Apple M2 chip has more than a $10^{11}$
 transistors compared to the $10^{4}$ transistors of the Motorola 68k processor
@@ -65,6 +68,8 @@ compromising their security, and implement the necessary mitigations.
 For example, a web developer must account for the threat that any of the
 thousands of JavaScript packages their code depends on might be malicious,
 currently or in the future.
+The security of computing is reliant on the security properties at the 
+interfaces between components (trusted and untrusted).
 The abstractions and interfaces at the core of computer systems need to
 enable systems to face up to today's security challenges.
 % See this example:
@@ -97,25 +102,42 @@ parts of this system have remained relatively unchanged.
 The designs of these interfaces reflect the requirements and threat landscape
 from their respective design periods, but fail to adequately address modern
 needs.
-One consequence is that key interfaces might not adequately mitigate threats
+Linux, for example, started development in the 1990s and is heavily inspired
+by Unix, initially developed in the 1960s-70s.
+The Linux kernel system call interface is cognizant of the threat of attacks
+or faults from untrusted userspace compromising the kernel, reflecting the
+contemporary shared use of mainframes running applications for a limited
+set of known users.
+System calls, therefore, typically check the validity of arguments passed
+from userspace.
+However, computing and the associated threat vectors developed over the
+past 30 years, rendering Linux' system call interface dated.
+One consequence of the dated designs of key interfaces is that these interfaces 
+might not adequately mitigate threats
 that have arisen or worsened after the design of the interface.
-For example, the kernel system call interface has always been cognizant of
-the threat
-of attacks from untrusted userspace, and system calls typically check the 
-validity of arguments passed from userspace.
-Meanwhile, computing has evolved to support increased concurrency and true 
+Since the 1990s, computing has evolved to support increased concurrency and true 
 parallelism, with the rise in popularity of multicore CPUs and multi-threaded 
 programs.
 For system call arguments stored in user memory and passed by reference,
 this evolution has enabled data races if the user program
 modifies the arguments from a second thread while the kernel executes
 a system call from one thread.
+This trend extends to other interfaces with widespread usage.
+The C programming language, dating back to the 1970s, remains in popular use
+despite the lack of memory safety by default.
+The rise of the internet and corresponding emergence of cyber warfare has
+exacerbated the effects malicious exploitation of memory safety bugs, 
+leading to major vulnerabilities 
+(e.g., Heartbleed~\cite{cve20140160}, GHOST~\cite{cve20150235} and NetUSB~\cite{cve20153036}).
 A second consequence is that interfaces might not provide the correct
 abstractions to efficiently support designs that reflect
 trust relations within parts of modern applications.
 For example, the dominant abstraction for isolation within userspace code
 is a process, and different applications typically execute in different 
 processes to isolate applications from bugs in other applications.
+The process virtual memory interface is supported by hardware enforced
+page table permissions across major commercial instruction set architectures
+(x86, SPARC, ARM) developed across the 1970s and 1980s.
 Process isolation is well suited to the historical state of software
 development where software vendors wrote their own applications with limited
 code sharing between vendors.
@@ -127,7 +149,8 @@ has become crucial.
 Security-critical programs, like browsers, microservices and microkernel
 operating systems (OSs), refactored to enforce intra-application isolation 
 using processes are limited by the high overheads of this abstraction, and 
-only support coarse-grained isolation to cap performance overheads.
+only support coarse-grained isolation to cap 
+performance overheads~\cite{ChakraCore, wxexclusionfirefox,barth2008security}.
 
 
 % Prior work around fixing abstractions or introducing new ones
@@ -148,6 +171,15 @@ only support coarse-grained isolation to cap performance overheads.
 %         Particularly, the OS is included in the TCB and tasked with implementing switching between
 %         protection domains or compartments, assuring security at high cost.
 % \end{itemize}
+Recognizing emerging threats, key interfaces have gradually evolved, 
+fixing bugs and introducing new defense features.
+Most improvements tend to be incremental.
+By adding a NX/XD bit to mark pages as non-executable, popular
+processor architectures added support for Data Execution Prevention (DEP)
+and prevented code injection exploiting buffer overflows.
+Over the years, millions of commits have added various patches to Linux.
+However, many improvements address individual bugs while failing to
+comprehensively improve an interface's security.
 Continuing industrial and academic efforts have proposed various 
 improvements to improve the kernel-user boundary and add support for 
 isolation within an application.
@@ -311,6 +343,15 @@ compartmentalization.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Kernel \tocttou Protection Overview}
 
+\begin{figure}
+      \centering
+      \includegraphics[width=0.6\linewidth]{media/midas_summary.pdf}
+      \caption[Illustrating the double-fetch attack at the system call interface]
+              {Illustrating the double-fetch attack at the system call interface}
+      \label{fig:intro:midas}
+\end{figure}
+
+    
 % Context
 % \begin{itemize}
 %   \item The design of many modern operating system kernels heavily draw inspiration from UNIX.
@@ -392,7 +433,8 @@ protection guarantees.
 %             by developers, sometimes due to legacy code.
 % \end{itemize}
 Untrusted userspace processes interact with the kernel using system calls,
-passing arguments by value (through registers) or by reference (in memory).
+passing arguments by value (through registers) or by reference (in memory),
+as illustrated in \autoref{fig:intro:midas}.
 When an argument is passed by reference, and the kernel loads the same
 value twice, an attacking user process can leverage the temporal window 
 between the loads to modify the value in memory, potentially triggering a
@@ -432,6 +474,14 @@ the required guarantee for argument accesses.
 %%%%%%% Deeper dive into userspace compartmentalization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Intra-address Space Compartmentalization Overview}
+
+\begin{figure}
+      \centering
+      \includegraphics[width=0.4\linewidth]{media/seccells_summary.pdf}
+      \caption[Illustrating intra-process trust components for an application]
+              {Illustrating intra-process trust components for an application}
+      \label{fig:intro:seccells}
+\end{figure}
 
 The complexity and rapid pace of change of modern software systems inevitably
 leads to a plethora of bugs across the stack.
@@ -507,7 +557,7 @@ and remains the mechanism of choice for usable isolation.
 % Insight and design/solution
 Modern software requires an intra-address space compartmentalization mechanism
 that provides strong isolation for application components
-running within the same address space, with
+running within the same address space (see \autoref{fig:intro:seccells}), with
 low-overhead nanosecond-scale operations to support compartments with short
 nanosecond-scale execution timescales, all while maintaining the flexibility
 to support a variety of software trust relationships.
@@ -679,7 +729,7 @@ This thesis is distributed across three chapters.
 kernel double-fetch bugs.
 \autoref{ch:seccells} describes SecureCells, a novel secure and performant 
 mechanism for intra-address space compartmentalization.
-Finally, \autoref{ch:compreview} contains a comprehensive comparison of
+Finally, \autoref{ch:compsok} contains a comprehensive comparison of
 compartmentalization mechanisms along qualitative and quantitative metrics.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

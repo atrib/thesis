@@ -3,8 +3,8 @@
 %%%%%%%%%%%%%%%%%%%%%%
 
 The operating system (OS) kernel provides isolation between processes and is
-a key trusted computing
-base. Each \emph{untrusted} userspace process runs under a
+a key component of the system's trusted computing base. 
+Each \emph{untrusted} userspace process runs under a
 dedicated user in its own address space and must request resources (such as
 communication channels or changes to its address space) from the \emph{trusted}
 kernel. The userspace/kernel interface forms an explicit trust barrier;
@@ -44,6 +44,7 @@ Syscall filtering wrappers require that data read from userspace for the
 initial check remains the same when the kernel later uses it for computation.
 Therefore, such filters can currently only check arguments passed by value.
 \midas enables ``deep argument inspection'' for SecComp~\cite{seccomp_deep, seccomp}
+and Janus~\cite{wagner1999janus}
 (i.e., checks arguments passed by reference).
 Without \midas, such inspection is impossible: these checks
 introduce double fetches, and consequently \tocttou bugs.
@@ -78,8 +79,9 @@ depending on when the syscall was started and how many
 concurrent syscalls are in flight. 
 Orthogonally, we derive a \emph{correctness
 property} that ensures the sharing of the correct version among inflight
-syscalls. All writes end up on the most recent version of
-the objects, allowing forward progress.
+syscalls. 
+All writes end up on the most recent version of the objects, 
+guaranteeing forward progress.
 While we implement this invariant in our \midas prototype for the Linux kernel,
 this defense applies to any modern OS kernel.
 
@@ -263,7 +265,7 @@ and the privileged \Code{stac}/\Code{clac} instructions are used to
 quickly enable and disable SMAP.
 In the OS, all accesses to userspace memory are made explicit,
 using \emph{transfer functions} to read from and write to userspace memory.
-Any unintended access outside of these functions causes a
+Any unintended access outside these functions causes a
 hardware fault, indicating a kernel bug or an attack.
 Linux implements the \Code{copy_\{from/to\}_user} functions, which
 use the access control instructions to disable SMAP before
@@ -322,7 +324,7 @@ boundaries~\cite{lu2018untrusted}).
 % No black magic allowed
 The attacker has access to a user account on the target machine. 
 They can execute arbitrary userspace code, including syscalls. 
-Some of the system calls have double-fetch vulnerabilities which the attacker 
+Some system calls have double-fetch vulnerabilities which the attacker 
 wishes to exploit (e.g., for privilege escalation).
 The attacker may execute arbitrary sequences of syscalls on multiple CPU
 cores in parallel, or concurrently on the same core.
@@ -427,7 +429,7 @@ due to demand paging.
 In a more involved variant, the attacker can use the kernel as a
 confused deputy which touches the unmapped page and maps it in,
 then writes to the vulnerable data.
-In all of the above vectors, the function populating pages for a
+In all the above vectors, the function populating pages for a
 process (\Code{mm_populate} on Linux) is creating the new mapping.
 \emph{A protection mechanism must instrument any syscalls
 and other kernel mechanisms which can create new mappings.}
@@ -439,7 +441,7 @@ a different address space, the kernel might lazily reinstate
 the attacker's mapping to the page.
 \emph{The swapping mechanism must be protected.}
 
-\midas protects against all of the previously-listed attack vectors.
+\midas protects against all the previously-listed attack vectors.
 In the absence of any other syscall which can create new userspace
 mappings to vulnerable data, \midas' protection is complete
 against writes from both user and kernel code.
@@ -462,7 +464,7 @@ However, \midas can be extended to protect against modifications by DMA devices
 on processors supporting IOMMUs or similar methods for
 access control~\cite{olsonbordercontrol}.
 As a superuser can modify kernel code via kernel modules, protecting against 
-attacks from this user falls outside of our threat model.
+attacks from this user falls outside our threat model.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -499,7 +501,7 @@ granularity: when a syscall reads from userspace, every page touched by that
 read is covered, not merely the bytes read.
 Page-granularity protections are conservative compared to byte-granularity
 protection and \midas maintains its invariant.
-As a side-effect of its implementation, \midas does not distinguish
+As a side effect of its implementation, \midas does not distinguish
 accesses to different parts of a page (intra-page false sharing).
 False sharing leads to unnecessary page duplications, incurring performance
 overhead on highly shared pages, but does not affect correctness.
@@ -649,8 +651,9 @@ the value $42$.
 \paragraph{State 1}
 The page in State 0 transitions to the \texttt{(protected, unduplicated)} state as soon as a syscall
 reads from it.
-\midas first marks the page's latest copy $C_L$ read-only in all processes,
-trapping writes to the page but allowing concurrent userspace reads to continue.
+First, \midas marks the page's latest copy $C_L$ read-only in all processes
+where the page is mapped,
+trapping writes to the page but permitting concurrent userspace reads to continue.
 A new snapshot, $S_0$ linked to this syscall is allocated for this page.
 For the rest of its lifetime, this syscall will only read this page from this snapshot.
 Both snapshots $S_0$ and $L$ refer to the same copy $C_L$ (shown by the
@@ -801,7 +804,7 @@ double fetch of that object.
 Multiple syscalls in \midas can therefore write to the same object
 without affecting
 correctness, because an equivalent, valid, safe non-\midas trace
-exists where all of the writes have been postponed, in the same order
+exists where all the writes have been postponed, in the same order
 to after the double fetch reads.
 
 \begin{table}
@@ -948,6 +951,60 @@ disjoint bytes.
 A precise sanitizer could maintain a bitmask of accessed bytes to
 prune false positives.
 
+\paragraph{Double-fetch exploition using speculative execution}
+Speculative execution attacks (SEA) on modern processors leverage speculative
+execution of instructions to bypass permission checks and illegally access and
+leak information.
+Assuming the presence of specific microarchitectural optimizations, an attacker
+may speculatively bypass Midas' protection, and leverage a double-fetch bug to
+leak information from the kernel.
+However, an attacker cannot mount an SEA to corrupt kernel state as processors
+eventually discard the results from incorrect speculation and roll back to
+the correct execution path where Midas prevents double fetch exploitation.
+Moreover, the SEA attack relies on load-to-store forwarding between logical
+threads on a simultaneously multi-threaded (SMT) processor, an optimization
+described in an academic proposal~\cite{HiltonR10} but not implemented in 
+contemporary commercial processors.
+Finally, the entire sequence from the attacker's illegal write to the victim
+syscall leaking sensitive kernel information must complete within the attacking
+thread's speculative window, typically lasting up to a couple of hundred cycles.
+Consequently, the victim syscall must use the value from the second read 
+immediately after userspace memory copy.
+Given the requirements for this attack, including experimental hardware 
+optimizations, strict timing requirements and the need for specific code patterns,
+we consider this attack theoretical, rather than practical.
+A hardware fix for this attack scenario is possible, restricting results from
+potentially faulting writes from being speculatively forwarded to a different thread.
+When the attacker and victim execute on separate physical cores, this attack
+is impossible as speculative writes are not forwarded across cores.
+Next, we describe the steps of this potential attack vector.
+
+For this attack, we assume that the attacker and victim run on two logical
+hardware threads running on a single physical core on a SMT processor.
+The steps of the attack are described now.
+\begin{enumerate}
+  \item The victim syscall fetches a user object for the first time,
+        marking the corresponding page as protected (State 1), 
+  \item The attacker thread starts speculation behind a long-latency operation
+        (e.g., a last-level cache miss for a data read),
+  \item The attacker speculatively writes to the protected page, 
+  \item The attacker's write is held in the core's shared load-store queue,
+        and the page fault (for writing to a read-only page) is delayed till
+        the commit phase,
+  \item The victim syscall initiates the second fetch, and speculatively reads
+        the attacker's write from the shared load-store queue, 
+  \item The result from the speculative read is forwarded to dependent 
+        instructions in the victim, causing a side-channel leakage of
+        kernel secrets.
+  \item The attacker finishes the long-latency instruction and ends speculation,
+  \item The core rolls back the attacker execution, including the illegal 
+        write, 
+  \item The core rolls back the victim's execution based on the illegal 
+        write, and
+  \item Both the attacker and victim continue on an architecturally legal
+        execution path.
+\end{enumerate}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{\midas Implementation}
@@ -1087,7 +1144,7 @@ problem while running which can affect its proper functioning, such
 as corrupted data structures.
 A more severe version, a kernel panic, causes the kernel to stop
 executing, expecting data loss or damage if it does.}
-where the kernel reads user memory to provide a backtrace.
+where the kernel reads user memory to provide a call backtrace.
 In this severe situation, the kernel's goal is to collect debug
 information before its imminent termination and no \tocttou protection
 is needed.
@@ -1287,6 +1344,18 @@ to pages.
 We instrument \Code{clone} to ensure that new mappings for protected
 pages are also correctly protected.
 
+A class of syscalls can be used to modify user memory using
+temporary mappings generated by the kernel. 
+Connor et. al.~\cite{ConnorMSS20} investigated the semantics of the
+Linux syscall interface in the context of bypassing access control
+for intra-address space compartmentalization. 
+For example, \Code{process_vm_writev} can be used to modify 
+a process' virtual memory from a separate process executed by the
+same user as the target process.
+Our \midas prototype currently lacks protection for modifications
+using these temporary mappings.
+We leave the manual inspection of each syscall, required to
+block this attack vector, for future work.
 
 \subsection{Discussion}
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -1568,8 +1637,7 @@ on our prototype kernel.
 The benchmark titled ``Linux'' represents compilation of the Linux kernel.
 While compilation is mostly compute bound, compiling the Linux kernel requires
 accessing a large number of source files, resulting in the creation
-of a large number of compiler processes each of which read and create
-files.
+of many compiler processes each of which read and create files.
 \midas experiences a small, but non-negligible overhead of $3.5\%$ on this workload.
 Redis requires syscalls for receiving and replying to requests, but
 processes its transaction entirely in-memory.

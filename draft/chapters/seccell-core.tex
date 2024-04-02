@@ -100,7 +100,7 @@ compartmentalization by embedding compartmentalization into the
 architectural virtual memory abstraction.
 \seccells proposes 
 \begin{inparaenum}[\itshape i\upshape)]
-\item \emph{TCB-maintained VMA-scale} access control, and 
+\item \emph{TCB-maintained VMA-granularity} access control, and 
 \item unprivileged (i.e., userspace) instructions implementing 
 \emph{securely-bounded} compartmentalization primitives, with
 \item software implementing call gates, call stacks, and context isolation.
@@ -233,7 +233,7 @@ modifying a file's permissions or owner.
 The principle of least privilege should also restrict a module's permissions
 to the temporal period where it requires specific privileges.
 Privileged programs (like webservers) typically drop elevated privileges 
-as soon no longer required, following this principle.
+when no longer required, following this principle.
 
 Least privileges require applications to be decomposed into modules 
 implementing logically different functionality or working on logically
@@ -426,6 +426,8 @@ The policy used for compartmentalization is assumed to be sound, and the softwar
 implementations of the modules comprising compartments are assumed to be
 free of bugs that can be exploited via only their exposed communication
 interfaces.
+For example, we assume that each compartment validates arguments for
+incoming cross-compartment calls.
 \seccells' trusted computing base (TCB) consists of the hardware implementation
 and the supervisor.
 Exploitable bugs in the policy or TCB can lead to a compromise irrespective of the
@@ -481,8 +483,9 @@ are controlled by the caller (correspondingly, the WebApp),
 representing an attack vector.
 The WebApp, for example, could try to switch to the Engine with a malicious stack pointer
 register, attempting to corrupt the Engine by reading from the wrong stack.
-CODOM~\cite{VilanovaBNEV14}, for example, assumes a migrating thread model
-and is vulnerable to attacks through an invalid register state.
+CODOMs~\cite{VilanovaBNEV14}, for example, uses the migrating thread model,
+and is consequently vulnerable to an attack involving an invalid register state
+on compartment transitions.
 
 \paragraph{Obj. \req{1d}}
 Mechanisms that allow untrusted compartments to modify or transfer their 
@@ -697,7 +700,7 @@ We discuss related mechanisms further in \autoref{sec:seccells:related}.
   UNIX        & \yes  & \yes  & \yes  & N/A   &       & \yes  &       &       &       & \yes  &               \\
   Mondrian    & \yes  & \yes  & \yes  & N/A   &       & \yes  & \yes  &       &       & \yes  &               \\
   lwC         & \yes  & \yes  & \yes  & N/A   &       & \yes  &       &       &       & \yes  &               \\
-  CODOM       & \yes  & \yes  &       & N/A   &       & \yes  &       & \yes  &       &       & \yes          \\
+  CODOMs       & \yes  & \yes  &       & N/A   &       & \yes  &       & \yes  &       &       & \yes          \\
   XPC         & \yes  & \yes  & \yes  & \yes  & \yes  & \yes  &       & \yes  & $\sim$& \yes  &               \\
   MPK         &       &       &       &       &       & $\sim$&       & \yes  & \yes  & \yes  & \yes          \\
   ERIM        & $\sim$& $\sim$&       &       &       & $\sim$&       & \yes  & \yes  & \yes  & \yes          \\
@@ -1362,7 +1365,7 @@ implementing context isolation (\autoref{sec:seccells:design:softmech}) includin
 stack switching.
 \seccells successfully prevents the WebApp from accessing the Engine's stack.
 
-\subsubsection{Formal Description and Analysis of \seccells' 
+\subsubsection{Formal Description and Security Analysis of \seccells' 
 Userspace Instructions}
 
 We define the semantics of \seccells' unprivileged instructions

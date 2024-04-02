@@ -1,0 +1,32 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Classification Data}
+\label{app:compsok:data}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Below, we present the data used for creating the scoring diagrams in
+\autoref{fig:compsok:scoring_sec} and \autoref{fig:compsok:scoring_perf}.
+We include descriptions for each column, which is a separate scoring factor,
+and show how each mechanism scores on this feature.
+For each feature, the mechanism fully satisfying the feature, or achieving
+the best performance in a category gets a full circle.
+Partially-filled circles show the relative score assigned to a mechanism 
+for a feature, compared to the max score for that feature.
+Red circles indicate a negative score, awarded when a mechanism has a
+negative contribution to a feature.
+
+\begin{sidewaystable*}
+  \centering
+  \input{data/compsok/table_security.tex}
+	\caption[Scoring matrix for mechanisms for security guarantees]
+          {Scoring matrix for mechanisms for security guarantees}
+	\label{tab:compsok:app_sec}
+\end{sidewaystable*}
+
+\begin{table*}
+  \centering
+  \input{data/compsok/table_practicality.tex}
+	\caption[Scoring matrix for mechanisms for performance and flexibility metrics]
+          {Scoring matrix for mechanisms for performance and flexibility metrics}
+	\label{tab:compsok:app_perf}
+\end{table*}
